@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #3a913f, #70c44b);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    #weather-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 350px;
+      width: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-bottom: 30px;
+    }
+    label, select {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    select {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      width: 100%;
+    }
+    #weather-info {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+    button {
+      background-color: #b5e61d;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      color: black;
+      width: 200px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #9acb18;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <h1>Welcome to AgriTech Connect Dashboard</h1>
+
+  <div id="weather-section">
+    <h2>🌤️ Weather Alerts</h2>
+
+    <label for="city-selector">Choose your town or city:</label>
+    <select id="city-selector" onchange="updateCity()">
+      <option value="Lebowakgomo">Lebowakgomo</option>
+      <option value="Polokwane">Polokwane</option>
+      <option value="Tzaneen">Tzaneen</option>
+      <option value="Pretoria">Pretoria</option>
+      <option value="Johannesburg">Johannesburg</option>
+      <option value="Cape Town">Cape Town</option>
+      <option value="Durban">Durban</option>
+    </select>
+
+    <p id="weather-info">Loading weather info...</p>
+  </div>
+
+  <button id="logout">Logout</button>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Redirect to login if not logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Logout button functionality
+    document.getElementById("logout").addEventListener("click", () => {
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    });
+
+    // Weather API key
+    const apiKey = "4e964608f63e83461ebc8ef5ea65e997";
+
+    function updateCity() {
+      const city = document.getElementById("city-selector").value;
+      fetchWeather(city);
+    }
+
+    function fetchWeather(city) {
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+          const temp = data.main.temp;
+          const weather = data.weather[0].description;
+          const rain = data.rain ? data.rain["1h"] : 0;
+
+          let alert = `🌡️ Temp: ${temp}°C - ${weather}`;
+          if (rain > 5) {
+            alert += " ⚠️ Heavy rain alert!";
+          }
+
+          document.getElementById("weather-info").innerText = alert;
+        })
+        .catch(err => {
+          document.getElementById("weather-info").innerText = "⚠️ Failed to fetch weather.";
+          console.error(err);
+        });
+    }
+
+    // Load default city weather on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchWeather(document.getElementById("city-selector").value);
+    });
+  </script>
+</body>
+</html>
