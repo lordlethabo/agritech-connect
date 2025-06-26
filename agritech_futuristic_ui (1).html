@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(to right, #3a913f, #70c44b);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #b5e61d;
+      color: #000;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #9acb18;
+    }
+    #message {
+      margin-top: 15px;
+      color: #fff;
+      font-size: 14px;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>AgriTech Connect</h1>
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+        authDomain: "agritechconnect.firebaseapp.com",
+        projectId: "AgriTechConnect",
+        storageBucket: "agritechconnect.appspot.com",
+        messagingSenderId: "1027312049739",
+        appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      window.register = function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage("❌ Email and password are required.");
+          return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => showMessage("✅ Registered successfully!"))
+          .catch(error => showMessage("❌ " + error.message));
+      };
+
+      window.login = function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage("❌ Email and password are required.");
+          return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => showMessage("✅ Login successful!"))
+          .catch(error => showMessage("❌ " + error.message));
+      };
+
+      function showMessage(msg) {
+        document.getElementById("message").innerText = msg;
+      }
+    });
+  </script>
+</body>
+</html>
