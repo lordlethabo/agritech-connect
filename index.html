@@ -106,18 +106,37 @@
       };
 
       window.login = function () {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-        if (!email || !password) {
-          showMessage("❌ Email and password are required.");
-          return;
-        }
+  if (!email || !password) {
+    showMessage("❌ Email and password are required.");
+    return;
+  }
 
-        auth.signInWithEmailAndPassword(email, password)
-          .then(() => showMessage("✅ Login successful!"))
-          .catch(error => showMessage("❌ " + error.message));
-      };
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      showMessage("✅ Login successful!");
+      window.location.href = "dashboard.html"; // Redirect to dashboard page
+    })
+    .catch(error => showMessage("❌ " + error.message));
+};
+window.login = function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showMessage("❌ Email and password are required.");
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      showMessage("✅ Login successful!");
+      window.location.href = "dashboard.html"; // Redirect to dashboard page
+    })
+    .catch(error => showMessage("❌ " + error.message));
+};
 
       function showMessage(msg) {
         document.getElementById("message").innerText = msg;
