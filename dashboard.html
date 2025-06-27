@@ -97,4 +97,209 @@
     .card p {
       font-size: 15px;
       line-height: 1.6;
-      color: #4a4a4a
+      color: #4a4a4a;
+      margin-bottom: 8px;
+    }
+    .card ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .card ul li {
+      margin-bottom: 6px;
+    }
+    a {
+      color: #6b8e23;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #8b6d3c;
+    }
+    button.logout {
+      background-color: #6b8e23;
+      color: white;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: block;
+      margin: 30px auto 0;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    button.logout:hover {
+      background-color: #8b6d3c;
+    }
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav .nav-links {
+        margin-top: 10px;
+      }
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <nav>
+    <div class="logo-container">
+      <img src="logo.png" alt="AgriTech Connect Logo" class="logo-img" />
+      <span class="logo-text">AgriTech Connect</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Dashboard</a>
+      <a href="#">Marketplace</a>
+      <a href="#">Messages</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Empowering Farmers with Smart Technology</h1>
+  </header>
+
+  <div class="container">
+    <div class="card knowledge-library">
+      <h2>📚 Knowledge Library</h2>
+      <p>Loading articles...</p>
+    </div>
+
+    <div class="card events-section">
+      <h2>📆 Events & Trainings</h2>
+      <p>Loading events...</p>
+    </div>
+
+    <div class="card price-section">
+      <h2>📊 Market Price Tracker</h2>
+      <p>Loading prices...</p>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Redirect to login if not authenticated
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'index.html';
+      } else {
+        loadKnowledgeLibrary();
+        loadEvents();
+        loadMarketPrices();
+      }
+    });
+
+    // Logout function
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = 'index.html';
+      });
+    }
+
+    // Load Knowledge Library articles
+    function loadKnowledgeLibrary() {
+      const container = document.querySelector(".knowledge-library");
+      container.innerHTML = '<h2>📚 Knowledge Library</h2>';
+
+      db.collection("articles").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No articles available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${data.link}" target="_blank" rel="noopener">${data.title}</a>`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading articles: ${error.message}</p>`;
+        });
+    }
+
+    // Load Events & Trainings
+    function loadEvents() {
+      const container = document.querySelector(".events-section");
+      container.innerHTML = '<h2>📆 Events & Trainings</h2>';
+
+      db.collection("events").orderBy("date").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No events available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const eventDate = new Date(data.date).toLocaleDateString();
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>${data.title}</strong> - ${eventDate} <a href="${data.link}" target="_blank" rel="noopener">Details</a>`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading events: ${error.message}</p>`;
+        });
+    }
+
+    // Load Market Prices
+    function loadMarketPrices() {
+      const container = document.querySelector(".price-section");
+      container.innerHTML = '<h2>📊 Market Price Tracker</h2>';
+
+      db.collection("prices").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No market prices available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.item} — ${data.price} (${data.location})`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading prices: ${error.message}</p>`;
+        });
+    }
+  </script>
+</body>
+</html>
