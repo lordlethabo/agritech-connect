@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AgriTech Connect – Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -19,6 +19,12 @@
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
     }
+    header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
     nav {
       background-color: #4a4721;
       display: flex;
@@ -33,16 +39,20 @@
     }
     .hero {
       text-align: center;
-      padding: 40px 20px;
-      background-image: url('hero-banner.jpg');
+      padding: 60px 20px;
+      background-image: url('hero-bg.jpg');
       background-size: cover;
       background-position: center;
       color: white;
       border-radius: 0 0 30px 30px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
     }
     .hero h1 {
-      font-size: 28px;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 18px;
     }
     .section {
       padding: 40px 20px;
@@ -102,6 +112,7 @@
 </head>
 <body>
   <header>
+    <img src="logo.png" alt="AgriTech Logo" />
     <h1>AgriTech Connect Dashboard</h1>
     <p>Empowering Youth Farmers in Rural Communities with Smart Technology</p>
   </header>
@@ -121,7 +132,9 @@
 
   <section class="section" id="knowledge-library">
     <h2>📚 Knowledge Library</h2>
-    <div class="cards" id="articles-list"></div>
+    <div class="cards" id="articles-list">
+      <!-- Articles will load here -->
+    </div>
   </section>
 
   <section class="section" id="weather-alerts">
