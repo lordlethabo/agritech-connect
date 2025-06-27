@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather Alerts - AgriTech Connect</title>
+  <title>AgriTech Connect Dashboard</title>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,87 +20,130 @@
       padding: 0;
     }
 
-    .weather-section {
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
+    header {
       background-color: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    header img {
+      height: 50px;
+      border-radius: 50%;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      color: #4a6b3b;
+      margin-left: 1rem;
     }
 
-    .weather-section h2 {
+    section {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
       text-align: center;
       color: #496b3f;
       margin-bottom: 24px;
     }
 
-    #weather-location {
-      width: 100%;
+    .card {
+      background: #f4f6f2;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    input, button {
       padding: 12px;
+      font-size: 1rem;
       border-radius: 12px;
       border: 1px solid #a3b18a;
-      font-size: 1rem;
-      margin-bottom: 12px;
+      margin-bottom: 1rem;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
       background-color: #7ca982;
       color: white;
       border: none;
-      border-radius: 12px;
-      font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #5a7d55;
-    }
-
-    #weather-result {
-      margin-top: 16px;
-      color: #333;
-      text-align: center;
     }
 
     canvas {
       margin-top: 30px;
       max-width: 100%;
     }
-
-    @media (max-width: 600px) {
-      .weather-section {
-        padding: 15px;
-        margin: 20px;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <section class="weather-section" id="weather-alerts">
+  <header>
+    <div style="display: flex; align-items: center;">
+      <img src="logo.png" alt="AgriTech Logo">
+      <h1>AgriTech Innovators Connect</h1>
+    </div>
+  </header>
+
+  <!-- Knowledge Library Section -->
+  <section id="knowledge-library">
+    <h2>📘 Knowledge Library</h2>
+    <div class="card">
+      <p>Access articles, videos, and expert tips to grow your farming knowledge.</p>
+      <ul>
+        <li><a href="#">How to Detect Maize Leaf Disease</a></li>
+        <li><a href="#">Organic Pest Control Techniques</a></li>
+        <li><a href="#">Water-Saving Smart Irrigation</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Events & Training Section -->
+  <section id="events-training">
+    <h2>🎓 Events & Training</h2>
+    <div class="card">
+      <p>Stay updated with upcoming workshops, webinars, and field days.</p>
+      <ul>
+        <li>🌾 Youth AgriBootcamp - July 15</li>
+        <li>💡 Smart Farm Hackathon - Aug 10</li>
+        <li>📍 Crop Disease Webinar - Aug 25</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Market Price Tracker -->
+  <section id="market-prices">
+    <h2>💰 Market Price Tracker</h2>
+    <div class="card">
+      <p>Track real-time produce prices in your region.</p>
+      <ul>
+        <li>Tomatoes: R12/kg</li>
+        <li>Maize: R3.50/kg</li>
+        <li>Potatoes: R8/kg</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Weather Alerts with Autocomplete and Chart -->
+  <section id="weather-alerts" class="weather-section">
     <h2>🌦️ Weather Alerts</h2>
-
-    <input 
-      type="text" 
-      id="weather-location" 
-      placeholder="Enter town (e.g. Lebowakgomo)" 
-      class="awesomplete"
-      autocomplete="off"
-    />
-
+    <input type="text" id="weather-location" placeholder="Enter town (e.g. Lebowakgomo)" class="awesomplete" autocomplete="off" />
     <button onclick="getWeather()">Check Weather</button>
-
     <div id="weather-result"></div>
-
     <canvas id="weatherChart"></canvas>
   </section>
 
   <script>
-    const weatherApiKey = "4e964608f63e83461ebc8ef5ea65e997"; // OpenWeatherMap API key
+    const weatherApiKey = "4e964608f63e83461ebc8ef5ea65e997";
     let weatherChart = null;
 
     const townNames = [
@@ -156,11 +199,7 @@
               label: `Weather in ${location}`,
               data: [temp, feelsLike, humidity, wind, pressure],
               backgroundColor: [
-                '#b7d3a8',
-                '#a3b18a',
-                '#ccd5ae',
-                '#d4a373',
-                '#6b705c'
+                '#b7d3a8', '#a3b18a', '#ccd5ae', '#d4a373', '#6b705c'
               ],
               borderRadius: 10
             }]
@@ -169,12 +208,8 @@
           const chartOptions = {
             indexAxis: 'y',
             responsive: true,
-            plugins: {
-              legend: { display: false }
-            },
-            scales: {
-              x: { beginAtZero: true }
-            }
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true } }
           };
 
           if (weatherChart) weatherChart.destroy();
@@ -187,10 +222,7 @@
         })
         .catch(error => {
           resultBox.innerHTML = `<p style="color:red;">${error.message}</p>`;
-          if (weatherChart) {
-            weatherChart.destroy();
-            weatherChart = null;
-          }
+          if (weatherChart) weatherChart.destroy();
         });
     }
   </script>
