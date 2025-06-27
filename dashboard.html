@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgriTech Connect Dashboard</title>
+  <title>AgriTech Connect Home</title>
 
   <style>
     body {
@@ -40,57 +40,6 @@
       color: #4a6b3b;
     }
 
-    .hamburger {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .sidebar {
-      width: 250px;
-      background-color: #fff;
-      position: fixed;
-      top: 0;
-      left: -250px;
-      height: 100%;
-      padding: 1rem;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-      transition: left 0.3s ease;
-      z-index: 1000;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .sidebar ul li {
-      margin: 15px 0;
-    }
-
-    .sidebar ul li a {
-      text-decoration: none;
-      color: #4a6b3b;
-      font-weight: 500;
-    }
-
-    .sidebar ul li a:hover {
-      text-decoration: underline;
-    }
-
-    .logout-btn {
-      background-color: white;
-      color: #4a6b3b;
-      border: 2px solid #4a6b3b;
-      padding: 6px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
     .profile-pic {
       height: 40px;
       width: 40px;
@@ -107,51 +56,11 @@
       <h1>AgriTech Connect</h1>
     </div>
     <div>
-      <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
       <img src="user.png" alt="Profile" class="profile-pic"/>
     </div>
   </header>
 
-  <nav class="sidebar" id="sidebar">
-    <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="profile.html">Profile Settings</a></li>
-      <li><a href="history.html">My Activity</a></li>
-      <li><a href="saved.html">Saved Resources</a></li>
-      <li><a href="forum.html">Community Forum</a></li>
-      <li><a href="mentorship.html">Mentorship</a></li>
-      <li><a href="diagnostic.html">AI Diagnostics</a></li>
-      <li><a href="submit-problem.html">Submit a Problem</a></li>
-      <li><a href="solutions.html">Solution Marketplace</a></li>
-      <li><a href="library.html">Knowledge Library</a></li>
-      <li><a href="events.html">Events & Trainings</a></li>
-      <li><a href="prices.html">Market Prices</a></li>
-      <li><a href="notifications.html">Notifications</a></li>
-      <li><a href="settings.html">Settings</a></li>
-      <li><button class="logout-btn" onclick="logout()">Logout</button></li>
-    </ul>
-  </nav>
-
-  <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    function logout() {
-      if (firebase && firebase.auth) {
-        firebase.auth().signOut().then(() => {
-          window.location.href = 'index.html';
-        }).catch((error) => {
-          console.error('Logout error:', error);
-        });
-      } else {
-        console.log("Firebase not initialized");
-        window.location.href = 'index.html';
-      }
-    }
-  </script>
-
-  <!-- Firebase scripts should be included here -->
+  <!-- Main content can go here -->
 
 </body>
 </html>
