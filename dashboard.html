@@ -6,11 +6,15 @@
   <title>AgriTech Connect – Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* Base styles */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background-color: #f4f9ef;
       color: #4a4721;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
       background-color: #6b8e23;
@@ -51,27 +55,44 @@
       max-width: 600px;
       line-height: 1.4;
     }
+
+    /* Navigation */
     nav {
       background-color: #4a4721;
       display: flex;
       justify-content: center;
-      gap: 30px;
-      padding: 10px 0;
+      gap: 20px;
+      padding: 10px 10px;
+      flex-wrap: wrap;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 999;
     }
     nav a {
       color: white;
       text-decoration: none;
       font-weight: 600;
       font-size: 16px;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 8px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
     }
     nav a:hover,
     nav a:focus {
       background-color: #8b5e3c;
+      color: #fff;
       outline: none;
     }
+    nav a.active {
+      background-color: #8ab73a;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* Hero Section */
     .hero {
       text-align: center;
       padding: 60px 20px;
@@ -94,33 +115,39 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    /* Sections */
     .section {
-      padding: 40px 20px;
-      background-color: #ffffffcc;
+      max-width: 1200px;
       margin: 20px auto;
+      background-color: #ffffffcc;
       border-radius: 20px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
-      max-width: 1200px;
+      overflow: hidden;
+      max-height: 0;
+      padding: 0 20px;
+      opacity: 0;
+      transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
     }
-    #knowledge-library {
-      background-image: url('library-bg.jpg');
+    .section.active {
+      max-height: 2000px; /* enough to show content */
+      padding: 40px 20px;
+      opacity: 1;
     }
-    #weather-alerts {
-      background-image: url('weather-bg.jpg');
-    }
-    #price-tracker {
-      background-image: url('market-bg.jpg');
-    }
-    #events {
-      background-image: url('events-bg.jpg');
-    }
-    #community-forum {
-      background-image: url('forum-bg.jpg');
-      color: #4a4721;
-    }
+
+    /* Section backgrounds */
+    #knowledge-library { background-image: url('library-bg.jpg'); }
+    #weather-alerts { background-image: url('weather-bg.jpg'); }
+    #price-tracker { background-image: url('market-bg.jpg'); }
+    #events { background-image: url('events-bg.jpg'); }
+    #community-forum { background-image: url('forum-bg.jpg'); color: #4a4721; }
+    #diagnostic { background-image: none; }
+    #marketplace { background-image: url('market-bg.jpg'); }
+
+    /* Section titles */
     .section h2 {
       color: #4a4721;
       margin-bottom: 20px;
@@ -134,6 +161,8 @@
       background-color: rgba(255, 255, 255, 0.85);
       color: #6b4f2f;
     }
+
+    /* Cards grid */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -166,6 +195,8 @@
       text-decoration: none;
       font-weight: 600;
     }
+
+    /* Buttons */
     button {
       background-color: #6b8e23;
       color: white;
@@ -179,15 +210,68 @@
     button:hover {
       background-color: #8ab73a;
     }
+
     input[type="file"] {
       margin-top: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
       padding: 6px;
     }
+
+    /* Marketplace specific */
+    #marketplace .cards {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    #marketplace .card img {
+      max-width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 20px 15px;
+      }
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav {
+        gap: 10px;
+        padding: 8px 10px;
+      }
+      nav a {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+      .hero {
+        font-size: 90%;
+        padding: 40px 15px;
+      }
+      .section {
+        margin: 15px 10px;
+        border-radius: 15px;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+      }
+      #marketplace .card img {
+        height: 100px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .cards {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
   </style>
 </head>
 <body>
+
   <header>
     <div class="header-container" role="banner">
       <img src="logo.png" alt="AgriTech Connect Logo" />
@@ -199,12 +283,13 @@
   </header>
 
   <nav>
-    <a href="#knowledge-library">Library</a>
-    <a href="#weather-alerts">Weather</a>
-    <a href="#price-tracker">Prices</a>
-    <a href="#events">Events</a>
-    <a href="#community-forum">Community</a>
-    <a href="#diagnostic">AI Diagnostic</a>
+    <a href="#" data-target="knowledge-library" class="active">Library</a>
+    <a href="#" data-target="weather-alerts">Weather</a>
+    <a href="#" data-target="price-tracker">Prices</a>
+    <a href="#" data-target="events">Events</a>
+    <a href="#" data-target="community-forum">Community</a>
+    <a href="#" data-target="diagnostic">AI Diagnostic</a>
+    <a href="#" data-target="marketplace">Marketplace</a>
   </nav>
 
   <section class="hero" role="img" aria-label="Farm field with sunrise">
@@ -212,10 +297,11 @@
     <p>Explore smart solutions for modern farming</p>
   </section>
 
-  <section class="section" id="knowledge-library">
+  <section class="section active" id="knowledge-library">
     <h2>📚 Knowledge Library</h2>
     <div class="cards" id="articles-list">
       <!-- Articles loaded here -->
+      <div class="card"><h3>Sample Article</h3><a href="#">Read more</a></div>
     </div>
   </section>
 
@@ -264,10 +350,28 @@
     </div>
   </section>
 
+  <section class="section" id="marketplace">
+    <h2>🛒 Marketplace</h2>
+    <div>
+      <p>Add your produce:</p>
+      <form id="produce-form">
+        <input type="text" id="produce-name" placeholder="Produce Name" required />
+        <input type="number" id="produce-price" placeholder="Price per unit (R)" min="0" step="0.01" required />
+        <input type="text" id="produce-unit" placeholder="Unit (e.g., kg, crate)" required />
+        <input type="url" id="produce-image" placeholder="Image URL" required />
+        <button type="submit">Add Produce</button>
+      </form>
+    </div>
+    <div class="cards" id="marketplace-list" style="margin-top:20px;">
+      <!-- Marketplace items -->
+    </div>
+  </section>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -280,6 +384,30 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // Section toggle logic
+    const allSections = document.querySelectorAll(".section");
+    const navLinks = document.querySelectorAll("nav a");
+
+    function showSection(targetId) {
+      allSections.forEach(section => {
+        section.classList.toggle('active', section.id === targetId);
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-target') === targetId);
+      });
+      // Scroll to top of page when section changes (optional)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const targetId = link.getAttribute("data-target");
+        showSection(targetId);
+      });
+    });
+
+    // Load articles from Firebase
     function loadArticles() {
       const list = document.getElementById("articles-list");
       list.innerHTML = "<p>Loading...</p>";
@@ -299,10 +427,10 @@
       });
     }
 
+    // Load weather from API
     function loadWeather() {
       const weather = document.getElementById("weather-card");
       weather.innerHTML = "Fetching forecast...";
-      // Replace 'demo' with your weather API key and correct location
       fetch("https://api.weatherapi.com/v1/current.json?key=demo&q=Lebowakgomo")
         .then(res => res.json())
         .then(data => {
@@ -317,10 +445,54 @@
         });
     }
 
-    window.onload = () => {
+    // Marketplace functionality
+    const produceForm = document.getElementById('produce-form');
+    const marketplaceList = document.getElementById('marketplace-list');
+
+    // In-memory store for produce items (in real app, you might use DB)
+    const produceItems = [];
+
+    function renderProduce() {
+      marketplaceList.innerHTML = "";
+      if (produceItems.length === 0) {
+        marketplaceList.innerHTML = "<p>No produce added yet.</p>";
+        return;
+      }
+      produceItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" />
+          <h3>${item.name}</h3>
+          <p>Price: R${item.price.toFixed(2)} per ${item.unit}</p>
+        `;
+        marketplaceList.appendChild(card);
+      });
+    }
+
+    produceForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('produce-name').value.trim();
+      const price = parseFloat(document.getElementById('produce-price').value);
+      const unit = document.getElementById('produce-unit').value.trim();
+      const image = document.getElementById('produce-image').value.trim();
+
+      if (!name || isNaN(price) || price < 0 || !unit || !image) {
+        alert("Please fill in all fields with valid data.");
+        return;
+      }
+
+      produceItems.push({ name, price, unit, image });
+      renderProduce();
+      produceForm.reset();
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
       loadArticles();
       loadWeather();
-    };
+      renderProduce();
+    });
   </script>
 </body>
 </html>
