@@ -66,7 +66,7 @@
       border: 1px solid #dce7d9;
     }
 
-    .card:nth-child(2) {
+    .card:nth-child(even) {
       background-color: #f5f3ee;
       border: 1px solid #ddd5ca;
     }
@@ -149,6 +149,24 @@
       <p>Upload an image to receive AI-based crop/livestock health diagnostics.</p>
       <input type="file" id="imageInput" accept="image/*" />
       <p><em>AI feature coming soon.</em></p>
+    </div>
+
+    <div class="card">
+      <h2>📖 Knowledge Library</h2>
+      <p>Browse curated articles, tips, and case studies on agriculture and farming innovations.</p>
+      <p><a href="#">Explore library &rarr;</a></p>
+    </div>
+
+    <div class="card">
+      <h2>📅 Events & Trainings</h2>
+      <p>Stay informed about upcoming agricultural webinars, workshops, and competitions.</p>
+      <p><a href="#">View calendar &rarr;</a></p>
+    </div>
+
+    <div class="card">
+      <h2>📊 Market Price Tracker</h2>
+      <p>Check the latest market prices for crops and livestock in your region.</p>
+      <p><em>Data sync in progress...</em></p>
     </div>
 
     <button class="logout" onclick="logout()">Logout</button>
