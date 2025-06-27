@@ -32,7 +32,7 @@
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      border: 2px solid #6b8e23; /* green border */
+      border: 2px solid #6b8e23;
     }
     .logo-text {
       font-weight: 600;
@@ -42,42 +42,48 @@
     }
     nav .nav-links a {
       text-decoration: none;
-      color: #6b8e23; /* olive green */
+      color: #6b8e23;
       margin-left: 20px;
       font-weight: 500;
       transition: color 0.3s;
     }
     nav .nav-links a:hover {
-      color: #8b6d3c; /* warm brown */
+      color: #8b6d3c;
     }
+
     header {
-      background: url('banner.jpg') no-repeat center center/cover;
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('header-bg.jpg') no-repeat center center/cover;
       padding: 60px 20px;
       text-align: center;
       color: white;
       border-radius: 0 0 30px 30px;
       box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
     }
+
     header h1 {
-      font-size: 32px;
+      font-size: 30px;
       margin: 0;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
       font-weight: 600;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
     }
+
     .container {
       max-width: 900px;
       margin: 40px auto;
       padding: 20px;
-      background-color: #fffdf8; /* very soft cream */
+      background-color: #fffdf8;
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
+
     .card {
-      background-color: #f1f5e1; /* light green cream */
+      background-color: #f1f5e1;
       border-radius: 14px;
       padding: 20px;
       margin-bottom: 20px;
-      border: 1px solid #d6d9bf; /* soft green/grey border */
+      border: 1px solid #d6d9bf;
       box-shadow: 0 1px 4px rgba(106, 124, 47, 0.1);
       transition: box-shadow 0.3s ease;
     }
@@ -85,11 +91,11 @@
       box-shadow: 0 4px 12px rgba(106, 124, 47, 0.3);
     }
     .card:nth-child(even) {
-      background-color: #ebeeda; /* lighter cream */
+      background-color: #ebeeda;
       border: 1px solid #c1c3a1;
     }
     .card h2 {
-      color: #556b2f; /* dark olive green */
+      color: #556b2f;
       font-size: 20px;
       margin-bottom: 12px;
       font-weight: 600;
@@ -107,15 +113,7 @@
     .card ul li {
       margin-bottom: 6px;
     }
-    a {
-      color: #6b8e23;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover {
-      text-decoration: underline;
-      color: #8b6d3c;
-    }
+
     button.logout {
       background-color: #6b8e23;
       color: white;
@@ -132,6 +130,7 @@
     button.logout:hover {
       background-color: #8b6d3c;
     }
+
     @media (max-width: 600px) {
       nav {
         flex-direction: column;
@@ -166,7 +165,7 @@
   </nav>
 
   <header>
-    <h1>Empowering Farmers with Smart Technology</h1>
+    <h1>Connecting Rural Youth to Smart Farming Opportunities</h1>
   </header>
 
   <div class="container">
@@ -189,7 +188,7 @@
   </div>
 
   <script>
-    // Your Firebase configuration
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -199,12 +198,10 @@
       appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Redirect to login if not authenticated
     auth.onAuthStateChanged(user => {
       if (!user) {
         window.location.href = 'index.html';
@@ -215,14 +212,12 @@
       }
     });
 
-    // Logout function
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'index.html';
       });
     }
 
-    // Load Knowledge Library articles
     function loadKnowledgeLibrary() {
       const container = document.querySelector(".knowledge-library");
       container.innerHTML = '<h2>📚 Knowledge Library</h2>';
@@ -248,7 +243,6 @@
         });
     }
 
-    // Load Events & Trainings
     function loadEvents() {
       const container = document.querySelector(".events-section");
       container.innerHTML = '<h2>📆 Events & Trainings</h2>';
@@ -275,7 +269,6 @@
         });
     }
 
-    // Load Market Prices
     function loadMarketPrices() {
       const container = document.querySelector(".price-section");
       container.innerHTML = '<h2>📊 Market Price Tracker</h2>';
