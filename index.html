@@ -3,80 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect - Welcome</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Welcome - AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #ffffff;
+      background-color: #f3f5f0;
       color: #37472e;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
-      background: #eaf2e3;
+      background: #ffffff;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     header img {
       height: 48px;
-      width: 48px;
       border-radius: 50%;
-      object-fit: cover;
     }
     header h1 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin-left: 1rem;
-      color: #47683f;
+      color: #4a6b3b;
     }
-    .hero {
-      background: url('hero-image.jpg') center/cover no-repeat;
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 5rem 1rem;
-      color: #ffffff;
+      padding: 2rem;
+      background-image: url('header-bg.jpg');
+      background-size: cover;
+      background-position: center;
     }
-    .hero h2 {
+    main h2 {
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
-    .hero p {
+    main p {
       font-size: 1.2rem;
+      margin-bottom: 2rem;
       max-width: 600px;
-      margin: 0 auto;
-    }
-    .cta-buttons {
-      margin-top: 2rem;
     }
     .cta-buttons a {
       display: inline-block;
+      margin: 0.5rem;
       padding: 0.75rem 1.5rem;
       background-color: #7ca982;
       color: white;
       text-decoration: none;
-      border-radius: 8px;
-      margin: 0 0.5rem;
       font-weight: 600;
+      border-radius: 8px;
     }
     .cta-buttons a:hover {
-      background-color: #5f8562;
+      background-color: #5a7d55;
     }
     footer {
       text-align: center;
-      padding: 2rem;
+      padding: 1rem;
+      background: #e9efe5;
       font-size: 0.9rem;
-      color: #888;
-    }
-    @media (max-width: 600px) {
-      .hero h2 {
-        font-size: 1.5rem;
-      }
-      .hero p {
-        font-size: 1rem;
-      }
     }
   </style>
 </head>
@@ -84,21 +78,21 @@
   <header>
     <div style="display: flex; align-items: center;">
       <img src="logo.png" alt="AgriTech Logo">
-      <h1>AgriTech Connect</h1>
+      <h1>AgriTech Innovators Connect</h1>
     </div>
   </header>
 
-  <section class="hero">
-    <h2>Empowering Youth Farmers with Smart Technology</h2>
-    <p>Connect, learn, and grow your agri-business through collaboration, innovation, and real-time insights tailored to rural farmers.</p>
+  <main>
+    <h2>Empowering Youth Farmers in Rural Africa</h2>
+    <p>Welcome to AgriTech Connect – your gateway to smart farming solutions, collaboration, mentorship, and innovation. Join our community to transform agriculture through technology.</p>
     <div class="cta-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Register</a>
     </div>
-  </section>
+  </main>
 
   <footer>
-    &copy; 2025 AgriTech Connect. All rights reserved.
+    &copy; 2025 AgriTech Innovators Connect. All rights reserved.
   </footer>
 </body>
 </html>
