@@ -4,89 +4,87 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AgriTech Connect – Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #f4fff1, #ddf7cc);
+      background-color: #e7f5e1;
       margin: 0;
       padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      background: linear-gradient(to right, #f4fff1, #ddf7cc);
     }
+
     .container {
-      background-color: #f4f9ef;
-      padding: 40px 30px;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      padding: 40px 30px;
       text-align: center;
       max-width: 400px;
       width: 90%;
       backdrop-filter: blur(5px);
     }
+
     .logo-container {
       margin-bottom: 20px;
     }
+
     .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 20px;
-      border: 2px solid #6b8e23;
+      width: 90px;
+      height: auto;
     }
+
     h1 {
       margin-bottom: 25px;
       color: #2e7d32;
       font-size: 24px;
     }
-    h2 {
-      text-align: center;
-      color: #4a4721;
-      margin-bottom: 20px;
-    }
+
     input[type="email"],
     input[type="password"] {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
-      border-radius: 12px;
       border: 1px solid #ccc;
-      font-size: 14px;
+      border-radius: 12px;
+      font-size: 15px;
       background-color: #f8fff5;
     }
+
     button {
-      background-color: #6b8e23;
-      width: 100%;
-      padding: 12px;
+      background-color: #81c784;
       border: none;
       color: white;
+      padding: 12px;
       font-size: 16px;
-      font-weight: 600;
-      border-radius: 10px;
+      font-weight: bold;
+      border-radius: 12px;
       cursor: pointer;
+      width: 100%;
       margin-top: 10px;
     }
+
     button:hover {
-      background-color: #8b6d3c;
+      background-color: #66bb6a;
     }
-    .links {
-      text-align: center;
+
+    .link {
       margin-top: 15px;
-    }
-    .links a {
-      color: #6b8e23;
-      text-decoration: none;
+      display: block;
+      color: #388e3c;
+      text-decoration: underline;
+      cursor: pointer;
       font-size: 14px;
     }
-    .message {
-      text-align: center;
-      margin-top: 10px;
+
+    #message {
+      margin-top: 15px;
       font-size: 14px;
-      color: #ff0000;
+      color: red;
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -97,73 +95,73 @@
     <div class="logo-container">
       <img src="logo.png" alt="AgriTech Logo" class="logo" />
     </div>
-    <h2>Login to AgriTech Connect</h2>
-    <input type="email" id="email" placeholder="Email Address">
-    <input type="password" id="password" placeholder="Password">
+
+    <h1>AgriTech Connect</h1>
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+
     <button onclick="login()">Login</button>
-    <button onclick="signup()">Create Account</button>
-    <div class="links">
-      <a href="#" onclick="resetPassword()">Forgot password?</a>
-    </div>
-    <div class="message" id="message"></div>
+
+    <span class="link" onclick="resetPassword()">Forgot Password?</span>
+    <span class="link" onclick="window.location.href='register.html'">Create Account</span>
+
+    <div id="message"></div>
   </div>
 
   <script>
     const firebaseConfig = {
-      // Your Firebase config goes here
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    function showMessage(text, color = '#ff0000') {
-      const msg = document.getElementById("message");
-      msg.textContent = text;
-      msg.style.color = color;
-    }
-
     function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const msg = document.getElementById("message");
 
       if (!email || !password) {
-        showMessage("Email and password are required.");
+        msg.textContent = "❌ Email and password required.";
         return;
       }
 
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-          showMessage("Login successful!", '#4caf50');
-          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+          msg.style.color = "green";
+          msg.textContent = "✅ Login successful!";
+          setTimeout(() => window.location.href = "dashboard.html", 1000);
         })
-        .catch(error => showMessage(error.message));
-    }
-
-    function signup() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      if (!email || !password) {
-        showMessage("Email and password are required to create an account.");
-        return;
-      }
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => showMessage("Account created successfully! You can now log in.", '#4caf50'))
-        .catch(error => showMessage(error.message));
+        .catch(error => {
+          msg.style.color = "red";
+          msg.textContent = "❌ " + error.message;
+        });
     }
 
     function resetPassword() {
       const email = document.getElementById("email").value;
+      const msg = document.getElementById("message");
 
       if (!email) {
-        showMessage("Please enter your email to reset your password.");
+        msg.textContent = "Please enter your email to reset your password.";
         return;
       }
 
       auth.sendPasswordResetEmail(email)
-        .then(() => showMessage("Password reset email sent. Check your inbox.", '#4caf50'))
-        .catch(error => showMessage(error.message));
+        .then(() => {
+          msg.style.color = "green";
+          msg.textContent = "Password reset link sent to your email.";
+        })
+        .catch(error => {
+          msg.style.color = "red";
+          msg.textContent = error.message;
+        });
     }
   </script>
 </body>
