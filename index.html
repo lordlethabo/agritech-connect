@@ -1,171 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect - Login</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriTech Connect Home</title>
+
   <style>
     body {
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9f3;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      padding: 0;
+      background-color: #f3f5f0;
     }
 
     header {
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .logo-area {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
     }
 
-    header img {
-      width: 60px;
-      height: 60px;
+    .logo-area img {
+      height: 48px;
+      width: 48px;
       border-radius: 50%;
+      margin-right: 10px;
     }
 
-    header h1 {
-      color: #4a6b3b;
+    h1 {
       font-size: 1.5rem;
-    }
-
-    .container {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-      width: 100%;
-      max-width: 400px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1rem;
       color: #4a6b3b;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 0.5rem 0;
-      border: 1px solid #a3b18a;
-      border-radius: 10px;
+    .hamburger {
+      font-size: 1.5rem;
+      cursor: pointer;
     }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #7ca982;
-      color: white;
-      border: none;
+    .sidebar {
+      width: 250px;
+      background-color: #fff;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      height: 100%;
+      padding: 1rem;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #4a6b3b;
+      font-weight: 500;
+    }
+
+    .sidebar ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .logout-btn {
+      background-color: white;
+      color: #4a6b3b;
+      border: 2px solid #4a6b3b;
+      padding: 6px 12px;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 1rem;
+      font-weight: bold;
     }
 
-    button:hover {
-      background-color: #5a7d55;
-    }
-
-    .link {
-      display: block;
-      text-align: center;
-      margin-top: 1rem;
-      color: #4a6b3b;
-      text-decoration: none;
-    }
-
-    .message {
-      text-align: center;
-      color: red;
-      margin-top: 1rem;
+    .profile-pic {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-left: 10px;
     }
   </style>
 </head>
-
 <body>
   <header>
-    <img src="logo.png" alt="AgriTech Logo" />
-    <h1>AgriTech Connect</h1>
+    <div class="logo-area">
+      <img src="logo.png" alt="AgriTech Logo">
+      <h1>AgriTech Connect</h1>
+    </div>
+    <div>
+      <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
+      <img src="user.png" alt="Profile" class="profile-pic"/>
+    </div>
   </header>
 
-  <div class="container">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button onclick="login()">Login</button>
-    <a href="#" class="link" onclick="resetPassword()">Forgot Password?</a>
-    <a href="register.html" class="link">Create an Account</a>
-    <p id="message" class="message"></p>
-  </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <nav class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="profile.html">Profile Settings</a></li>
+      <li><a href="history.html">My Activity</a></li>
+      <li><a href="saved.html">Saved Resources</a></li>
+      <li><a href="forum.html">Community Forum</a></li>
+      <li><a href="mentorship.html">Mentorship</a></li>
+      <li><a href="diagnostic.html">AI Diagnostics</a></li>
+      <li><a href="weather.html">Weather Alerts</a></li>
+      <li><a href="predictions.html">Weather Predictions</a></li>
+      <li><a href="news.html">Farming News</a></li>
+      <li><a href="submit-problem.html">Submit a Problem</a></li>
+      <li><a href="solutions.html">Solution Marketplace</a></li>
+      <li><a href="library.html">Knowledge Library</a></li>
+      <li><a href="events.html">Events & Trainings</a></li>
+      <li><a href="prices.html">Market Prices</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+    </ul>
+  </nav>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b",
-      storageBucket: "agritechconnect-1d52b.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const msg = document.getElementById("message");
-
-      if (!email || !password) {
-        msg.textContent = "Please enter email and password.";
-        return;
-      }
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          msg.style.color = 'green';
-          msg.textContent = "Login successful! Redirecting...";
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 1500);
-        })
-        .catch(error => {
-          msg.textContent = error.message;
-        });
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
     }
 
-    function resetPassword() {
-      const email = document.getElementById("email").value;
-      const msg = document.getElementById("message");
-
-      if (!email) {
-        msg.textContent = "Enter your email to reset password.";
-        return;
-      }
-
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          msg.style.color = 'green';
-          msg.textContent = "Password reset email sent.";
-        })
-        .catch(error => {
-          msg.textContent = error.message;
+    function logout() {
+      if (firebase && firebase.auth) {
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'index.html';
+        }).catch((error) => {
+          console.error('Logout error:', error);
         });
+      } else {
+        console.log("Firebase not initialized");
+        window.location.href = 'index.html';
+      }
     }
   </script>
-</body>
 
+  <!-- Firebase scripts should be included here -->
+
+</body>
 </html>
