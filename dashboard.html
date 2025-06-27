@@ -2,65 +2,370 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgriTech Connect Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect Dashboard</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Awesomplete for Autocomplete -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
 
   <style>
+    /* Reset & base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9f4;
       margin: 0;
-      padding: 0;
-      background-color: #f3f5f0;
+      color: #3a4a2a;
+      line-height: 1.6;
     }
 
+    a {
+      color: #7a8f4c;
+      text-decoration: none;
+    }
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    /* Header */
     header {
       background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       padding: 1rem 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      position: relative;
-    }
-
-    .logo-area {
       display: flex;
       align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-
-    .logo-area img {
-      height: 48px;
-      width: 48px;
+    header img {
+      height: 56px;
+      width: 56px;
       border-radius: 50%;
-      margin-right: 10px;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      color: #4a6b3b;
-    }
-
-    .profile-pic {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(122, 143, 76, 0.5);
       object-fit: cover;
-      margin-left: 10px;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+      color: #567234;
+      user-select: none;
+    }
+
+    /* Container */
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem 3rem;
+    }
+
+    /* Section styles */
+    section {
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(86, 114, 52, 0.12);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      transition: box-shadow 0.3s ease;
+    }
+    section:hover,
+    section:focus-within {
+      box-shadow: 0 10px 28px rgba(86, 114, 52, 0.2);
+    }
+
+    /* Section headings */
+    section h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #4a682b;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+
+    /* Cards inside sections */
+    .card {
+      background: #f1f5e1;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      color: #516530;
+      font-size: 1rem;
+      box-shadow: inset 0 0 4px rgba(86, 114, 52, 0.1);
+    }
+    .card ul {
+      padding-left: 1.25rem;
+      margin: 0.5rem 0 0;
+    }
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Weather section inputs */
+    #weather-location {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 14px;
+      border: 1.5px solid #9aae6f;
+      outline-offset: 2px;
+      margin-right: 0.75rem;
+      transition: border-color 0.3s ease;
+    }
+    #weather-location:focus {
+      border-color: #567234;
+    }
+
+    button {
+      background-color: #8aa64e;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgba(138, 166, 78, 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover,
+    button:focus {
+      background-color: #567234;
+      box-shadow: 0 5px 16px rgba(86, 114, 52, 0.7);
+      outline: none;
+    }
+
+    #weather-result {
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #4a682b;
+      min-height: 90px;
+      user-select: text;
+    }
+
+    /* Chart */
+    canvas {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(86, 114, 52, 0.15);
+    }
+
+    /* Responsive layout */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.4rem;
+      }
+      #weather-location {
+        max-width: 100%;
+        margin-bottom: 0.75rem;
+      }
+      button {
+        width: 100%;
+        padding: 14px 0;
+      }
+      main {
+        padding: 0 1rem;
+        margin: 1rem auto 3rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <header>
-    <div class="logo-area">
-      <img src="logo.png" alt="AgriTech Logo">
-      <h1>AgriTech Connect</h1>
-    </div>
-    <div>
-      <img src="user.png" alt="Profile" class="profile-pic"/>
-    </div>
+    <img src="logo.png" alt="AgriTech Logo" />
+    <h1>AgriTech Innovators Connect</h1>
   </header>
 
-  <!-- Main content can go here -->
+  <main>
+    <!-- Knowledge Library Section -->
+    <section id="knowledge-library" tabindex="0" aria-label="Knowledge Library">
+      <h2>Knowledge Library</h2>
+      <div class="card" role="region" aria-live="polite">
+        <p>Access articles, videos, and expert tips to grow your farming knowledge.</p>
+        <ul>
+          <li><a href="#" tabindex="0">How to Detect Maize Leaf Disease</a></li>
+          <li><a href="#" tabindex="0">Organic Pest Control Techniques</a></li>
+          <li><a href="#" tabindex="0">Water-Saving Smart Irrigation</a></li>
+        </ul>
+      </div>
+    </section>
 
+    <!-- Events & Training Section -->
+    <section id="events-training" tabindex="0" aria-label="Events and Training">
+      <h2>Events & Training</h2>
+      <div class="card" role="region" aria-live="polite">
+        <p>Stay updated with upcoming workshops, webinars, and field days.</p>
+        <ul>
+          <li>Youth AgriBootcamp - July 15</li>
+          <li>Smart Farm Hackathon - Aug 10</li>
+          <li>Crop Disease Webinar - Aug 25</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Market Price Tracker -->
+    <section id="market-prices" tabindex="0" aria-label="Market Price Tracker">
+      <h2>Market Price Tracker</h2>
+      <div class="card" role="region" aria-live="polite">
+        <p>Track real-time produce prices in your region.</p>
+        <ul>
+          <li>Tomatoes: R12/kg</li>
+          <li>Maize: R3.50/kg</li>
+          <li>Potatoes: R8/kg</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Weather Alerts Section -->
+    <section id="weather-alerts" tabindex="0" aria-label="Weather Alerts">
+      <h2>Weather Alerts</h2>
+      <form onsubmit="event.preventDefault(); getWeather();" aria-label="Check weather form">
+        <input
+          type="text"
+          id="weather-location"
+          class="awesomplete"
+          placeholder="Enter town (e.g. Lebowakgomo)"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="weatherHelp"
+        />
+        <button type="submit">Check Weather</button>
+      </form>
+      <div id="weather-result" role="status" aria-live="polite"></div>
+      <canvas id="weatherChart" aria-label="Weather data chart" role="img"></canvas>
+    </section>
+  </main>
+
+  <script>
+    const weatherApiKey = "4e964608f63e83461ebc8ef5ea65e997";
+    let weatherChart = null;
+
+    const townNames = [
+      "Lebowakgomo",
+      "Polokwane",
+      "Thohoyandou",
+      "Jane Furse",
+      "Giyani",
+      "Makhado",
+      "Tzaneen",
+      "Bela-Bela",
+      "Mokopane",
+      "Musina",
+      "Burgersfort",
+      "Louis Trichardt",
+      "Groblersdal",
+      "Modimolle",
+      "Phalaborwa",
+      "Zebediela",
+      "Pretoria",
+      "Johannesburg",
+      "Durban",
+      "Cape Town",
+    ];
+
+    new Awesomplete(document.getElementById("weather-location"), {
+      list: townNames,
+      minChars: 1,
+      maxItems: 6,
+      autoFirst: true,
+    });
+
+    function getWeather() {
+      const location = document.getElementById("weather-location").value.trim();
+      const resultBox = document.getElementById("weather-result");
+      const ctx = document.getElementById("weatherChart").getContext("2d");
+
+      if (!location) {
+        resultBox.innerHTML = `<p style="color: #a84141;">Please enter a town name.</p>`;
+        return;
+      }
+
+      resultBox.innerHTML = `<p>Fetching weather data for <strong>${location}</strong>...</p>`;
+
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${weatherApiKey}`
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Town not found.");
+          return response.json();
+        })
+        .then((data) => {
+          const desc = data.weather[0].description;
+          const temp = data.main.temp;
+          const feelsLike = data.main.feels_like;
+          const humidity = data.main.humidity;
+          const wind = data.wind.speed;
+          const pressure = data.main.pressure;
+
+          resultBox.innerHTML = `
+            <p><strong>Weather:</strong> ${desc}</p>
+            <p><strong>Temperature:</strong> ${temp}°C</p>
+            <p><strong>Feels Like:</strong> ${feelsLike}°C</p>
+            <p><strong>Humidity:</strong> ${humidity}%</p>
+            <p><strong>Wind Speed:</strong> ${wind} m/s</p>
+            <p><strong>Pressure:</strong> ${pressure} hPa</p>
+          `;
+
+          const chartData = {
+            labels: [
+              "Temperature (°C)",
+              "Feels Like",
+              "Humidity (%)",
+              "Wind Speed (m/s)",
+              "Pressure (hPa)",
+            ],
+            datasets: [
+              {
+                label: `Weather in ${location}`,
+                data: [temp, feelsLike, humidity, wind, pressure],
+                backgroundColor: [
+                  "#b7d3a8",
+                  "#a3b18a",
+                  "#ccd5ae",
+                  "#d4a373",
+                  "#6b705c",
+                ],
+                borderRadius: 10,
+              },
+            ],
+          };
+
+          const chartOptions = {
+            indexAxis: "y",
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true } },
+          };
+
+          if (weatherChart) weatherChart.destroy();
+
+          weatherChart = new Chart(ctx, {
+            type: "bar",
+            data: chartData,
+            options: chartOptions,
+          });
+        })
+        .catch((error) => {
+          resultBox.innerHTML = `<p style="color:#a84141;">${error.message}</p>`;
+          if (weatherChart) weatherChart.destroy();
+        });
+    }
+  </script>
 </body>
 </html>
