@@ -19,6 +19,31 @@
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
     }
+    nav {
+      background-color: #4a4721;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 10px 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      background-image: url('hero-banner.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      border-radius: 0 0 30px 30px;
+    }
+    .hero h1 {
+      font-size: 28px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    }
     .section {
       padding: 40px 20px;
       background-color: #ffffff;
@@ -51,6 +76,9 @@
       color: #6b8e23;
       text-decoration: none;
     }
+    input[type="file"] {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -59,10 +87,54 @@
     <p>Empowering Youth Farmers in Rural Communities with Smart Technology</p>
   </header>
 
+  <nav>
+    <a href="#knowledge-library">Library</a>
+    <a href="#weather-alerts">Weather</a>
+    <a href="#price-tracker">Prices</a>
+    <a href="#events">Events</a>
+    <a href="#diagnostic">AI Diagnostic</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome to AgriTech Connect</h1>
+    <p>Explore smart solutions for modern farming</p>
+  </section>
+
   <section class="section" id="knowledge-library">
     <h2>📚 Knowledge Library</h2>
-    <div class="cards" id="articles-list">
-      <!-- Articles will load here -->
+    <div class="cards" id="articles-list"></div>
+  </section>
+
+  <section class="section" id="weather-alerts">
+    <h2>🌦 Weather Alerts</h2>
+    <div class="cards">
+      <div class="card" id="weather-card">Loading weather...</div>
+    </div>
+  </section>
+
+  <section class="section" id="price-tracker">
+    <h2>📈 Market Price Tracker</h2>
+    <div class="cards" id="price-list">
+      <div class="card">Maize: R300 per 50kg</div>
+      <div class="card">Tomatoes: R120 per crate</div>
+      <div class="card">Cabbage: R40 per head</div>
+    </div>
+  </section>
+
+  <section class="section" id="events">
+    <h2>🎓 Events & Trainings</h2>
+    <div class="cards" id="event-list">
+      <div class="card">AgriTech Youth Hackathon – July 2025</div>
+      <div class="card">Soil Health Webinar – Aug 2025</div>
+    </div>
+  </section>
+
+  <section class="section" id="diagnostic">
+    <h2>🧠 AI Image Diagnostic</h2>
+    <div class="card">
+      <p>Upload an image of your crop or livestock issue:</p>
+      <input type="file" accept="image/*" />
+      <p><em>Feature under development...</em></p>
     </div>
   </section>
 
@@ -85,30 +157,43 @@
     function loadArticles() {
       const list = document.getElementById("articles-list");
       list.innerHTML = "<p>Loading...</p>";
-
       db.collection("articles").get().then(snapshot => {
         list.innerHTML = "";
         snapshot.forEach(doc => {
           const data = doc.data();
           const card = document.createElement("div");
           card.className = "card";
-          card.innerHTML = `
-            <h3>${data.title}</h3>
-            <a href="${data.link}" target="_blank">Read more</a>
-          `;
+          card.innerHTML = `<h3>${data.title}</h3><a href="${data.link}" target="_blank">Read more</a>`;
           list.appendChild(card);
         });
-
-        if (snapshot.empty) {
-          list.innerHTML = "<p>No articles available.</p>";
-        }
+        if (snapshot.empty) list.innerHTML = "<p>No articles available.</p>";
       }).catch(err => {
         list.innerHTML = "<p>Error loading articles.</p>";
         console.error(err);
       });
     }
 
-    window.onload = loadArticles;
+    function loadWeather() {
+      const weather = document.getElementById("weather-card");
+      weather.innerHTML = "Fetching forecast...";
+      fetch("https://api.weatherapi.com/v1/current.json?key=demo&q=Lebowakgomo")
+        .then(res => res.json())
+        .then(data => {
+          weather.innerHTML = `
+            <h3>${data.location.name}</h3>
+            <p>${data.current.condition.text}, ${data.current.temp_c}°C</p>
+          `;
+        })
+        .catch(err => {
+          weather.innerHTML = "Unable to fetch weather.";
+          console.error(err);
+        });
+    }
+
+    window.onload = () => {
+      loadArticles();
+      loadWeather();
+    }
   </script>
 </body>
 </html>
