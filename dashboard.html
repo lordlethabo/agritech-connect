@@ -57,11 +57,16 @@
       font-size: 16px;
       cursor: pointer;
       color: black;
-      width: 200px;
+      width: auto;
       margin-top: 20px;
     }
     button:hover {
       background-color: #9acb18;
+    }
+    #logout {
+      margin-top: 30px;
+      background-color: #f44336;
+      color: white;
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -87,7 +92,13 @@
     <p id="weather-info">Loading weather info...</p>
   </div>
 
-  <button id="logout">Logout</button>
+  <!-- New Sickness Diagnostic Feature Button -->
+  <a href="sickness.html">
+    <button>🧠 Diagnose Crop/Livestock Sickness</button>
+  </a>
+
+  <!-- Logout button -->
+  <button id="logout">🚪 Logout</button>
 
   <script>
     const firebaseConfig = {
@@ -102,21 +113,18 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Redirect to login if not logged in
     auth.onAuthStateChanged(user => {
       if (!user) {
         window.location.href = "index.html";
       }
     });
 
-    // Logout button functionality
     document.getElementById("logout").addEventListener("click", () => {
       auth.signOut().then(() => {
         window.location.href = "index.html";
       });
     });
 
-    // Weather API key
     const apiKey = "4e964608f63e83461ebc8ef5ea65e997";
 
     function updateCity() {
@@ -145,7 +153,6 @@
         });
     }
 
-    // Load default city weather on page load
     document.addEventListener("DOMContentLoaded", () => {
       fetchWeather(document.getElementById("city-selector").value);
     });
