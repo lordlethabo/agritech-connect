@@ -190,17 +190,17 @@
 
   <div class="container">
     <div class="card knowledge-library">
-      <h2>📚 Knowledge Library</h2>
+      <h2>Knowledge Library</h2>
       <p>Loading articles...</p>
     </div>
 
     <div class="card events-section">
-      <h2>📆 Events & Trainings</h2>
+      <h2>Events & Trainings</h2>
       <p>Loading events...</p>
     </div>
 
     <div class="card price-section">
-      <h2>📊 Market Price Tracker</h2>
+      <h2>Market Price Tracker</h2>
       <p>Loading prices...</p>
     </div>
 
@@ -208,7 +208,6 @@
   </div>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -240,7 +239,7 @@
 
     function loadKnowledgeLibrary() {
       const container = document.querySelector(".knowledge-library");
-      container.innerHTML = '<h2>📚 Knowledge Library</h2>';
+      container.innerHTML = '<h2>Knowledge Library</h2>';
 
       db.collection("articles").get()
         .then(snapshot => {
@@ -265,7 +264,7 @@
 
     function loadEvents() {
       const container = document.querySelector(".events-section");
-      container.innerHTML = '<h2>📆 Events & Trainings</h2>';
+      container.innerHTML = '<h2>Events & Trainings</h2>';
 
       db.collection("events").orderBy("date").get()
         .then(snapshot => {
@@ -291,7 +290,7 @@
 
     function loadMarketPrices() {
       const container = document.querySelector(".price-section");
-      container.innerHTML = '<h2>📊 Market Price Tracker</h2>';
+      container.innerHTML = '<h2>Market Price Tracker</h2>';
 
       db.collection("prices").get()
         .then(snapshot => {
