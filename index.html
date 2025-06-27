@@ -2,25 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome - AgriTech Connect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect - Welcome</title>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
   <style>
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background-color: #f3f5f0;
-      color: #37472e;
+      color: #333;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     header {
-      background: #ffffff;
+      background-color: #ffffff;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     header img {
@@ -33,66 +38,291 @@
       color: #4a6b3b;
     }
     main {
-      flex: 1;
+      flex-grow: 1;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
+      align-items: center;
       padding: 2rem;
-      background-image: url('header-bg.jpg');
-      background-size: cover;
-      background-position: center;
+      background: url('header-background.jpg') center/cover no-repeat;
+      color: #fff;
     }
-    main h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    .auth-container {
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      padding: 2rem;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
-    main p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      max-width: 600px;
+    .auth-container h2 {
+      text-align: center;
+      color: #4a6b3b;
+      margin-bottom: 1.5rem;
     }
-    .cta-buttons a {
-      display: inline-block;
-      margin: 0.5rem;
-      padding: 0.75rem 1.5rem;
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #a3b18a;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
       background-color: #7ca982;
       color: white;
-      text-decoration: none;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
-      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 1rem;
     }
-    .cta-buttons a:hover {
+    button:hover {
       background-color: #5a7d55;
     }
-    footer {
+    .message {
       text-align: center;
-      padding: 1rem;
-      background: #e9efe5;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      min-height: 1.2em;
+    }
+    .toggle-link {
+      display: block;
+      text-align: center;
+      color: #496b3f;
+      cursor: pointer;
+      user-select: none;
+      margin-top: -0.5rem;
+      margin-bottom: 1.5rem;
+      text-decoration: underline;
+    }
+    a.reset-link {
+      color: #496b3f;
       font-size: 0.9rem;
+      cursor: pointer;
+      display: block;
+      text-align: right;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      user-select: none;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <header>
-    <div style="display: flex; align-items: center;">
-      <img src="logo.png" alt="AgriTech Logo">
-      <h1>AgriTech Innovators Connect</h1>
-    </div>
+    <img src="logo.png" alt="AgriTech Logo" />
+    <h1>AgriTech Innovators Connect</h1>
   </header>
 
   <main>
-    <h2>Empowering Youth Farmers in Rural Africa</h2>
-    <p>Welcome to AgriTech Connect – your gateway to smart farming solutions, collaboration, mentorship, and innovation. Join our community to transform agriculture through technology.</p>
-    <div class="cta-buttons">
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+    <div class="auth-container" id="auth-container">
+
+      <!-- Login Form (default) -->
+      <form id="login-form">
+        <h2>Login</h2>
+
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email" />
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required placeholder="Your password" autocomplete="current-password" />
+
+        <a class="reset-link" id="forgot-password-link">Forgot Password?</a>
+
+        <button type="submit">Login</button>
+        <div class="message" id="login-message"></div>
+
+        <span class="toggle-link" id="show-register">Don't have an account? Register</span>
+      </form>
+
+      <!-- Register Form (hidden initially) -->
+      <form id="register-form" style="display:none;">
+        <h2>Register</h2>
+
+        <label for="register-email">Email</label>
+        <input type="email" id="register-email" required placeholder="you@example.com" autocomplete="email" />
+
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" required placeholder="Create a password" autocomplete="new-password" />
+
+        <button type="submit">Create Account</button>
+        <div class="message" id="register-message"></div>
+
+        <span class="toggle-link" id="show-login">Already have an account? Login</span>
+      </form>
+
+      <!-- Reset Password Form (hidden initially) -->
+      <form id="reset-form" style="display:none;">
+        <h2>Reset Password</h2>
+
+        <label for="reset-email">Email</label>
+        <input type="email" id="reset-email" required placeholder="you@example.com" autocomplete="email" />
+
+        <button type="submit">Send Reset Link</button>
+        <div class="message" id="reset-message"></div>
+
+        <span class="toggle-link" id="show-login-from-reset">Back to Login</span>
+      </form>
+
     </div>
   </main>
 
-  <footer>
-    &copy; 2025 AgriTech Innovators Connect. All rights reserved.
-  </footer>
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect-1d52b.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect-1d52b.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Forms and UI elements
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const resetForm = document.getElementById('reset-form');
+
+    const loginMessage = document.getElementById('login-message');
+    const registerMessage = document.getElementById('register-message');
+    const resetMessage = document.getElementById('reset-message');
+
+    const showRegisterLink = document.getElementById('show-register');
+    const showLoginLink = document.getElementById('show-login');
+    const showLoginFromReset = document.getElementById('show-login-from-reset');
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+    // Toggle forms
+    showRegisterLink.addEventListener('click', () => {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      resetForm.style.display = 'none';
+      clearMessages();
+    });
+
+    showLoginLink.addEventListener('click', () => {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      resetForm.style.display = 'none';
+      clearMessages();
+    });
+
+    showLoginFromReset.addEventListener('click', () => {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      resetForm.style.display = 'none';
+      clearMessages();
+    });
+
+    forgotPasswordLink.addEventListener('click', () => {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'none';
+      resetForm.style.display = 'block';
+      clearMessages();
+    });
+
+    // Clear messages helper
+    function clearMessages() {
+      loginMessage.textContent = '';
+      registerMessage.textContent = '';
+      resetMessage.textContent = '';
+    }
+
+    // Login form submission
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      clearMessages();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if(!email || !password) {
+        loginMessage.textContent = 'Please enter email and password.';
+        loginMessage.style.color = 'red';
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          loginMessage.textContent = 'Login successful! Redirecting...';
+          loginMessage.style.color = 'green';
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';  // Redirect to dashboard after login
+          }, 1000);
+        })
+        .catch(error => {
+          loginMessage.textContent = error.message;
+          loginMessage.style.color = 'red';
+        });
+    });
+
+    // Register form submission
+    registerForm.addEventListener('submit', e => {
+      e.preventDefault();
+      clearMessages();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value;
+
+      if(!email || !password) {
+        registerMessage.textContent = 'Please enter email and password.';
+        registerMessage.style.color = 'red';
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          registerMessage.textContent = 'Account created! You can now login.';
+          registerMessage.style.color = 'green';
+          setTimeout(() => {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            resetForm.style.display = 'none';
+            clearMessages();
+          }, 1500);
+        })
+        .catch(error => {
+          registerMessage.textContent = error.message;
+          registerMessage.style.color = 'red';
+        });
+    });
+
+    // Reset password form submission
+    resetForm.addEventListener('submit', e => {
+      e.preventDefault();
+      clearMessages();
+      const email = document.getElementById('reset-email').value.trim();
+
+      if(!email) {
+        resetMessage.textContent = 'Please enter your email.';
+        resetMessage.style.color = 'red';
+        return;
+      }
+
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          resetMessage.textContent = 'Password reset email sent. Check your inbox.';
+          resetMessage.style.color = 'green';
+        })
+        .catch(error => {
+          resetMessage.textContent = error.message;
+          resetMessage.style.color = 'red';
+        });
+    });
+
+  </script>
 </body>
 </html>
