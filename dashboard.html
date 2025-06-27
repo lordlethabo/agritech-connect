@@ -2,325 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AgriTech Connect – Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Alerts - AgriTech Connect</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Awesomplete for Autocomplete -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f5f0;
       margin: 0;
-      background-color: #f4f9ef;
-      color: #4a4721;
+      padding: 0;
     }
-    header {
-      background-color: #6b8e23;
-      padding: 24px 40px;
-      color: #fff;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      font-family: 'Poppins', sans-serif;
-    }
-    .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    header img {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
-      object-fit: cover;
-    }
-    .header-text h1 {
-      margin: 0;
-      font-weight: 700;
-      font-size: 28px;
-      line-height: 1.2;
-      letter-spacing: 0.03em;
-    }
-    .header-text p {
-      margin-top: 6px;
-      font-weight: 400;
-      font-size: 16px;
-      color: #e0e7c6; /* lighter green for subtle contrast */
-      max-width: 600px;
-      line-height: 1.4;
-    }
-    nav {
-      background-color: #4a4721;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 10px 0;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-    }
-    nav a:hover,
-    nav a:focus {
-      background-color: #8b5e3c;
-      outline: none;
-    }
-    .hero {
-      text-align: center;
-      padding: 60px 20px;
-      background-image: url('hero-bg.jpg');
-      background-size: cover;
-      background-position: center;
-      color: white;
-      border-radius: 0 0 30px 30px;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-      max-width: 1200px;
-      margin: 0 auto 40px auto;
-    }
-    .hero h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 18px;
+
+    .weather-section {
       max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .section {
-      padding: 40px 20px;
-      background-color: #ffffffcc;
-      margin: 20px auto;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      max-width: 1200px;
-    }
-    #knowledge-library {
-      background-image: url('library-bg.jpg');
-    }
-    #weather-alerts {
-      background-image: url('weather-bg.jpg');
-    }
-    #price-tracker {
-      background-image: url('market-bg.jpg');
-    }
-    #events {
-      background-image: url('events-bg.jpg');
-    }
-    #community-forum {
-      background-image: url('forum-bg.jpg');
-      color: #4a4721;
-    }
-    .section h2 {
-      color: #4a4721;
-      margin-bottom: 20px;
-      background-color: rgba(255, 255, 255, 0.8);
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
-    #community-forum h2 {
-      background-color: rgba(255, 255, 255, 0.85);
-      color: #6b4f2f;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
+      margin: 40px auto;
       padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      border-left: 5px solid #6b8e23;
-      color: #2d3a1f;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
     }
-    #community-forum .card {
-      border-left-color: #8B5E3C; /* softer brown */
+
+    .weather-section h2 {
+      text-align: center;
+      color: #496b3f;
+      margin-bottom: 24px;
     }
-    .card h3 {
-      font-size: 18px;
-      color: #2d3a1f;
-      margin-top: 0;
-      margin-bottom: 10px;
+
+    #weather-location {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #a3b18a;
+      font-size: 1rem;
+      margin-bottom: 12px;
     }
-    .card p {
-      margin: 0 0 12px 0;
-      font-size: 15px;
-      line-height: 1.4;
-    }
-    .card a {
-      color: #6b8e23;
-      text-decoration: none;
-      font-weight: 600;
-    }
+
     button {
-      background-color: #6b8e23;
+      width: 100%;
+      padding: 12px;
+      background-color: #7ca982;
       color: white;
       border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 600;
+      border-radius: 12px;
+      font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #8ab73a;
+      background-color: #5a7d55;
     }
-    input[type="file"] {
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      padding: 6px;
+
+    #weather-result {
+      margin-top: 16px;
+      color: #333;
+      text-align: center;
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .weather-section {
+        padding: 15px;
+        margin: 20px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="header-container" role="banner">
-      <img src="logo.png" alt="AgriTech Connect Logo" />
-      <div class="header-text">
-        <h1>AgriTech Connect Dashboard</h1>
-        <p>Empowering Youth Farmers in Rural Communities with Smart Technology</p>
-      </div>
-    </div>
-  </header>
+  <section class="weather-section" id="weather-alerts">
+    <h2>🌦️ Weather Alerts</h2>
 
-  <nav>
-    <a href="#knowledge-library">Library</a>
-    <a href="#weather-alerts">Weather</a>
-    <a href="#price-tracker">Prices</a>
-    <a href="#events">Events</a>
-    <a href="#community-forum">Community</a>
-    <a href="#diagnostic">AI Diagnostic</a>
-  </nav>
+    <input 
+      type="text" 
+      id="weather-location" 
+      placeholder="Enter town (e.g. Lebowakgomo)" 
+      class="awesomplete"
+      autocomplete="off"
+    />
 
-  <section class="hero" role="img" aria-label="Farm field with sunrise">
-    <h1>Welcome to AgriTech Connect</h1>
-    <p>Explore smart solutions for modern farming</p>
+    <button onclick="getWeather()">Check Weather</button>
+
+    <div id="weather-result"></div>
+
+    <canvas id="weatherChart"></canvas>
   </section>
-
-  <section class="section" id="knowledge-library">
-    <h2>📚 Knowledge Library</h2>
-    <div class="cards" id="articles-list">
-      <!-- Articles loaded here -->
-    </div>
-  </section>
-
-  <section class="section" id="weather-alerts">
-    <h2>🌦 Weather Alerts</h2>
-    <div class="cards">
-      <div class="card" id="weather-card">Loading weather...</div>
-    </div>
-  </section>
-
-  <section class="section" id="price-tracker">
-    <h2>📈 Market Price Tracker</h2>
-    <div class="cards" id="price-list">
-      <div class="card">Maize: R300 per 50kg</div>
-      <div class="card">Tomatoes: R120 per crate</div>
-      <div class="card">Cabbage: R40 per head</div>
-    </div>
-  </section>
-
-  <section class="section" id="events">
-    <h2>🎓 Events & Trainings</h2>
-    <div class="cards" id="event-list">
-      <div class="card">AgriTech Youth Hackathon – July 2025</div>
-      <div class="card">Soil Health Webinar – Aug 2025</div>
-    </div>
-  </section>
-
-  <section class="section" id="community-forum">
-    <h2>🤝 Community Forum & Mentorship</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Chat with other farmers, agri-experts, and youth entrepreneurs</h3>
-        <p>Ask questions, share experiences, and get peer support.</p>
-        <p><strong>Recognition:</strong> Built-in badges for top contributors and mentors.</p>
-        <button onclick="alert('Forum feature coming soon!')">Enter Forum</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="diagnostic">
-    <h2>🧠 AI Image Diagnostic</h2>
-    <div class="card">
-      <p>Upload an image of your crop or livestock issue:</p>
-      <input type="file" accept="image/*" aria-label="Upload image for AI diagnostic" />
-      <p><em>Feature under development...</em></p>
-    </div>
-  </section>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect",
-      storageBucket: "agritechconnect.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-    };
+    const weatherApiKey = "4e964608f63e83461ebc8ef5ea65e997"; // OpenWeatherMap API key
+    let weatherChart = null;
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const townNames = [
+      "Lebowakgomo", "Polokwane", "Thohoyandou", "Jane Furse", "Giyani", "Makhado", "Tzaneen",
+      "Bela-Bela", "Mokopane", "Musina", "Burgersfort", "Louis Trichardt", "Groblersdal",
+      "Modimolle", "Phalaborwa", "Zebediela", "Pretoria", "Johannesburg", "Durban", "Cape Town"
+    ];
 
-    function loadArticles() {
-      const list = document.getElementById("articles-list");
-      list.innerHTML = "<p>Loading...</p>";
-      db.collection("articles").get().then(snapshot => {
-        list.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `<h3>${data.title}</h3><a href="${data.link}" target="_blank" rel="noopener noreferrer">Read more</a>`;
-          list.appendChild(card);
-        });
-        if (snapshot.empty) list.innerHTML = "<p>No articles available.</p>";
-      }).catch(err => {
-        list.innerHTML = "<p>Error loading articles.</p>";
-        console.error(err);
-      });
-    }
+    new Awesomplete(document.getElementById("weather-location"), {
+      list: townNames,
+      minChars: 1,
+      maxItems: 6,
+      autoFirst: true
+    });
 
-    function loadWeather() {
-      const weather = document.getElementById("weather-card");
-      weather.innerHTML = "Fetching forecast...";
-      // Replace 'demo' with your weather API key and correct location
-      fetch("https://api.weatherapi.com/v1/current.json?key=demo&q=Lebowakgomo")
-        .then(res => res.json())
-        .then(data => {
-          weather.innerHTML = `
-            <h3>${data.location.name}</h3>
-            <p>${data.current.condition.text}, ${data.current.temp_c}°C</p>
-          `;
+    function getWeather() {
+      const location = document.getElementById("weather-location").value.trim();
+      const resultBox = document.getElementById("weather-result");
+      const ctx = document.getElementById("weatherChart").getContext('2d');
+
+      if (!location) {
+        resultBox.innerHTML = "<p style='color: red;'>Please enter a town name.</p>";
+        return;
+      }
+
+      resultBox.innerHTML = "<p>Fetching weather data...</p>";
+
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${weatherApiKey}`)
+        .then(response => {
+          if (!response.ok) throw new Error("Town not found.");
+          return response.json();
         })
-        .catch(err => {
-          weather.innerHTML = "Unable to fetch weather.";
-          console.error(err);
+        .then(data => {
+          const desc = data.weather[0].description;
+          const temp = data.main.temp;
+          const feelsLike = data.main.feels_like;
+          const humidity = data.main.humidity;
+          const wind = data.wind.speed;
+          const pressure = data.main.pressure;
+
+          resultBox.innerHTML = `
+            <p><strong>Weather:</strong> ${desc}</p>
+            <p><strong>Temperature:</strong> ${temp}°C</p>
+            <p><strong>Feels Like:</strong> ${feelsLike}°C</p>
+            <p><strong>Humidity:</strong> ${humidity}%</p>
+            <p><strong>Wind Speed:</strong> ${wind} m/s</p>
+            <p><strong>Pressure:</strong> ${pressure} hPa</p>
+          `;
+
+          const chartData = {
+            labels: ['Temperature (°C)', 'Feels Like', 'Humidity (%)', 'Wind Speed (m/s)', 'Pressure (hPa)'],
+            datasets: [{
+              label: `Weather in ${location}`,
+              data: [temp, feelsLike, humidity, wind, pressure],
+              backgroundColor: [
+                '#b7d3a8',
+                '#a3b18a',
+                '#ccd5ae',
+                '#d4a373',
+                '#6b705c'
+              ],
+              borderRadius: 10
+            }]
+          };
+
+          const chartOptions = {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: { beginAtZero: true }
+            }
+          };
+
+          if (weatherChart) weatherChart.destroy();
+
+          weatherChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+          });
+        })
+        .catch(error => {
+          resultBox.innerHTML = `<p style="color:red;">${error.message}</p>`;
+          if (weatherChart) {
+            weatherChart.destroy();
+            weatherChart = null;
+          }
         });
     }
-
-    window.onload = () => {
-      loadArticles();
-      loadWeather();
-    };
   </script>
 </body>
 </html>
