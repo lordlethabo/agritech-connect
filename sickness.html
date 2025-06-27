@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crop & Livestock Sickness Diagnostic</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #558b2f, #a5d6a7);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 28px;
+    }
+    input[type="file"] {
+      margin-top: 20px;
+    }
+    #preview {
+      margin: 20px;
+      max-width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    }
+    button {
+      background-color: #cddc39;
+      border: none;
+      color: #333;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px 25px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌿 Sickness Diagnostic Tool</h1>
+  <p>Upload a photo of your crop or livestock for a simulated diagnosis:</p>
+  <input type="file" id="imageUpload" accept="image/*" />
+  <br />
+  <img id="preview" style="display:none;" />
+  <button onclick="diagnose()">Analyze Image</button>
+  <div id="result"></div>
+
+  <script>
+    const possibleResults = [
+      "✅ Healthy crop — no signs of infection.",
+      "⚠️ Possible fungal infection (e.g. blight).",
+      "⚠️ Yellowing leaves — check for nutrient deficiency.",
+      "⚠️ Suspected pest damage — inspect closely.",
+      "✅ Healthy livestock — normal appearance.",
+      "⚠️ Signs of fever — possible viral infection.",
+      "⚠️ Possible foot-and-mouth symptoms. Call a vet.",
+      "⚠️ Eye discharge detected — consult animal health officer."
+    ];
+
+    const imageInput = document.getElementById("imageUpload");
+    const preview = document.getElementById("preview");
+    const result = document.getElementById("result");
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+          result.innerText = "";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function diagnose() {
+      if (!imageInput.files.length) {
+        result.innerText = "❌ Please upload an image first.";
+        return;
+      }
+
+      const randomResult = possibleResults[Math.floor(Math.random() * possibleResults.length)];
+      result.innerText = "🧠 Analyzing image...";
+      setTimeout(() => {
+        result.innerText = randomResult;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
