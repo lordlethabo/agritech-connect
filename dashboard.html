@@ -2,210 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard – AgriTech Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriTech Connect – Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f8fcf4;
       margin: 0;
-      padding: 0;
-      color: #2e2e2e;
+      background-color: #f4f9ef;
     }
-    nav {
-      background-color: #ffffff;
-      border-bottom: 1px solid #e0e0e0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-    }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-img {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      border: 2px solid #6b8e23;
-    }
-    .logo-text {
-      font-weight: 600;
-      color: #4a4721;
-      font-size: 20px;
-      user-select: none;
-    }
-    nav .nav-links a {
-      text-decoration: none;
-      color: #6b8e23;
-      margin-left: 20px;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    nav .nav-links a:hover {
-      color: #8b6d3c;
-    }
-
     header {
-      background: 
-        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-        url('header-bg.jpg') no-repeat center center/cover;
-      padding: 60px 20px;
-      text-align: center;
-      color: white;
-      border-radius: 0 0 30px 30px;
-      box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
-    }
-
-    header h1 {
-      font-size: 30px;
-      margin: 0;
-      font-weight: 600;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #fffdf8;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .card {
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid #d6d9bf;
-      box-shadow: 0 1px 4px rgba(106, 124, 47, 0.1);
-      transition: box-shadow 0.3s ease;
-      background-color: #f1f5e1;
-    }
-
-    .card:hover {
-      box-shadow: 0 4px 12px rgba(106, 124, 47, 0.3);
-    }
-
-    .card h2 {
-      color: #556b2f;
-      font-size: 20px;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .card p {
-      font-size: 15px;
-      line-height: 1.6;
-      color: #4a4a4a;
-      margin-bottom: 8px;
-    }
-
-    .card ul {
-      padding-left: 20px;
-      margin: 0;
-    }
-
-    .card ul li {
-      margin-bottom: 6px;
-    }
-
-    .card.knowledge-library {
-      background: 
-        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        url('library-bg.jpg') no-repeat center center/cover;
-    }
-
-    .card.events-section {
-      background: 
-        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        url('events-bg.jpg') no-repeat center center/cover;
-    }
-
-    .card.price-section {
-      background: 
-        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        url('prices-bg.jpg') no-repeat center center/cover;
-    }
-
-    button.logout {
       background-color: #6b8e23;
+      padding: 20px;
       color: white;
-      padding: 10px 28px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      display: block;
-      margin: 30px auto 0;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
+      text-align: center;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
-
-    button.logout:hover {
-      background-color: #8b6d3c;
+    .section {
+      padding: 40px 20px;
+      background-color: #ffffff;
+      margin: 20px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav .nav-links {
-        margin-top: 10px;
-      }
-      .container {
-        margin: 20px;
-        padding: 15px;
-      }
+    .section h2 {
+      color: #4a4721;
+      margin-bottom: 20px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #f9fdf7;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      border-left: 5px solid #6b8e23;
+    }
+    .card h3 {
+      font-size: 16px;
+      color: #2d3a1f;
+      margin-top: 0;
+    }
+    .card a {
+      color: #6b8e23;
+      text-decoration: none;
     }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <nav>
-    <div class="logo-container">
-      <img src="logo.png" alt="AgriTech Connect Logo" class="logo-img" />
-      <span class="logo-text">AgriTech Connect</span>
-    </div>
-    <div class="nav-links">
-      <a href="#">Dashboard</a>
-      <a href="#">Marketplace</a>
-      <a href="#">Messages</a>
-    </div>
-  </nav>
-
   <header>
-    <h1>Connecting Rural Youth to Smart Farming Opportunities</h1>
+    <h1>AgriTech Connect Dashboard</h1>
+    <p>Empowering Youth Farmers in Rural Communities with Smart Technology</p>
   </header>
 
-  <div class="container">
-    <div class="card knowledge-library">
-      <h2>Knowledge Library</h2>
-      <p>Loading articles...</p>
+  <section class="section" id="knowledge-library">
+    <h2>📚 Knowledge Library</h2>
+    <div class="cards" id="articles-list">
+      <!-- Articles will load here -->
     </div>
+  </section>
 
-    <div class="card events-section">
-      <h2>Events & Trainings</h2>
-      <p>Loading events...</p>
-    </div>
-
-    <div class="card price-section">
-      <h2>Market Price Tracker</h2>
-      <p>Loading prices...</p>
-    </div>
-
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -218,100 +80,35 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = 'index.html';
-      } else {
-        loadKnowledgeLibrary();
-        loadEvents();
-        loadMarketPrices();
-      }
-    });
+    function loadArticles() {
+      const list = document.getElementById("articles-list");
+      list.innerHTML = "<p>Loading...</p>";
 
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = 'index.html';
+      db.collection("articles").get().then(snapshot => {
+        list.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${data.title}</h3>
+            <a href="${data.link}" target="_blank">Read more</a>
+          `;
+          list.appendChild(card);
+        });
+
+        if (snapshot.empty) {
+          list.innerHTML = "<p>No articles available.</p>";
+        }
+      }).catch(err => {
+        list.innerHTML = "<p>Error loading articles.</p>";
+        console.error(err);
       });
     }
 
-    function loadKnowledgeLibrary() {
-      const container = document.querySelector(".knowledge-library");
-      container.innerHTML = '<h2>Knowledge Library</h2>';
-
-      db.collection("articles").get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            container.innerHTML += "<p>No articles available currently.</p>";
-            return;
-          }
-
-          const ul = document.createElement("ul");
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const li = document.createElement("li");
-            li.innerHTML = `<a href="${data.link}" target="_blank">${data.title}</a>`;
-            ul.appendChild(li);
-          });
-          container.appendChild(ul);
-        })
-        .catch(error => {
-          container.innerHTML += `<p>Error loading articles: ${error.message}</p>`;
-        });
-    }
-
-    function loadEvents() {
-      const container = document.querySelector(".events-section");
-      container.innerHTML = '<h2>Events & Trainings</h2>';
-
-      db.collection("events").orderBy("date").get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            container.innerHTML += "<p>No events available currently.</p>";
-            return;
-          }
-
-          const ul = document.createElement("ul");
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const eventDate = new Date(data.date).toLocaleDateString();
-            const li = document.createElement("li");
-            li.innerHTML = `<strong>${data.title}</strong> - ${eventDate} <a href="${data.link}" target="_blank">Details</a>`;
-            ul.appendChild(li);
-          });
-          container.appendChild(ul);
-        })
-        .catch(error => {
-          container.innerHTML += `<p>Error loading events: ${error.message}</p>`;
-        });
-    }
-
-    function loadMarketPrices() {
-      const container = document.querySelector(".price-section");
-      container.innerHTML = '<h2>Market Price Tracker</h2>';
-
-      db.collection("prices").get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            container.innerHTML += "<p>No market prices available currently.</p>";
-            return;
-          }
-
-          const ul = document.createElement("ul");
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const li = document.createElement("li");
-            li.textContent = `${data.item} — ${data.price} (${data.location})`;
-            ul.appendChild(li);
-          });
-          container.appendChild(ul);
-        })
-        .catch(error => {
-          container.innerHTML += `<p>Error loading prices: ${error.message}</p>`;
-        });
-    }
+    window.onload = loadArticles;
   </script>
 </body>
 </html>
