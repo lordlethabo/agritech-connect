@@ -1,104 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard - AgriTech Connect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #3a913f, #70c44b);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
+      background: #f8fcf4;
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      padding: 0;
+      color: #2e2e2e;
     }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
+
+    nav {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
     }
-    #weather-section {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 350px;
-      width: 100%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      margin-bottom: 30px;
-    }
-    label, select {
+
+    nav .logo {
       font-weight: 600;
-      font-size: 16px;
-    }
-    select {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-      width: 100%;
-    }
-    #weather-info {
-      margin-top: 15px;
+      color: #2e7d32;
       font-size: 18px;
     }
-    button {
-      background-color: #b5e61d;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      color: black;
-      width: auto;
-      margin-top: 20px;
+
+    nav .nav-links a {
+      text-decoration: none;
+      color: #4caf50;
+      margin-left: 20px;
+      font-weight: 500;
     }
-    button:hover {
-      background-color: #9acb18;
-    }
-    #logout {
-      margin-top: 30px;
-      background-color: #f44336;
+
+    header {
+      background: url('banner.jpg') no-repeat center center/cover;
+      padding: 60px 20px;
+      text-align: center;
       color: white;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card {
+      background-color: #f1f8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #dce7d9;
+    }
+
+    .card:nth-child(2) {
+      background-color: #f5f3ee;
+      border: 1px solid #ddd5ca;
+    }
+
+    .card h2 {
+      color: #388e3c;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    .card input[type="file"] {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .logout {
+      background-color: #66bb6a;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: block;
+      margin: 30px auto 0;
+    }
+
+    .logout:hover {
+      background-color: #4caf50;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav .nav-links {
+        margin-top: 10px;
+      }
+
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <h1>Welcome to AgriTech Connect Dashboard</h1>
+  <nav>
+    <div class="logo">AgriTech Connect</div>
+    <div class="nav-links">
+      <a href="#">Dashboard</a>
+      <a href="#">Marketplace</a>
+      <a href="#">Messages</a>
+    </div>
+  </nav>
 
-  <div id="weather-section">
-    <h2>🌤️ Weather Alerts</h2>
+  <header>
+    <h1>Empowering Farmers with Smart Technology</h1>
+  </header>
 
-    <label for="city-selector">Choose your town or city:</label>
-    <select id="city-selector" onchange="updateCity()">
-      <option value="Lebowakgomo">Lebowakgomo</option>
-      <option value="Polokwane">Polokwane</option>
-      <option value="Tzaneen">Tzaneen</option>
-      <option value="Pretoria">Pretoria</option>
-      <option value="Johannesburg">Johannesburg</option>
-      <option value="Cape Town">Cape Town</option>
-      <option value="Durban">Durban</option>
-    </select>
+  <div class="container">
+    <div class="card">
+      <h2>🌦 Weather Alerts</h2>
+      <p>Stay updated with real-time weather conditions in your area.</p>
+      <p><em>Current Weather: Sunny, 26°C in Lebowakgomo</em></p>
+    </div>
 
-    <p id="weather-info">Loading weather info...</p>
+    <div class="card">
+      <h2>🧬 Crop & Livestock Sickness Diagnostics</h2>
+      <p>Upload an image to receive AI-based crop/livestock health diagnostics.</p>
+      <input type="file" id="imageInput" accept="image/*" />
+      <p><em>AI feature coming soon.</em></p>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
   </div>
-
-  <!-- New Sickness Diagnostic Feature Button -->
-  <a href="sickness.html">
-    <button>🧠 Diagnose Crop/Livestock Sickness</button>
-  </a>
-
-  <!-- Logout button -->
-  <button id="logout">🚪 Logout</button>
 
   <script>
     const firebaseConfig = {
@@ -115,47 +169,15 @@
 
     auth.onAuthStateChanged(user => {
       if (!user) {
-        window.location.href = "index.html";
+        window.location.href = 'index.html';
       }
     });
 
-    document.getElementById("logout").addEventListener("click", () => {
+    function logout() {
       auth.signOut().then(() => {
-        window.location.href = "index.html";
+        window.location.href = 'index.html';
       });
-    });
-
-    const apiKey = "4e964608f63e83461ebc8ef5ea65e997";
-
-    function updateCity() {
-      const city = document.getElementById("city-selector").value;
-      fetchWeather(city);
     }
-
-    function fetchWeather(city) {
-      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-          const temp = data.main.temp;
-          const weather = data.weather[0].description;
-          const rain = data.rain ? data.rain["1h"] : 0;
-
-          let alert = `🌡️ Temp: ${temp}°C - ${weather}`;
-          if (rain > 5) {
-            alert += " ⚠️ Heavy rain alert!";
-          }
-
-          document.getElementById("weather-info").innerText = alert;
-        })
-        .catch(err => {
-          document.getElementById("weather-info").innerText = "⚠️ Failed to fetch weather.";
-          console.error(err);
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      fetchWeather(document.getElementById("city-selector").value);
-    });
   </script>
 </body>
 </html>
