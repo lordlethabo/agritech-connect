@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard – AgriTech Connect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -13,7 +13,6 @@
       padding: 0;
       color: #2e2e2e;
     }
-
     nav {
       background-color: #ffffff;
       border-bottom: 1px solid #e0e0e0;
@@ -22,106 +21,122 @@
       align-items: center;
       padding: 10px 20px;
     }
-
     nav .logo {
       font-weight: 600;
-      color: #2e7d32;
-      font-size: 18px;
+      color: #4a4721; /* dark olive brown */
+      font-size: 20px;
     }
-
     nav .nav-links a {
       text-decoration: none;
-      color: #4caf50;
+      color: #6b8e23; /* olive green */
       margin-left: 20px;
       font-weight: 500;
+      transition: color 0.3s;
     }
-
+    nav .nav-links a:hover {
+      color: #8b6d3c; /* warm brown */
+    }
     header {
       background: url('banner.jpg') no-repeat center center/cover;
       padding: 60px 20px;
       text-align: center;
       color: white;
+      border-radius: 0 0 30px 30px;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
     }
-
     header h1 {
       font-size: 32px;
       margin: 0;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+      font-weight: 600;
     }
-
     .container {
       max-width: 900px;
       margin: 40px auto;
       padding: 20px;
-      background-color: #ffffff;
+      background-color: #fffdf8; /* very soft cream */
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
-
     .card {
-      background-color: #f1f8f0;
+      background-color: #f1f5e1; /* light green cream */
       border-radius: 14px;
       padding: 20px;
       margin-bottom: 20px;
-      border: 1px solid #dce7d9;
+      border: 1px solid #d6d9bf; /* soft green/grey border */
+      box-shadow: 0 1px 4px rgba(106, 124, 47, 0.1);
+      transition: box-shadow 0.3s ease;
     }
-
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(106, 124, 47, 0.3);
+    }
     .card:nth-child(even) {
-      background-color: #f5f3ee;
-      border: 1px solid #ddd5ca;
+      background-color: #ebeeda; /* lighter cream */
+      border: 1px solid #c1c3a1;
     }
-
     .card h2 {
-      color: #388e3c;
+      color: #556b2f; /* dark olive green */
       font-size: 20px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
-
     .card p {
       font-size: 15px;
       line-height: 1.6;
-      color: #444;
+      color: #4a4a4a;
+      margin-bottom: 8px;
     }
-
-    .card input[type="file"] {
-      display: block;
-      margin-top: 10px;
+    .card ul {
+      padding-left: 20px;
+      margin: 0;
     }
-
-    .logout {
-      background-color: #66bb6a;
+    .card ul li {
+      margin-bottom: 6px;
+    }
+    a {
+      color: #6b8e23;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #8b6d3c;
+    }
+    button.logout {
+      background-color: #6b8e23;
       color: white;
-      padding: 10px 20px;
+      padding: 10px 28px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 14px;
       display: block;
       margin: 30px auto 0;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
     }
-
-    .logout:hover {
-      background-color: #4caf50;
+    button.logout:hover {
+      background-color: #8b6d3c;
     }
-
     @media (max-width: 600px) {
       nav {
         flex-direction: column;
         align-items: flex-start;
       }
-
       nav .nav-links {
         margin-top: 10px;
       }
-
       .container {
         margin: 20px;
         padding: 15px;
       }
     }
   </style>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <nav>
@@ -138,41 +153,26 @@
   </header>
 
   <div class="container">
-    <div class="card">
-      <h2>🌦 Weather Alerts</h2>
-      <p>Stay updated with real-time weather conditions in your area.</p>
-      <p><em>Current Weather: Sunny, 26°C in Lebowakgomo</em></p>
+    <div class="card knowledge-library">
+      <h2>📚 Knowledge Library</h2>
+      <p>Loading articles...</p>
     </div>
 
-    <div class="card">
-      <h2>🧬 Crop & Livestock Sickness Diagnostics</h2>
-      <p>Upload an image to receive AI-based crop/livestock health diagnostics.</p>
-      <input type="file" id="imageInput" accept="image/*" />
-      <p><em>AI feature coming soon.</em></p>
+    <div class="card events-section">
+      <h2>📆 Events & Trainings</h2>
+      <p>Loading events...</p>
     </div>
 
-    <div class="card">
-      <h2>📖 Knowledge Library</h2>
-      <p>Browse curated articles, tips, and case studies on agriculture and farming innovations.</p>
-      <p><a href="#">Explore library &rarr;</a></p>
-    </div>
-
-    <div class="card">
-      <h2>📅 Events & Trainings</h2>
-      <p>Stay informed about upcoming agricultural webinars, workshops, and competitions.</p>
-      <p><a href="#">View calendar &rarr;</a></p>
-    </div>
-
-    <div class="card">
+    <div class="card price-section">
       <h2>📊 Market Price Tracker</h2>
-      <p>Check the latest market prices for crops and livestock in your region.</p>
-      <p><em>Data sync in progress...</em></p>
+      <p>Loading prices...</p>
     </div>
 
     <button class="logout" onclick="logout()">Logout</button>
   </div>
 
   <script>
+    // Your Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -182,19 +182,106 @@
       appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
+    // Redirect to login if not authenticated
     auth.onAuthStateChanged(user => {
       if (!user) {
         window.location.href = 'index.html';
+      } else {
+        loadKnowledgeLibrary();
+        loadEvents();
+        loadMarketPrices();
       }
     });
 
+    // Logout function
     function logout() {
       auth.signOut().then(() => {
         window.location.href = 'index.html';
       });
+    }
+
+    // Load Knowledge Library articles
+    function loadKnowledgeLibrary() {
+      const container = document.querySelector(".knowledge-library");
+      container.innerHTML = '<h2>📚 Knowledge Library</h2>';
+
+      db.collection("articles").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No articles available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${data.link}" target="_blank" rel="noopener">${data.title}</a>`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading articles: ${error.message}</p>`;
+        });
+    }
+
+    // Load Events & Trainings
+    function loadEvents() {
+      const container = document.querySelector(".events-section");
+      container.innerHTML = '<h2>📆 Events & Trainings</h2>';
+
+      db.collection("events").orderBy("date").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No events available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const eventDate = new Date(data.date).toLocaleDateString();
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>${data.title}</strong> - ${eventDate} <a href="${data.link}" target="_blank" rel="noopener">Details</a>`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading events: ${error.message}</p>`;
+        });
+    }
+
+    // Load Market Prices
+    function loadMarketPrices() {
+      const container = document.querySelector(".price-section");
+      container.innerHTML = '<h2>📊 Market Price Tracker</h2>';
+
+      db.collection("prices").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML += "<p>No market prices available currently.</p>";
+            return;
+          }
+
+          const ul = document.createElement("ul");
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.item} — ${data.price} (${data.location})`;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        })
+        .catch(error => {
+          container.innerHTML += `<p>Error loading prices: ${error.message}</p>`;
+        });
     }
   </script>
 </body>
