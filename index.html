@@ -3,158 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgriTech Connect Home</title>
-
+  <title>AgriTech Connect – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f4fff1, #ddf7cc);
       margin: 0;
       padding: 0;
-      background-color: #f3f5f0;
-    }
-
-    header {
-      background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      position: relative;
-    }
-
-    .logo-area {
       display: flex;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
-
-    .logo-area img {
-      height: 48px;
-      width: 48px;
-      border-radius: 50%;
-      margin-right: 10px;
+    .container {
+      background-color: #f4f9ef;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      backdrop-filter: blur(5px);
     }
-
-    h1 {
-      font-size: 1.5rem;
-      color: #4a6b3b;
+    .logo-container {
+      margin-bottom: 20px;
     }
-
-    .hamburger {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .sidebar {
-      width: 250px;
-      background-color: #fff;
-      position: fixed;
-      top: 0;
-      left: -250px;
-      height: 100%;
-      padding: 1rem;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-      transition: left 0.3s ease;
-      z-index: 1000;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .sidebar ul li {
-      margin: 15px 0;
-    }
-
-    .sidebar ul li a {
-      text-decoration: none;
-      color: #4a6b3b;
-      font-weight: 500;
-    }
-
-    .sidebar ul li a:hover {
-      text-decoration: underline;
-    }
-
-    .logout-btn {
-      background-color: white;
-      color: #4a6b3b;
-      border: 2px solid #4a6b3b;
-      padding: 6px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .profile-pic {
-      height: 40px;
-      width: 40px;
+    .logo {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       object-fit: cover;
-      margin-left: 10px;
+      display: block;
+      margin: 0 auto 20px;
+      border: 2px solid #6b8e23;
+    }
+    h1 {
+      margin-bottom: 25px;
+      color: #2e7d32;
+      font-size: 24px;
+    }
+    h2 {
+      text-align: center;
+      color: #4a4721;
+      margin-bottom: 20px;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background-color: #f8fff5;
+    }
+    button {
+      background-color: #6b8e23;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #8b6d3c;
+    }
+    .links {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .links a {
+      color: #6b8e23;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ff0000;
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <header>
-    <div class="logo-area">
-      <img src="logo.png" alt="AgriTech Logo">
-      <h1>AgriTech Connect</h1>
+  <div class="container">
+    <div class="logo-container">
+      <img src="logo.png" alt="AgriTech Logo" class="logo" />
     </div>
-    <div>
-      <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
-      <img src="user.png" alt="Profile" class="profile-pic"/>
+    <h2>Login to AgriTech Connect</h2>
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="signup()">Create Account</button>
+    <div class="links">
+      <a href="#" onclick="resetPassword()">Forgot password?</a>
     </div>
-  </header>
-
-  <nav class="sidebar" id="sidebar">
-    <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="profile.html">Profile Settings</a></li>
-      <li><a href="history.html">My Activity</a></li>
-      <li><a href="saved.html">Saved Resources</a></li>
-      <li><a href="forum.html">Community Forum</a></li>
-      <li><a href="mentorship.html">Mentorship</a></li>
-      <li><a href="diagnostic.html">AI Diagnostics</a></li>
-      <li><a href="weather.html">Weather Alerts</a></li>
-      <li><a href="predictions.html">Weather Predictions</a></li>
-      <li><a href="news.html">Farming News</a></li>
-      <li><a href="submit-problem.html">Submit a Problem</a></li>
-      <li><a href="solutions.html">Solution Marketplace</a></li>
-      <li><a href="library.html">Knowledge Library</a></li>
-      <li><a href="events.html">Events & Trainings</a></li>
-      <li><a href="prices.html">Market Prices</a></li>
-      <li><a href="notifications.html">Notifications</a></li>
-      <li><a href="settings.html">Settings</a></li>
-      <li><button class="logout-btn" onclick="logout()">Logout</button></li>
-    </ul>
-  </nav>
+    <div class="message" id="message"></div>
+  </div>
 
   <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+    const firebaseConfig = {
+      // Your Firebase config goes here
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function showMessage(text, color = '#ff0000') {
+      const msg = document.getElementById("message");
+      msg.textContent = text;
+      msg.style.color = color;
     }
 
-    function logout() {
-      if (firebase && firebase.auth) {
-        firebase.auth().signOut().then(() => {
-          window.location.href = 'index.html';
-        }).catch((error) => {
-          console.error('Logout error:', error);
-        });
-      } else {
-        console.log("Firebase not initialized");
-        window.location.href = 'index.html';
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        showMessage("Email and password are required.");
+        return;
       }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          showMessage("Login successful!", '#4caf50');
+          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        })
+        .catch(error => showMessage(error.message));
+    }
+
+    function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        showMessage("Email and password are required to create an account.");
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => showMessage("Account created successfully! You can now log in.", '#4caf50'))
+        .catch(error => showMessage(error.message));
+    }
+
+    function resetPassword() {
+      const email = document.getElementById("email").value;
+
+      if (!email) {
+        showMessage("Please enter your email to reset your password.");
+        return;
+      }
+
+      auth.sendPasswordResetEmail(email)
+        .then(() => showMessage("Password reset email sent. Check your inbox.", '#4caf50'))
+        .catch(error => showMessage(error.message));
     }
   </script>
-
-  <!-- Firebase scripts should be included here -->
-
 </body>
 </html>
