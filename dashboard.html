@@ -79,39 +79,58 @@
     }
 
     .card {
-      background-color: #f1f5e1;
       border-radius: 14px;
       padding: 20px;
       margin-bottom: 20px;
       border: 1px solid #d6d9bf;
       box-shadow: 0 1px 4px rgba(106, 124, 47, 0.1);
       transition: box-shadow 0.3s ease;
+      background-color: #f1f5e1;
     }
+
     .card:hover {
       box-shadow: 0 4px 12px rgba(106, 124, 47, 0.3);
     }
-    .card:nth-child(even) {
-      background-color: #ebeeda;
-      border: 1px solid #c1c3a1;
-    }
+
     .card h2 {
       color: #556b2f;
       font-size: 20px;
       margin-bottom: 12px;
       font-weight: 600;
     }
+
     .card p {
       font-size: 15px;
       line-height: 1.6;
       color: #4a4a4a;
       margin-bottom: 8px;
     }
+
     .card ul {
       padding-left: 20px;
       margin: 0;
     }
+
     .card ul li {
       margin-bottom: 6px;
+    }
+
+    .card.knowledge-library {
+      background: 
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url('library-bg.jpg') no-repeat center center/cover;
+    }
+
+    .card.events-section {
+      background: 
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url('events-bg.jpg') no-repeat center center/cover;
+    }
+
+    .card.price-section {
+      background: 
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url('prices-bg.jpg') no-repeat center center/cover;
     }
 
     button.logout {
@@ -127,6 +146,7 @@
       font-weight: 600;
       transition: background-color 0.3s ease;
     }
+
     button.logout:hover {
       background-color: #8b6d3c;
     }
@@ -233,7 +253,7 @@
           snapshot.forEach(doc => {
             const data = doc.data();
             const li = document.createElement("li");
-            li.innerHTML = `<a href="${data.link}" target="_blank" rel="noopener">${data.title}</a>`;
+            li.innerHTML = `<a href="${data.link}" target="_blank">${data.title}</a>`;
             ul.appendChild(li);
           });
           container.appendChild(ul);
@@ -259,7 +279,7 @@
             const data = doc.data();
             const eventDate = new Date(data.date).toLocaleDateString();
             const li = document.createElement("li");
-            li.innerHTML = `<strong>${data.title}</strong> - ${eventDate} <a href="${data.link}" target="_blank" rel="noopener">Details</a>`;
+            li.innerHTML = `<strong>${data.title}</strong> - ${eventDate} <a href="${data.link}" target="_blank">Details</a>`;
             ul.appendChild(li);
           });
           container.appendChild(ul);
