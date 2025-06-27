@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f5f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      background-color: #ffffff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    header img {
+      height: 48px;
+      border-radius: 50%;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #4a6b3b;
+    }
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      width: 90%;
+      max-width: 400px;
+      margin-top: 6rem;
+    }
+    form h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #4a6b3b;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid #a3b18a;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #7ca982;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5a7d55;
+    }
+    .links {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .links a {
+      color: #4a6b3b;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="AgriTech Logo">
+    <h1>AgriTech Innovators Connect</h1>
+  </header>
+
+  <form id="registerForm">
+    <h2>Create Account</h2>
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email Address" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Register</button>
+    <div class="links">
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+  </form>
+
+  <script>
+    const registerForm = document.getElementById("registerForm");
+    registerForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      alert("📌 Registering user: " + name);
+      // Firebase registration code goes here
+    });
+  </script>
+</body>
+</html>
