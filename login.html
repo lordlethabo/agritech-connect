@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f6f9f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #37472e;
+    }
+    .login-container {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(55, 71, 46, 0.15);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #47683f;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #7ca982;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5f8562;
+    }
+    .links {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .links a {
+      color: #4a6b3b;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    .message {
+      text-align: center;
+      color: red;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to AgriTech Connect</h2>
+    <div class="message" id="login-message"></div>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div class="links">
+      <a href="register.html">Create Account</a> |
+      <a href="reset-password.html">Forgot Password?</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("login-message");
+
+      if (!email || !password) {
+        message.textContent = "Email and password are required.";
+        return;
+      }
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          message.style.color = "green";
+          message.textContent = "Login successful! Redirecting...";
+          setTimeout(() => window.location.href = "dashboard.html", 1500);
+        })
+        .catch(error => {
+          message.textContent = error.message;
+        });
+    }
+  </script>
+</body>
+</html>
