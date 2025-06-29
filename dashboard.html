@@ -1,70 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AgriTech Connect – Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body { margin:0; font-family:Poppins,sans-serif; color:#4a4721; display:flex; min-height:100vh; }
-    aside { width:250px; background:#4a4721; color:white; flex-shrink:0; }
-    aside .logo { padding:20px; font-size:1.4em; text-align:center; border-bottom:1px solid #6b8e23; font-weight:700; }
-    aside nav a {
-      display:block; padding:14px 20px; color:white; text-decoration:none; transition:all .3s;
-      border-left: 4px solid transparent;
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      color: #4a4721;
+      display: flex;
+      min-height: 100vh;
+      background: #f4f9ef;
     }
+
+    aside {
+      width: 250px;
+      background: #4a4721;
+      color: white;
+      flex-shrink: 0;
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      padding: 20px 0;
+      text-align: center;
+      border-bottom: 1px solid #6b8e23;
+      border-top-right-radius: 16px;
+    }
+
+    .logo img {
+      max-width: 180px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      padding: 15px 0;
+      border-radius: 12px;
+    }
+
+    aside nav a {
+      display: block;
+      padding: 14px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+      border-radius: 0 12px 12px 0;
+      margin: 6px 10px;
+    }
+
     aside nav a:hover,
     aside nav a.active {
-      background:#6b8e23;
-      font-weight:bold;
+      background: #6b8e23;
+      font-weight: bold;
       border-left-color: #8ab73a;
     }
 
     main {
-      flex:1;
-      background:#f4f9ef;
-      padding:40px 30px;
-      display:flex;
+      flex: 1;
+      background: #f4f9ef;
+      padding: 40px 30px;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
+      border-radius: 16px;
+      margin: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     main h1 {
       font-size: 2.8rem;
       margin-bottom: 10px;
+      border-radius: 12px;
     }
 
-    main p {
+    .description-bg {
+      background: url('background.jpg') center center / cover no-repeat;
+      padding: 40px 30px;
+      border-radius: 16px;
+      color: white;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       font-size: 1.2rem;
-      color: #555;
-      max-width: 450px;
-      margin-bottom: 30px;
+      line-height: 1.5;
     }
 
     main .btn {
-      background:#6b8e23;
-      color:white;
-      border:none;
-      padding:12px 28px;
-      border-radius:8px;
-      font-weight:600;
-      cursor:pointer;
-      text-decoration:none;
+      background: #6b8e23;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
       font-size: 1.1rem;
       margin: 6px;
       display: inline-block;
-      transition: background-color 0.3s ease;
-    }
-    main .btn:hover {
-      background:#8ab73a;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 8px rgba(107, 142, 35, 0.4);
     }
 
-    @media(max-width:768px) {
-      aside {
-        display:none;
+    main .btn:hover {
+      background: #8ab73a;
+      box-shadow:
+        0 0 8px 2px #d4f16f,
+        0 0 15px 5px #c1e65a,
+        0 0 25px 10px #a8d64f,
+        0 0 35px 15px #9bc841;
+      transform: translateY(-2px);
+      animation: glowStar 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowStar {
+      0% {
+        box-shadow:
+          0 0 6px 2px #d4f16f,
+          0 0 12px 4px #c1e65a,
+          0 0 22px 8px #a8d64f,
+          0 0 32px 12px #9bc841;
       }
+      100% {
+        box-shadow:
+          0 0 12px 4px #f0ff8c,
+          0 0 20px 8px #d4ff6a,
+          0 0 30px 12px #b9ff5b,
+          0 0 40px 16px #9bdb3d;
+      }
+    }
+
+    @media (max-width: 768px) {
+      aside {
+        display: none;
+      }
+
       main {
+        margin: 10px;
         padding: 20px;
       }
     }
@@ -72,29 +149,33 @@
 </head>
 <body>
 
-<aside>
-  <div class="logo">AgriTech Connect</div>
-  <nav>
-    <a href="dashboard.html" class="active">🏠 Home</a>
-    <a href="learning.html">📚 Learning Hub</a>
-    <a href="community.html">👥 Community</a>
-    <a href="marketplace.html">🛒 Marketplace</a>
-    <a href="weather.html">☀️ Weather & Soil</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-</aside>
+  <aside>
+    <div class="logo">
+      <img src="logo.png" alt="AgriTech Connect Logo" />
+    </div>
+    <nav>
+      <a href="dashboard.html" class="active">Home</a>
+      <a href="learning.html">Learning Hub</a>
+      <a href="community.html">Community</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="weather.html">Weather & Soil</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+  </aside>
 
-<main>
-  <h1>Welcome to AgriTech Connect</h1>
-  <p>Your digital platform to empower rural youth and small-scale farmers with market access, learning resources, community, and smart tools.</p>
+  <main>
+    <h1>Welcome to AgriTech Connect</h1>
+    <div class="description-bg">
+      <p>Your digital platform to empower rural youth and small-scale farmers with market access, learning resources, community, and smart tools.</p>
+    </div>
 
-  <div>
-    <a href="learning.html" class="btn">Go to Learning Hub</a>
-    <a href="community.html" class="btn">Join the Community</a>
-    <a href="marketplace.html" class="btn">Visit Marketplace</a>
-    <a href="weather.html" class="btn">Check Weather & Soil</a>
-  </div>
-</main>
+    <div>
+      <a href="learning.html" class="btn">Go to Learning Hub</a>
+      <a href="community.html" class="btn">Join the Community</a>
+      <a href="marketplace.html" class="btn">Visit Marketplace</a>
+      <a href="weather.html" class="btn">Check Weather & Soil</a>
+    </div>
+  </main>
 
 </body>
 </html>
