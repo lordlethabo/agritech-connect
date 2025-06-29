@@ -10,7 +10,11 @@
     section { background: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .label { font-weight: bold; }
     .alert { padding: 10px; background: #fff3cd; border-left: 5px solid #ffc107; border-radius: 6px; margin-top: 10px; }
+    select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; margin-top: 10px; }
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -36,23 +40,63 @@
     <p id="riskAlert">Analyzing weather conditions...</p>
   </section>
 
+  <section>
+    <h2>🧪 Soil-Based Advisor</h2>
+    <label class="label" for="soilType">Select your soil type:</label>
+    <select id="soilType">
+      <option value="">-- Choose Soil Type --</option>
+      <option value="loamy">Loamy</option>
+      <option value="sandy">Sandy</option>
+      <option value="clay">Clay</option>
+      <option value="silty">Silty</option>
+    </select>
+    <p id="soilAdvice">Waiting for soil input...</p>
+  </section>
+
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const apiKey = "4e964608f63e83461ebc8ef5ea65e997";
     const cropData = [
-      { name: "Maize", tempRange: [20, 32], humidityRange: [30, 80], livestock: false },
-      { name: "Spinach", tempRange: [10, 25], humidityRange: [40, 90], livestock: false },
-      { name: "Goat", tempRange: [15, 35], humidityRange: [20, 80], livestock: true },
-      { name: "Chicken", tempRange: [18, 30], humidityRange: [40, 85], livestock: true }
+      { name: "Maize", tempRange: [20, 32], humidityRange: [30, 80], soils: ["loamy", "silty"], livestock: false },
+      { name: "Spinach", tempRange: [10, 25], humidityRange: [40, 90], soils: ["loamy", "clay"], livestock: false },
+      { name: "Goat", tempRange: [15, 35], humidityRange: [20, 80], soils: ["sandy", "loamy"], livestock: true },
+      { name: "Chicken", tempRange: [18, 30], humidityRange: [40, 85], soils: ["any"], livestock: true }
     ];
 
-    function matchCrops(temp, humidity) {
-      const matches = cropData.filter(c =>
-        temp >= c.tempRange[0] && temp <= c.tempRange[1] &&
-        humidity >= c.humidityRange[0] && humidity <= c.humidityRange[1]
-      );
+    let userTemp = 0, userHumidity = 0;
 
-      document.getElementById("cropOutput").textContent = matches.filter(m => !m.livestock).map(m => m.name).join(", ") || "None";
-      document.getElementById("livestockOutput").textContent = matches.filter(m => m.livestock).map(m => m.name).join(", ") || "None";
+    function matchCrops(temp, humidity, soil) {
+      const matches = cropData.filter(c => {
+        const soilMatch = c.soils.includes("any") || c.soils.includes(soil);
+        return temp >= c.tempRange[0] && temp <= c.tempRange[1] &&
+               humidity >= c.humidityRange[0] && humidity <= c.humidityRange[1] &&
+               soilMatch;
+      });
+
+      const crops = matches.filter(m => !m.livestock).map(m => m.name);
+      const livestock = matches.filter(m => m.livestock).map(m => m.name);
+
+      document.getElementById("cropOutput").textContent = crops.length ? crops.join(", ") : "None";
+      document.getElementById("livestockOutput").textContent = livestock.length ? livestock.join(", ") : "None";
+
+      db.collection("userPreferences").add({
+        soil,
+        crops,
+        livestock,
+        weather: { temp, humidity },
+        timestamp: Date.now()
+      });
     }
 
     function evaluateDiseaseRisk(temp, humidity) {
@@ -73,23 +117,30 @@
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
         .then(res => res.json())
         .then(data => {
-          const temp = data.main.temp;
-          const humidity = data.main.humidity;
-          const desc = data.weather[0].description;
-          const location = `${data.name}, ${data.sys.country}`;
+          userTemp = data.main.temp;
+          userHumidity = data.main.humidity;
 
-          document.getElementById("location").textContent = location;
-          document.getElementById("weatherDesc").textContent = desc;
-          document.getElementById("temp").textContent = temp;
-          document.getElementById("humidity").textContent = humidity;
+          document.getElementById("location").textContent = `${data.name}, ${data.sys.country}`;
+          document.getElementById("weatherDesc").textContent = data.weather[0].description;
+          document.getElementById("temp").textContent = userTemp;
+          document.getElementById("humidity").textContent = userHumidity;
 
-          matchCrops(temp, humidity);
-          evaluateDiseaseRisk(temp, humidity);
+          evaluateDiseaseRisk(userTemp, userHumidity);
         })
         .catch(err => {
           document.getElementById("location").textContent = "Weather data unavailable.";
         });
     }
+
+    document.getElementById("soilType").addEventListener("change", function() {
+      const soil = this.value;
+      if (!soil || userTemp === 0) {
+        document.getElementById("soilAdvice").textContent = "Please wait for weather data or select a valid soil type.";
+        return;
+      }
+      document.getElementById("soilAdvice").textContent = `Advising based on ${soil} soil...`;
+      matchCrops(userTemp, userHumidity, soil);
+    });
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
