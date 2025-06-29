@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Hub – AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      background-color: #f4f9ef;
+      color: #4a4721;
+      display: flex;
+    }
+    aside {
+      width: 250px;
+      background-color: #4a4721;
+      color: white;
+      min-height: 100vh;
+      padding-top: 20px;
+    }
+    aside .logo {
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    aside .logo img {
+      max-width: 160px;
+      border-radius: 10px;
+    }
+    aside nav a {
+      display: block;
+      padding: 14px 20px;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      margin: 8px;
+      transition: background 0.3s;
+    }
+    aside nav a:hover,
+    aside nav a.active {
+      background: #6b8e23;
+      font-weight: bold;
+    }
+    main {
+      flex: 1;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .filters {
+      margin-bottom: 20px;
+    }
+    .filters select, .filters input[type="text"] {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      position: relative;
+    }
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    iframe {
+      width: 100%;
+      border-radius: 12px;
+      aspect-ratio: 16 / 9;
+    }
+    .video-title {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .save-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #8ab73a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .upload-section {
+      margin-top: 40px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+    }
+    .upload-section h2 {
+      margin-top: 0;
+    }
+    .upload-section input {
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .upload-section button {
+      background: #6b8e23;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .upload-section button:hover {
+      background: #8ab73a;
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <div class="logo">
+      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/logo.png" alt="Logo">
+    </div>
+    <nav>
+      <a href="dashboard.html">Home</a>
+      <a href="learning.html" class="active">Learning Hub</a>
+      <a href="community.html">Community</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="weather.html">Weather & Soil</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </aside>
+
+  <main>
+    <h1>Learning Hub</h1>
+    <div class="filters">
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="crop">Crop Farming</option>
+        <option value="livestock">Livestock</option>
+        <option value="agribusiness">Agribusiness</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search videos...">
+    </div>
+
+    <div class="video-grid" id="videoList">
+      <!-- Videos will load dynamically -->
+    </div>
+
+    <div class="upload-section">
+      <h2>Suggest a Learning Video</h2>
+      <input type="text" id="videoTitle" placeholder="Video Title">
+      <input type="text" id="videoURL" placeholder="YouTube Video URL">
+      <input type="text" id="videoCategory" placeholder="Category (crop, livestock, agribusiness)">
+      <button onclick="submitVideoSuggestion()">Submit Suggestion</button>
+    </div>
+  </main>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const videoList = document.getElementById("videoList");
+
+    function renderVideoCard(doc) {
+      const { title, url, category } = doc.data();
+      const videoId = new URL(url).searchParams.get("v") || url.split("/").pop();
+      const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
+      const card = document.createElement("div");
+      card.className = "video-card";
+      card.dataset.category = category;
+      card.innerHTML = `
+        ${iframe}
+        <div class="video-title">${title}</div>
+        <button class="save-btn" onclick="saveVideo('${doc.id}')">Save</button>
+      `;
+      videoList.appendChild(card);
+    }
+
+    function loadVideos() {
+      db.collection("videoSuggestions").onSnapshot(snapshot => {
+        videoList.innerHTML = "";
+        snapshot.forEach(doc => renderVideoCard(doc));
+        filterVideos();
+      });
+    }
+
+    function saveVideo(videoId) {
+      const user = auth.currentUser;
+      if (!user) return alert("Sign in to save videos.");
+      db.collection("users").doc(user.uid).collection("savedVideos").doc(videoId).set({ savedAt: Date.now() });
+      alert("Video saved!");
+    }
+
+    function submitVideoSuggestion() {
+      const title = document.getElementById("videoTitle").value;
+      const url = document.getElementById("videoURL").value;
+      const category = document.getElementById("videoCategory").value.toLowerCase();
+      if (!title || !url || !category) return alert("Fill in all fields.");
+      db.collection("videoSuggestions").add({ title, url, category, submittedAt: Date.now() });
+      alert("Video submitted for review!");
+      document.getElementById("videoTitle").value = "";
+      document.getElementById("videoURL").value = "";
+      document.getElementById("videoCategory").value = "";
+    }
+
+    function filterVideos() {
+      const keyword = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+      const cards = document.querySelectorAll(".video-card");
+      cards.forEach(card => {
+        const title = card.querySelector(".video-title").textContent.toLowerCase();
+        const matchesKeyword = title.includes(keyword);
+        const matchesCategory = category === "all" || card.dataset.category === category;
+        card.style.display = matchesKeyword && matchesCategory ? "block" : "none";
+      });
+    }
+
+    searchInput.addEventListener("input", filterVideos);
+    categoryFilter.addEventListener("change", filterVideos);
+
+    auth.onAuthStateChanged(user => {
+      if (user) loadVideos();
+      else alert("Please sign in to use the Learning Hub features.");
+    });
+  </script>
+</body>
+</html>
