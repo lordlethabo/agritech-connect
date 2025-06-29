@@ -2,102 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AgriTech Connect – Dashboard</title>
+  <title>AgriTech Connect – Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body { margin:0; font-family:Poppins,sans-serif; color:#4a4721; display:flex; min-height:100vh; }
     aside { width:250px; background:#4a4721; color:white; flex-shrink:0; }
-    aside .logo { padding:20px; font-size:1.2em; text-align:center; border-bottom:1px solid #6b8e23; }
-    aside nav a { display:flex; align-items:center; padding:14px 20px; color:white; text-decoration:none; transition:all .3s; }
+    aside .logo { padding:20px; font-size:1.4em; text-align:center; border-bottom:1px solid #6b8e23; font-weight:700; }
+    aside nav a {
+      display:block; padding:14px 20px; color:white; text-decoration:none; transition:all .3s;
+      border-left: 4px solid transparent;
+    }
     aside nav a:hover,
     aside nav a.active {
       background:#6b8e23;
       font-weight:bold;
-      border-left: 4px solid #8ab73a;
-      padding-left:16px;
-    }
-    aside nav a i { margin-right:12px; }
-
-    main { flex:1; background:#f4f9ef; display:flex; flex-direction:column; }
-    header { background:#fff; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 5px rgba(0,0,0,0.1); position:sticky; top:0; z-index:10; }
-    .stats { display:flex; gap:20px; }
-    .stat-card { background:white; padding:15px; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.1); flex:1; text-align:center; }
-
-    .content { flex:1; overflow:auto; padding:20px; }
-    .section { display:none; animation:fadeIn .5s; }
-    .section.active { display:block; }
-
-    .marketplace-header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:16px; gap:10px; }
-    .marketplace-header form { display:flex; flex-wrap:wrap; gap:10px; }
-    .marketplace-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
-
-    .card {
-      background:white; border-radius:8px; padding:10px;
-      box-shadow:0 1px 4px rgba(0,0,0,.1);
-      transition:transform .2s ease, box-shadow .3s ease;
-      cursor:pointer;
-    }
-    .card:hover {
-      transform:translateY(-4px);
-      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+      border-left-color: #8ab73a;
     }
 
-    .card img { width:100%; height:120px; object-fit:cover; border-radius:6px; }
+    main {
+      flex:1;
+      background:#f4f9ef;
+      padding:40px 30px;
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-    button {
+    main h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    main p {
+      font-size: 1.2rem;
+      color: #555;
+      max-width: 450px;
+      margin-bottom: 30px;
+    }
+
+    main .btn {
       background:#6b8e23;
       color:white;
       border:none;
-      padding:10px 14px;
+      padding:12px 28px;
       border-radius:8px;
       font-weight:600;
       cursor:pointer;
-      transition:background-color .3s ease, transform 0.2s ease;
+      text-decoration:none;
+      font-size: 1.1rem;
+      margin: 6px;
+      display: inline-block;
+      transition: background-color 0.3s ease;
     }
-    button:hover {
+    main .btn:hover {
       background:#8ab73a;
-      transform:scale(1.03);
     }
-
-    input[type="text"], input[type="number"] {
-      padding:8px; border-radius:6px; border:1px solid #ccc;
-    }
-    input:hover, input:focus {
-      border-color: #6b8e23;
-      outline:none;
-    }
-
-    .chat-window {
-      position:fixed; bottom:20px; right:20px;
-      width:300px; max-height:400px;
-      background:white; border-radius:8px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.2);
-      display:none; flex-direction:column;
-    }
-    .chat-header {
-      padding:10px; background:#6b8e23; color:white;
-      display:flex; justify-content:space-between; align-items:center;
-      border-top-left-radius:8px;border-top-right-radius:8px;
-    }
-    .chat-body { flex:1; padding:10px; overflow:auto; font-size:0.9em; }
-    .message { margin:4px 0; padding:6px 10px; border-radius:8px; max-width:80%; }
-    .message.theirs { background:#efefef; align-self:flex-start; }
-    .message.mine { background:#8ab73a; color:white; align-self:flex-end; }
-
-    .chat-input { display:flex; border-top:1px solid #ccc; }
-    .chat-input input {
-      flex:1; padding:10px; border:none; border-radius:0 0 0 8px;
-    }
-    .chat-input button {
-      padding:0 15px; border-radius:0 0 8px 0;
-    }
-
-    @keyframes fadeIn { from {opacity:0;} to{opacity:1;} }
 
     @media(max-width:768px) {
-      aside { display:none; }
-      .stats { display:none; }
-      .marketplace-list { grid-template-columns:1fr; }
+      aside {
+        display:none;
+      }
+      main {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -106,147 +75,26 @@
 <aside>
   <div class="logo">AgriTech Connect</div>
   <nav>
-    <a href="#" data-target="dashboard" class="active"><i>🏠</i>Home</a>
-    <a href="#" data-target="marketplace"><i>🛒</i>Marketplace</a>
-    <a href="#" data-target="chat"><i>💬</i>Chat</a>
-    <a href="#" data-target="settings"><i>⚙️</i>Settings</a>
+    <a href="dashboard.html" class="active">🏠 Home</a>
+    <a href="learning.html">📚 Learning Hub</a>
+    <a href="community.html">👥 Community</a>
+    <a href="marketplace.html">🛒 Marketplace</a>
+    <a href="weather.html">☀️ Weather & Soil</a>
+    <a href="settings.html">⚙️ Settings</a>
   </nav>
 </aside>
 
 <main>
-  <header>
-    <div class="stats">
-      <div class="stat-card"><strong id="weatherNow">--°C</strong><div>Current Temp</div></div>
-      <div class="stat-card"><strong id="liveListings">0</strong><div>Listings</div></div>
-      <div class="stat-card"><strong id="unreadChats">0</strong><div>Messages</div></div>
-    </div>
-  </header>
+  <h1>Welcome to AgriTech Connect</h1>
+  <p>Your digital platform to empower rural youth and small-scale farmers with market access, learning resources, community, and smart tools.</p>
 
-  <div class="content">
-    <section id="dashboard" class="section active">
-      <h2>Welcome!</h2>
-      <p>Use the sidebar to explore farming tools, prices, and connect with others.</p>
-    </section>
-
-    <section id="marketplace" class="section">
-      <h2>Marketplace</h2>
-      <div class="marketplace-header">
-        <form id="produce-form">
-          <input id="prod-name" type="text" placeholder="Product" required />
-          <input id="prod-price" type="number" placeholder="Price (R)" min="0" step="0.01" required />
-          <button>Add</button>
-        </form>
-        <button id="new-chat-btn">Start Chat</button>
-      </div>
-      <div class="marketplace-list" id="listings"></div>
-    </section>
-
-    <section id="chat" class="section">
-      <h2>Community Chat</h2>
-      <p>Talk with others in real time!</p>
-    </section>
-
-    <section id="settings" class="section">
-      <h2>Settings</h2>
-      <p>Adjust your preferences and notifications here.</p>
-    </section>
+  <div>
+    <a href="learning.html" class="btn">Go to Learning Hub</a>
+    <a href="community.html" class="btn">Join the Community</a>
+    <a href="marketplace.html" class="btn">Visit Marketplace</a>
+    <a href="weather.html" class="btn">Check Weather & Soil</a>
   </div>
 </main>
 
-<!-- Chat UI -->
-<div id="chatUI" class="chat-window">
-  <div class="chat-header">
-    <span>Marketplace Chat</span>
-    <button id="close-chat">✖️</button>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-input">
-    <input id="msgInput" placeholder="Type a message..." />
-    <button id="sendMsg">Send</button>
-  </div>
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-<script>
-  // Firebase config with your key
-  firebase.initializeApp({
-    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-    authDomain: "agritechconnect.firebaseapp.com",
-    projectId: "AgriTechConnect",
-    storageBucket: "agritechconnect.appspot.com",
-    messagingSenderId: "1027312049739",
-    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-  });
-  const db = firebase.firestore();
-
-  // Navigation
-  document.querySelectorAll("aside nav a").forEach(link => {
-    link.onclick = e => {
-      e.preventDefault();
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      document.querySelectorAll("aside nav a").forEach(a => a.classList.remove("active"));
-      document.getElementById(link.dataset.target).classList.add("active");
-      link.classList.add("active");
-    };
-  });
-
-  // Product form
-  document.getElementById("produce-form").onsubmit = e => {
-    e.preventDefault();
-    const name = document.getElementById("prod-name").value;
-    const price = parseFloat(document.getElementById("prod-price").value);
-    db.collection("marketplace").add({name, price, created: Date.now()});
-    e.target.reset();
-  };
-
-  // Load marketplace listings
-  db.collection("marketplace").orderBy("created", "desc").onSnapshot(snapshot => {
-    const list = document.getElementById("listings");
-    list.innerHTML = "";
-    document.getElementById("liveListings").textContent = snapshot.size;
-    snapshot.forEach(doc => {
-      const item = doc.data();
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `<img src="https://via.placeholder.com/150x120?text=${item.name}" alt="${item.name}" />
-        <h4>${item.name}</h4><p>R${item.price.toFixed(2)}</p>`;
-      list.appendChild(div);
-    });
-  });
-
-  // Chat feature
-  document.getElementById("new-chat-btn").onclick = () => {
-    document.getElementById("chatUI").style.display = "flex";
-  };
-  document.getElementById("close-chat").onclick = () => {
-    document.getElementById("chatUI").style.display = "none";
-  };
-  document.getElementById("sendMsg").onclick = () => {
-    const msg = document.getElementById("msgInput").value;
-    if (msg.trim()) {
-      db.collection("chat").add({msg, time: Date.now()});
-      document.getElementById("msgInput").value = "";
-    }
-  };
-
-  db.collection("chat").orderBy("time").onSnapshot(snap => {
-    const chat = document.getElementById("chatBody");
-    chat.innerHTML = "";
-    document.getElementById("unreadChats").textContent = snap.size;
-    snap.forEach(doc => {
-      const m = doc.data();
-      const div = document.createElement("div");
-      div.className = "message theirs";
-      div.textContent = m.msg;
-      chat.appendChild(div);
-    });
-    chat.scrollTop = chat.scrollHeight;
-  });
-
-  // Static weather display
-  document.getElementById("weatherNow").textContent = "26°C"; // replace with real API if needed
-</script>
 </body>
 </html>
