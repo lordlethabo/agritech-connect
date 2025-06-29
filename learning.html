@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Learning Hub – AgriTech Connect</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -15,6 +16,7 @@
       background-color: #f4f9ef;
       color: #4a4721;
       display: flex;
+      min-height: 100vh;
     }
     aside {
       width: 250px;
@@ -23,153 +25,264 @@
       min-height: 100vh;
       padding-top: 20px;
       transition: 0.3s;
+      flex-shrink: 0;
     }
     aside .logo {
       text-align: center;
-      padding-bottom: 10px;
+      padding-bottom: 20px;
     }
     aside .logo img {
-      width: 120px;
-      height: 120px;
+      max-width: 160px;
       border-radius: 50%;
-      object-fit: cover;
-    }
-    aside nav {
-      margin-top: 20px;
+      display: block;
+      margin: 0 auto;
     }
     aside nav a {
       display: block;
       padding: 14px 20px;
       color: white;
       text-decoration: none;
-      border-radius: 10px;
-      margin: 8px;
+      border-radius: 12px;
+      margin: 8px 12px;
       transition: background 0.3s;
+      font-weight: 600;
     }
     aside nav a:hover,
     aside nav a.active {
       background: #6b8e23;
-      font-weight: bold;
+      font-weight: 700;
+      box-shadow:
+        0 0 8px 2px #d4f16f,
+        0 0 15px 5px #c1e65a,
+        0 0 25px 10px #a8d64f,
+        0 0 35px 15px #9bc841;
     }
     main {
       flex: 1;
-      padding: 20px;
+      padding: 30px 40px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     #menuToggle {
       background: none;
       border: none;
       cursor: pointer;
       margin-bottom: 20px;
+      display: none; /* shown only on small screens */
     }
     #menuToggle img {
       width: 40px;
       height: 40px;
     }
     h1 {
-      font-size: 2rem;
-      margin-bottom: 20px;
+      font-weight: 900;
+      font-size: 3rem;
+      color: #6b8e23;
+      text-shadow:
+        0 0 10px #a8d64f,
+        0 0 20px #c1e65a,
+        0 0 30px #d4f16f;
+      margin-bottom: 24px;
+      text-align: center;
+      user-select: none;
     }
-    .filters {
+    .category-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 600px;
     }
-    .filters select, .filters input[type="text"] {
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      flex: 1;
+    .category-buttons button {
+      background: #8ab73a;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 24px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      box-shadow:
+        0 0 8px #9bc841;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+    }
+    .category-buttons button.active,
+    .category-buttons button:hover {
+      background: #6b8e23;
+      box-shadow:
+        0 0 12px 4px #d4f16f,
+        0 0 18px 8px #c1e65a;
+    }
+    #searchInput {
+      padding: 12px 16px;
+      border-radius: 24px;
+      border: 2px solid #6b8e23;
+      width: 100%;
+      max-width: 600px;
+      font-size: 1rem;
+      margin-bottom: 30px;
+      box-shadow:
+        0 0 8px #9bc841;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    #searchInput:focus {
+      border-color: #8ab73a;
     }
     .video-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
+      width: 100%;
+      max-width: 1000px;
     }
     .video-card {
       background: white;
       padding: 16px;
       border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+      transition: transform 0.3s, box-shadow 0.3s;
       position: relative;
+      user-select: none;
     }
     .video-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     iframe {
       width: 100%;
       border-radius: 12px;
       aspect-ratio: 16 / 9;
+      pointer-events: none;
+      user-select: none;
     }
     .video-title {
       margin-top: 12px;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 1.1rem;
+      color: #4a4721;
     }
     .save-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       background: #8ab73a;
       color: white;
       border: none;
-      border-radius: 8px;
-      padding: 5px 10px;
+      border-radius: 12px;
+      padding: 6px 14px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow:
+        0 0 10px 1px #a8d64f;
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
     }
-    .upload-section {
+    .save-btn:hover {
+      background: #6b8e23;
+      box-shadow:
+        0 0 15px 4px #d4f16f,
+        0 0 25px 8px #c1e65a;
+    }
+    #videoFormSection {
       margin-top: 40px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-    }
-    .upload-section h2 {
-      margin-top: 0;
-    }
-    .upload-section input {
-      padding: 10px;
+      background: white;
+      padding: 28px 30px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
       width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 10px;
+      max-width: 600px;
+      user-select: none;
     }
-    .upload-section button {
+    #videoFormSection h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 900;
+      color: #6b8e23;
+      text-align: center;
+      text-shadow:
+        0 0 10px #a8d64f,
+        0 0 15px #c1e65a;
+      user-select: none;
+    }
+    #videoFormSection input {
+      padding: 12px 16px;
+      width: 100%;
+      border: 2px solid #6b8e23;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      user-select: text;
+    }
+    #videoFormSection input:focus {
+      border-color: #8ab73a;
+    }
+    #videoFormSection button {
       background: #6b8e23;
       color: white;
-      padding: 10px 20px;
       border: none;
-      border-radius: 10px;
-      font-weight: bold;
+      padding: 14px 30px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      width: 100%;
+      box-shadow:
+        0 6px 20px rgba(107, 142, 35, 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      user-select: none;
     }
-    .upload-section button:hover {
+    #videoFormSection button:hover {
       background: #8ab73a;
+      box-shadow:
+        0 0 15px 5px #d4f16f,
+        0 0 25px 10px #c1e65a;
+      transform: translateY(-2px);
+      animation: glowStar 1.5s ease-in-out infinite alternate;
     }
-
+    @keyframes glowStar {
+      0% {
+        box-shadow:
+          0 0 8px 3px #d4f16f,
+          0 0 12px 4px #c1e65a;
+      }
+      100% {
+        box-shadow:
+          0 0 14px 5px #f0ff8c,
+          0 0 20px 7px #d4ff6a;
+      }
+    }
+    /* Responsive */
     @media (max-width: 768px) {
-      #sidebar {
-        position: absolute;
-        left: 0;
-        top: 0;
+      aside {
         display: none;
-        z-index: 1000;
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh;
+        z-index: 9999;
+        overflow-y: auto;
+      }
+      #menuToggle {
+        display: block;
       }
       main {
-        padding-left: 0;
+        padding: 20px;
       }
     }
   </style>
 </head>
 <body>
+
   <aside id="sidebar">
     <div class="logo">
-      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/logo.png" alt="Logo">
+      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/logo.png" alt="AgriTech Connect Logo" />
     </div>
     <nav>
       <a href="dashboard.html">Home</a>
@@ -182,114 +295,268 @@
   </aside>
 
   <main>
-    <button id="menuToggle">
-      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/menu-icon.png" alt="Menu">
+    <button id="menuToggle" aria-label="Toggle menu">
+      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/menu-icon.png" alt="Menu Icon" />
     </button>
 
     <h1>Learning Hub</h1>
-    <div class="filters">
-      <select id="categoryFilter">
-        <option value="all">All Categories</option>
-        <option value="crop">Crop Farming</option>
-        <option value="livestock">Livestock</option>
-        <option value="agribusiness">Agribusiness</option>
-      </select>
-      <input type="text" id="searchInput" placeholder="Search videos...">
+
+    <div class="category-buttons" role="group" aria-label="Filter videos by category">
+      <button class="active" data-category="all" type="button">All</button>
+      <button data-category="crop" type="button">Crop Farming</button>
+      <button data-category="livestock" type="button">Livestock</button>
+      <button data-category="agribusiness" type="button">Agribusiness</button>
     </div>
 
-    <div class="video-grid" id="videoList"></div>
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="Search videos..."
+      aria-label="Search videos"
+      autocomplete="off"
+    />
 
-    <div class="upload-section">
-      <h2>Suggest a Learning Video</h2>
-      <input type="text" id="videoTitle" placeholder="Video Title">
-      <input type="text" id="videoURL" placeholder="YouTube Video URL">
-      <input type="text" id="videoCategory" placeholder="Category (crop, livestock, agribusiness)">
-      <button onclick="submitVideoSuggestion()">Submit Suggestion</button>
+    <div class="video-grid" id="videoList" aria-live="polite" aria-atomic="true">
+      <!-- Video cards injected here -->
     </div>
+
+    <section id="videoFormSection" class="upload-section" aria-labelledby="videoFormTitle">
+      <!-- Video form rendered dynamically -->
+    </section>
   </main>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect",
-      storageBucket: "agritechconnect.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+<script>
+  // Firebase config + initialization
+  const firebaseConfig = {
+    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+    authDomain: "agritechconnect.firebaseapp.com",
+    projectId: "AgriTechConnect",
+    storageBucket: "agritechconnect.appspot.com",
+    messagingSenderId: "1027312049739",
+    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
 
-    const videoList = document.getElementById("videoList");
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
+  // Admin emails list
+  const adminEmails = [
+    "jamesmoshabane98@gmail.com",
+    // Add more admins here
+  ];
 
-    function renderVideoCard(doc) {
-      const { title, url, category } = doc.data();
-      const videoId = new URL(url).searchParams.get("v") || url.split("/").pop();
-      const card = document.createElement("div");
-      card.className = "video-card";
-      card.dataset.category = category;
-      card.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-        <div class="video-title">${title}</div>
-        <button class="save-btn" onclick="saveVideo('${doc.id}')">Save</button>
+  // DOM references
+  const videoList = document.getElementById('videoList');
+  const categoryButtons = document.querySelectorAll('.category-buttons button');
+  const searchInput = document.getElementById('searchInput');
+
+  let videosCache = [];
+  let currentCategory = 'all';
+  let currentUser = null;
+  let isAdmin = false;
+
+  // Menu toggle for mobile
+  const menuToggleBtn = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  menuToggleBtn.addEventListener('click', () => {
+    if (sidebar.style.display === 'block') {
+      sidebar.style.display = 'none';
+    } else {
+      sidebar.style.display = 'block';
+    }
+  });
+  // Auto hide sidebar on small screens on load
+  if (window.innerWidth < 768) {
+    sidebar.style.display = 'none';
+  }
+
+  // Render video cards
+  function renderVideoCard(doc) {
+    const data = doc.data();
+    if (!data.approved) return; // show only approved videos
+
+    const { title, url, category } = data;
+    const videoId = extractYouTubeID(url);
+    if (!videoId) return;
+
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.dataset.category = category;
+
+    card.innerHTML = `
+      <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen loading="lazy" title="${title}"></iframe>
+      <div class="video-title">${title}</div>
+      <button class="save-btn" type="button" aria-label="Save video ${title}">Save</button>
+    `;
+
+    // Save video handler
+    card.querySelector('.save-btn').addEventListener('click', () => {
+      if (!currentUser) {
+        alert('Please sign in to save videos.');
+        return;
+      }
+      db.collection('users').doc(currentUser.uid).collection('savedVideos').doc(doc.id)
+        .set({ savedAt: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(() => alert('Video saved!'))
+        .catch(err => alert('Failed to save video: ' + err.message));
+    });
+
+    videoList.appendChild(card);
+  }
+
+  // Extract YouTube video ID from URL
+  function extractYouTubeID(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname === 'youtu.be') {
+        return u.pathname.slice(1);
+      } else if (u.hostname.includes('youtube.com')) {
+        return u.searchParams.get('v');
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Load videos from Firestore realtime listener
+  function loadVideos() {
+    db.collection('videoSuggestions').onSnapshot(snapshot => {
+      videosCache = [];
+      videoList.innerHTML = '';
+      snapshot.forEach(doc => {
+        videosCache.push({ id: doc.id, data: doc.data() });
+      });
+      applyFilters();
+    });
+  }
+
+  // Filter videos based on category and search keyword
+  function applyFilters() {
+    const keyword = searchInput.value.toLowerCase();
+    videoList.innerHTML = '';
+    videosCache.forEach(({ id, data }) => {
+      if (!data.approved) return; // only show approved
+
+      const matchesCategory = currentCategory === 'all' || data.category === currentCategory;
+      const matchesSearch = data.title.toLowerCase().includes(keyword);
+
+      if (matchesCategory && matchesSearch) {
+        renderVideoCard({ id, data });
+      }
+    });
+  }
+
+  // Category buttons event
+  categoryButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.category;
+      applyFilters();
+    });
+  });
+
+  // Search input event
+  searchInput.addEventListener('input', applyFilters);
+
+  // Render form for admin or user
+  function renderVideoForm() {
+    const container = document.getElementById('videoFormSection');
+    container.innerHTML = ''; // clear
+
+    if (isAdmin) {
+      container.innerHTML = `
+        <h2 id="videoFormTitle">Add Video (Admin Only)</h2>
+        <input type="text" id="adminVideoTitle" placeholder="Video Title" aria-label="Video Title" />
+        <input type="url" id="adminVideoURL" placeholder="YouTube Video URL" aria-label="YouTube Video URL" />
+        <input type="text" id="adminVideoCategory" placeholder="Category (crop, livestock, agribusiness)" aria-label="Video Category" />
+        <button type="button" id="adminSubmitBtn">Add Video</button>
       `;
-      videoList.appendChild(card);
-    }
+      document.getElementById('adminSubmitBtn').addEventListener('click', () => {
+        const title = document.getElementById('adminVideoTitle').value.trim();
+        const url = document.getElementById('adminVideoURL').value.trim();
+        const category = document.getElementById('adminVideoCategory').value.trim().toLowerCase();
 
-    function loadVideos() {
-      db.collection("videoSuggestions").onSnapshot(snapshot => {
-        videoList.innerHTML = "";
-        snapshot.forEach(doc => renderVideoCard(doc));
-        filterVideos();
+        if (!title || !url || !category) {
+          alert('Please fill in all fields.');
+          return;
+        }
+        if (!['crop', 'livestock', 'agribusiness'].includes(category)) {
+          alert('Category must be one of: crop, livestock, agribusiness.');
+          return;
+        }
+
+        db.collection('videoSuggestions').add({
+          title,
+          url,
+          category,
+          submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          approved: true,
+          addedBy: currentUser.email
+        }).then(() => {
+          alert('Video added successfully!');
+          document.getElementById('adminVideoTitle').value = '';
+          document.getElementById('adminVideoURL').value = '';
+          document.getElementById('adminVideoCategory').value = '';
+        }).catch(err => {
+          alert('Error adding video: ' + err.message);
+        });
+      });
+    } else {
+      container.innerHTML = `
+        <h2 id="videoFormTitle">Suggest a Learning Video</h2>
+        <input type="text" id="videoTitle" placeholder="Video Title" aria-label="Video Title" />
+        <input type="url" id="videoURL" placeholder="YouTube Video URL" aria-label="YouTube Video URL" />
+        <input type="text" id="videoCategory" placeholder="Category (crop, livestock, agribusiness)" aria-label="Video Category" />
+        <button type="button" id="submitVideoBtn">Submit Suggestion</button>
+      `;
+      document.getElementById('submitVideoBtn').addEventListener('click', () => {
+        const title = document.getElementById('videoTitle').value.trim();
+        const url = document.getElementById('videoURL').value.trim();
+        const category = document.getElementById('videoCategory').value.trim().toLowerCase();
+
+        if (!title || !url || !category) {
+          alert('Please fill in all fields.');
+          return;
+        }
+        if (!['crop', 'livestock', 'agribusiness'].includes(category)) {
+          alert('Category must be one of: crop, livestock, agribusiness.');
+          return;
+        }
+
+        db.collection('videoSuggestions').add({
+          title,
+          url,
+          category,
+          submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          approved: false,
+          submittedBy: currentUser.email
+        }).then(() => {
+          alert('Thank you! Your video suggestion has been submitted for review.');
+          document.getElementById('videoTitle').value = '';
+          document.getElementById('videoURL').value = '';
+          document.getElementById('videoCategory').value = '';
+        }).catch(err => {
+          alert('Failed to submit suggestion: ' + err.message);
+        });
       });
     }
+  }
 
-    function saveVideo(videoId) {
-      const user = auth.currentUser;
-      if (!user) return alert("Sign in to save videos.");
-      db.collection("users").doc(user.uid).collection("savedVideos").doc(videoId).set({ savedAt: Date.now() });
-      alert("Video saved!");
+  // Auth state change
+  auth.onAuthStateChanged(user => {
+    currentUser = user;
+    if (user) {
+      isAdmin = adminEmails.includes(user.email.toLowerCase());
+      loadVideos();
+      renderVideoForm();
+    } else {
+      videoList.innerHTML = '<p style="text-align:center; font-weight:bold;">Please sign in to view videos and use all features.</p>';
+      renderVideoForm();
     }
+  });
+</script>
 
-    function submitVideoSuggestion() {
-      const title = document.getElementById("videoTitle").value;
-      const url = document.getElementById("videoURL").value;
-      const category = document.getElementById("videoCategory").value.toLowerCase();
-      if (!title || !url || !category) return alert("Fill in all fields.");
-      db.collection("videoSuggestions").add({ title, url, category, submittedAt: Date.now() });
-      alert("Video submitted for review!");
-      document.getElementById("videoTitle").value = "";
-      document.getElementById("videoURL").value = "";
-      document.getElementById("videoCategory").value = "";
-    }
-
-    function filterVideos() {
-      const keyword = searchInput.value.toLowerCase();
-      const category = categoryFilter.value;
-      const cards = document.querySelectorAll(".video-card");
-      cards.forEach(card => {
-        const title = card.querySelector(".video-title").textContent.toLowerCase();
-        const matchesKeyword = title.includes(keyword);
-        const matchesCategory = category === "all" || card.dataset.category === category;
-        card.style.display = matchesKeyword && matchesCategory ? "block" : "none";
-      });
-    }
-
-    searchInput.addEventListener("input", filterVideos);
-    categoryFilter.addEventListener("change", filterVideos);
-
-    auth.onAuthStateChanged(user => {
-      if (user) loadVideos();
-      else alert("Please sign in to use the Learning Hub features.");
-    });
-
-    document.getElementById("menuToggle").addEventListener("click", () => {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
-    });
-  </script>
 </body>
 </html>
