@@ -26,14 +26,16 @@
     }
     aside .logo {
       text-align: center;
-      padding-bottom: 20px;
+      padding-bottom: 10px;
     }
     aside .logo img {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid #8ab73a;
+    }
+    aside nav {
+      margin-top: 20px;
     }
     aside nav a {
       display: block;
@@ -65,22 +67,23 @@
     }
     h1 {
       font-size: 2rem;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
     .filters {
-      margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-bottom: 20px;
     }
     .filters select, .filters input[type="text"] {
       padding: 10px;
       border-radius: 10px;
       border: 1px solid #ccc;
+      flex: 1;
     }
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
     .video-card {
@@ -148,6 +151,7 @@
     .upload-section button:hover {
       background: #8ab73a;
     }
+
     @media (max-width: 768px) {
       #sidebar {
         position: absolute;
@@ -155,7 +159,6 @@
         top: 0;
         display: none;
         z-index: 1000;
-        width: 200px;
       }
       main {
         padding-left: 0;
@@ -182,6 +185,7 @@
     <button id="menuToggle">
       <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/menu-icon.png" alt="Menu">
     </button>
+
     <h1>Learning Hub</h1>
     <div class="filters">
       <select id="categoryFilter">
@@ -192,7 +196,9 @@
       </select>
       <input type="text" id="searchInput" placeholder="Search videos...">
     </div>
+
     <div class="video-grid" id="videoList"></div>
+
     <div class="upload-section">
       <h2>Suggest a Learning Video</h2>
       <input type="text" id="videoTitle" placeholder="Video Title">
@@ -215,19 +221,18 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
+    const videoList = document.getElementById("videoList");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
-    const videoList = document.getElementById("videoList");
 
     function renderVideoCard(doc) {
       const { title, url, category } = doc.data();
       const videoId = new URL(url).searchParams.get("v") || url.split("/").pop();
-      const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
       const card = document.createElement("div");
       card.className = "video-card";
       card.dataset.category = category;
       card.innerHTML = `
-        ${iframe}
+        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
         <div class="video-title">${title}</div>
         <button class="save-btn" onclick="saveVideo('${doc.id}')">Save</button>
       `;
@@ -281,13 +286,10 @@
       else alert("Please sign in to use the Learning Hub features.");
     });
 
-    // Sidebar toggle
-    const toggleBtn = document.getElementById("menuToggle");
-    const sidebar = document.getElementById("sidebar");
-    toggleBtn.addEventListener("click", () => {
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      const sidebar = document.getElementById("sidebar");
       sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
     });
-    if (window.innerWidth < 768) sidebar.style.display = "none";
   </script>
 </body>
 </html>
