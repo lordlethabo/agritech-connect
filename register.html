@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect – Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #f4fff1, #ddf7cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      padding: 40px 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      backdrop-filter: blur(5px);
+    }
+    h1 {
+      margin-bottom: 25px;
+      color: #2e7d32;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 15px;
+      background-color: #f8fff5;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      border-color: #81c784;
+      box-shadow: 0 0 5px rgba(129,199,132,0.5);
+      outline: none;
+    }
+    button {
+      background-color: #81c784;
+      border: none;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #66bb6a;
+      transform: scale(1.02);
+    }
+    .link {
+      margin-top: 10px;
+      display: block;
+      color: #388e3c;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: red;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Create an Account</h1>
+
+    <input type="text" id="fullName" placeholder="Full Name" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password (min 6 characters)" />
+
+    <button onclick="register()">Register</button>
+
+    <span class="link" onclick="window.location.href='index.html'">Back to Login</span>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const messageDiv = document.getElementById("message");
+
+    function register() {
+      messageDiv.textContent = "";
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!fullName || !email || !password) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      if (password.length < 6) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Password must be at least 6 characters.";
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          // Update user profile display name
+          return user.updateProfile({ displayName: fullName });
+        })
+        .then(() => {
+          messageDiv.style.color = "green";
+          messageDiv.textContent = "Registration successful! Redirecting...";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        })
+        .catch((error) => {
+          messageDiv.style.color = "red";
+          messageDiv.textContent = error.message;
+        });
+    }
+  </script>
+</body>
+</html>
