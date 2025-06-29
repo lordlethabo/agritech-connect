@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Advisor – AgriTech Connect</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f9ef; color: #333; padding: 20px; }
+    h1, h2, h3 { color: #4a4721; }
+    section { background: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .label { font-weight: bold; }
+    .alert { padding: 10px; background: #fff3cd; border-left: 5px solid #ffc107; border-radius: 6px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>🌦️ Smart Weather & Crop Advisor</h1>
+  <a href="dashboard.html">⬅️ Back to Dashboard</a>
+
+  <section>
+    <h2>📍 Current Weather</h2>
+    <p><span class="label">Location:</span> <span id="location">Detecting...</span></p>
+    <p><span class="label">Weather:</span> <span id="weatherDesc">--</span></p>
+    <p><span class="label">Temperature:</span> <span id="temp">--</span> °C</p>
+    <p><span class="label">Humidity:</span> <span id="humidity">--</span>%</p>
+  </section>
+
+  <section>
+    <h2>🌱 Crop & Livestock Suitability</h2>
+    <p><span class="label">Crops:</span> <span id="cropOutput">--</span></p>
+    <p><span class="label">Livestock:</span> <span id="livestockOutput">--</span></p>
+  </section>
+
+  <section id="diseaseRisk">
+    <h2>🦠 Crop Disease & Pest Risk Predictor</h2>
+    <p id="riskAlert">Analyzing weather conditions...</p>
+  </section>
+
+  <script>
+    const apiKey = "4e964608f63e83461ebc8ef5ea65e997";
+    const cropData = [
+      { name: "Maize", tempRange: [20, 32], humidityRange: [30, 80], livestock: false },
+      { name: "Spinach", tempRange: [10, 25], humidityRange: [40, 90], livestock: false },
+      { name: "Goat", tempRange: [15, 35], humidityRange: [20, 80], livestock: true },
+      { name: "Chicken", tempRange: [18, 30], humidityRange: [40, 85], livestock: true }
+    ];
+
+    function matchCrops(temp, humidity) {
+      const matches = cropData.filter(c =>
+        temp >= c.tempRange[0] && temp <= c.tempRange[1] &&
+        humidity >= c.humidityRange[0] && humidity <= c.humidityRange[1]
+      );
+
+      document.getElementById("cropOutput").textContent = matches.filter(m => !m.livestock).map(m => m.name).join(", ") || "None";
+      document.getElementById("livestockOutput").textContent = matches.filter(m => m.livestock).map(m => m.name).join(", ") || "None";
+    }
+
+    function evaluateDiseaseRisk(temp, humidity) {
+      let riskMessage = "✅ Low risk. Conditions are stable.";
+
+      if (humidity > 85 && temp > 20) {
+        riskMessage = "⚠️ High risk of fungal infections. Consider antifungal measures and ensure good drainage.";
+      } else if (temp > 32 && humidity < 40) {
+        riskMessage = "🔥 Heat and drought conditions. Protect young plants with mulch and water early morning.";
+      } else if (humidity < 30 && temp < 15) {
+        riskMessage = "⚠️ Dry + cold conditions. Watch out for pest infestations and frost-sensitive crops.";
+      }
+
+      document.getElementById("riskAlert").innerHTML = `<div class='alert'>${riskMessage}</div>`;
+    }
+
+    function fetchWeather(lat, lon) {
+      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+        .then(res => res.json())
+        .then(data => {
+          const temp = data.main.temp;
+          const humidity = data.main.humidity;
+          const desc = data.weather[0].description;
+          const location = `${data.name}, ${data.sys.country}`;
+
+          document.getElementById("location").textContent = location;
+          document.getElementById("weatherDesc").textContent = desc;
+          document.getElementById("temp").textContent = temp;
+          document.getElementById("humidity").textContent = humidity;
+
+          matchCrops(temp, humidity);
+          evaluateDiseaseRisk(temp, humidity);
+        })
+        .catch(err => {
+          document.getElementById("location").textContent = "Weather data unavailable.";
+        });
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        fetchWeather(pos.coords.latitude, pos.coords.longitude);
+      }, () => {
+        document.getElementById("location").textContent = "Location not granted.";
+      });
+    } else {
+      document.getElementById("location").textContent = "Geolocation not supported.";
+    }
+  </script>
+</body>
+</html>
