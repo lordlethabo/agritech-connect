@@ -1,710 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AgriTech Connect – Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect – Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg-color-light: #f4f9ef;
-      --text-color-light: #4a4721;
-      --card-bg-light: white;
-      --btn-bg: #6b8e23;
-      --btn-hover: #8ab73a;
-      --glow-color: #d4f06d;
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      color: #4a4721;
+      display: flex;
+      min-height: 100vh;
+      background: #f4f9ef;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    [data-theme="dark"] {
-      --bg-color-light: #1f241e;
-      --text-color-light: #c9d1b1;
-      --card-bg-light: #2a2e24;
-      --btn-bg: #8ab73a;
-      --btn-hover: #6b8e23;
-      --glow-color: #a7cc4c;
+    body.dark-mode {
+      background: #1a1a1a;
+      color: #cfcfcf;
     }
 
-    body {
-      margin: 0; font-family: Poppins, sans-serif;
-      color: var(--text-color-light);
-      background: var(--bg-color-light);
-      display: flex; min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-    }
     aside {
-      width: 250px; background: var(--text-color-light);
-      color: white; flex-shrink: 0;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-      overflow: hidden;
+      width: 250px;
+      background: #4a4721;
+      color: white;
+      flex-shrink: 0;
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
     }
-    aside .logo {
-      padding: 20px; font-size: 1.3em; text-align: center;
-      border-bottom: 1px solid var(--btn-hover);
-      font-weight: 700;
+
+    .logo {
+      padding: 20px 0;
+      text-align: center;
+      border-bottom: 1px solid #6b8e23;
+      border-top-right-radius: 16px;
     }
+
+    .logo img {
+      max-width: 180px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      padding: 15px 0;
+      border-radius: 12px;
+    }
+
     aside nav a {
-      display: flex; align-items: center;
-      padding: 14px 20px; color: white;
+      display: block;
+      padding: 14px 20px;
+      color: white;
       text-decoration: none;
-      border-radius: 12px 0 0 12px;
-      transition: all 0.3s ease;
-      font-weight: 600;
-      user-select: none;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+      border-radius: 0 12px 12px 0;
+      margin: 6px 10px;
     }
+
     aside nav a:hover,
     aside nav a.active {
-      background: var(--btn-hover);
-      font-weight: 700;
-      box-shadow: 0 0 10px var(--glow-color);
-      padding-left: 24px;
-    }
-    aside nav a i {
-      margin-right: 12px;
-      font-style: normal;
+      background: #6b8e23;
+      font-weight: bold;
+      border-left-color: #8ab73a;
     }
 
     main {
       flex: 1;
+      background: #f4f9ef;
+      padding: 40px 30px;
       display: flex;
       flex-direction: column;
-      background: var(--bg-color-light);
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
-      overflow: hidden;
-      transition: background-color 0.3s;
-    }
-    header {
-      background: var(--card-bg-light);
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom-left-radius: 20px;
-      border-top-left-radius: 20px;
-    }
-    .stats {
-      display: flex; gap: 20px;
-    }
-    .stat-card {
-      background: var(--card-bg-light);
-      padding: 15px;
-      border-radius: 16px;
-      box-shadow: 0 1px 8px rgba(0,0,0,0.1);
-      flex: 1;
+      justify-content: center;
       text-align: center;
-      transition: box-shadow 0.3s ease;
-      cursor: default;
-      user-select: none;
-    }
-    .stat-card:hover {
-      box-shadow: 0 0 15px var(--glow-color);
-    }
-    .content {
-      flex: 1;
-      overflow: auto;
-      padding: 20px;
-    }
-    .section {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-    .section.active {
-      display: block;
-    }
-    .marketplace-header {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-      gap: 10px;
-    }
-    .marketplace-header form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      flex: 1;
-    }
-    .marketplace-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
-      gap: 16px;
-    }
-    .card {
-      background: var(--card-bg-light);
       border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      user-select: none;
+      margin: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px var(--glow-color);
-    }
-    .card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 16px;
-      margin-bottom: 8px;
-    }
-    button {
-      background: var(--btn-bg);
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      user-select: none;
-    }
-    button:hover {
-      background: var(--btn-hover);
-      transform: scale(1.05);
-      box-shadow: 0 0 15px var(--glow-color);
-    }
-    input[type="text"], input[type="number"] {
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      flex: 1;
-      transition: border-color 0.3s ease;
-    }
-    input:hover, input:focus {
-      border-color: var(--btn-bg);
-      outline: none;
+    body.dark-mode main {
+      background: #2a2a2a;
+      color: #d0d0d0;
+      box-shadow: 0 4px 20px rgba(255 255 255 / 0.1);
     }
 
-    .chat-window {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      max-height: 400px;
-      background: var(--card-bg-light);
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      user-select: none;
-    }
-    .chat-header {
-      padding: 10px;
-      background: var(--btn-bg);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-    }
-    .chat-body {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-      font-size: 0.9em;
-      background: var(--bg-color-light);
-    }
-    .message {
-      margin: 6px 0;
-      padding: 8px 12px;
-      border-radius: 16px;
-      max-width: 80%;
-      word-wrap: break-word;
-      user-select: text;
-    }
-    .message.theirs {
-      background: #efefef;
-      align-self: flex-start;
-      color: var(--text-color-light);
-    }
-    .message.mine {
-      background: var(--btn-hover);
-      color: white;
-      align-self: flex-end;
-    }
-    .chat-input {
-      display: flex;
-      border-top: 1px solid #ccc;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 0 0 0 16px;
-      font-size: 1rem;
-    }
-    .chat-input button {
-      padding: 0 18px;
-      border-radius: 0 0 16px 0;
-      border: none;
-      background: var(--btn-bg);
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-    }
-    .chat-input button:hover {
-      background: var(--btn-hover);
-      box-shadow: 0 0 10px var(--glow-color);
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    /* Profile dropdown top right */
-    .profile-menu {
-      position: relative;
-      user-select: none;
-    }
-    .profile-button {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--btn-bg);
-      border: none;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 0 8px var(--glow-color);
-      transition: background-color 0.3s ease;
-    }
-    .profile-button:hover {
-      background: var(--btn-hover);
-      box-shadow: 0 0 15px var(--glow-color);
-    }
-    .profile-button img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-    }
-    .profile-dropdown {
-      position: absolute;
-      right: 0;
-      top: 45px;
-      background: var(--card-bg-light);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      border-radius: 16px;
-      width: 260px;
-      padding: 20px;
-      display: none;
-      z-index: 20;
-      user-select: text;
-    }
-    .profile-dropdown.active {
-      display: block;
-      animation: fadeIn 0.3s ease forwards;
-    }
-    .profile-dropdown input[type="text"] {
-      width: 100%;
+    main h1 {
+      font-size: 2.8rem;
       margin-bottom: 10px;
       border-radius: 12px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .profile-dropdown label {
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: block;
-      color: var(--text-color-light);
-    }
-    .profile-dropdown .profile-pic-preview {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 10px;
-      border: 2px solid var(--btn-bg);
-    }
-    .profile-dropdown button {
-      margin-top: 10px;
-      width: 100%;
     }
 
-    /* Hamburger menu for mobile */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-      gap: 5px;
-      margin-left: 10px;
-    }
-    .hamburger div {
-      width: 25px;
-      height: 3px;
-      background: var(--btn-bg);
-      border-radius: 3px;
-      transition: 0.3s;
-    }
-
-    @media (max-width: 768px) {
-      aside {
-        display: none;
-      }
-      .hamburger {
-        display: flex;
-      }
-      header {
-        justify-content: space-between;
-      }
-    }
-  </style>
-</head>
-<body data-theme="light">
-
-<aside>
-  <div class="logo">AgriTech Connect</div>
-  <nav>
-    <a href="#" data-target="dashboard" class="active">Home</a>
-    <a href="#" data-target="marketplace">Marketplace</a>
-    <a href="#" data-target="chat">Chat</a>
-    <a href="#" data-target="settings">Settings</a>
-  </nav>
-</aside>
-
-<main>
-  <header>
-    <div class="stats">
-      <div class="stat-card"><strong id="weatherNow">--°C</strong><div>Current Temp</div></div>
-      <div class="stat-card"><strong id="liveListings">0</strong><div>Listings</div></div>
-      <div class="stat-card"><strong id="unreadChats">0</strong><div>Messages</div></div>
-    </div>
-
-    <div class="profile-menu" tabindex="0">
-      <button id="profileBtn" class="profile-button" aria-haspopup="true" aria-expanded="false">
-        <img id="profilePicBtn" src="https://via.placeholder.com/32" alt="Profile Picture" />
-        <span id="profileNameBtn">Profile</span>
-      </button>
-      <div id="profileDropdown" class="profile-dropdown" role="menu" aria-label="Profile menu">
-        <img id="profilePicPreview" class="profile-pic-preview" src="https://via.placeholder.com/80" alt="Profile Picture Preview" />
-        <input type="file" id="photoInput" accept="image/*" aria-label="Upload profile picture" />
-        <label for="fnameInput">First Name</label>
-        <input id="fnameInput" type="text" placeholder="First Name" />
-        <label for="lnameInput">Last Name</label>
-        <input id="lnameInput" type="text" placeholder="Last Name" />
-        <label for="usernameInput">Username</label>
-        <input id="usernameInput" type="text" placeholder="Username" />
-        <button id="saveProfileBtn" class="btn">Save Profile</button>
-        <button id="logoutBtn" class="btn" style="background:#c0392b; margin-top:10px;">Logout</button>
-        <button id="toggleThemeBtn" class="btn" style="background:#333; margin-top:10px;">Toggle Light/Dark Mode</button>
-      </div>
-    </div>
-
-    <div class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" tabindex="0">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </header>
-
-  <div class="content">
-    <section id="dashboard" class="section active">
-      <h2>Welcome!</h2>
-      <p>Your digital platform to empower rural youth and small-scale farmers with market access, learning resources, community, and smart tools.</p>
-    </section>
-
-    <section id="marketplace" class="section">
-      <h2>Marketplace</h2>
-      <div class="marketplace-header">
-        <form id="produce-form">
-          <input id="prod-name" type="text" placeholder="Product" required />
-          <input id="prod-price" type="number" placeholder="Price (R)" min="0" step="0.01" required />
-          <button>Add</button>
-        </form>
-        <button id="new-chat-btn">Start Chat</button>
-      </div>
-      <div class="marketplace-list" id="listings"></div>
-    </section>
-
-    <section id="chat" class="section">
-      <h2>Community Chat</h2>
-      <p>Talk with others in real time!</p>
-    </section>
-
-    <section id="settings" class="section">
-      <h2>Settings</h2>
-      <p>Adjust your preferences and notifications here.</p>
-    </section>
-  </div>
-</main>
-
-<!-- Chat UI -->
-<div id="chatUI" class="chat-window" role="dialog" aria-modal="true" aria-label="Chat window">
-  <div class="chat-header">
-    <span>Marketplace Chat</span>
-    <button id="close-chat" aria-label="Close chat window">✖️</button>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-input">
-    <input id="msgInput" placeholder="Type a message..." aria-label="Chat message input" />
-    <button id="sendMsg">Send</button>
-  </div>
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-
-<script>
-  // Firebase config
-  firebase.initializeApp({
-    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-    authDomain: "agritechconnect.firebaseapp.com",
-    projectId: "AgriTechConnect",
-    storageBucket: "agritechconnect.appspot.com",
-    messagingSenderId: "1027312049739",
-    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-  });
-
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
-
-  // Navigation logic
-  document.querySelectorAll("aside nav a").forEach(link => {
-    link.onclick = e => {
-      e.preventDefault();
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      document.querySelectorAll("aside nav a").forEach(a => a.classList.remove("active"));
-      document.getElementById(link.dataset.target).classList.add("active");
-      link.classList.add("active");
-    };
-  });
-
-  // Marketplace product form
-  document.getElementById("produce-form").onsubmit = e => {
-    e.preventDefault();
-    const name = document.getElementById("prod-name").value.trim();
-    const price = parseFloat(document.getElementById("prod-price").value);
-    if (!name || isNaN(price) || price < 0) return alert("Please enter valid product name and price.");
-    db.collection("marketplace").add({name, price, created: Date.now()});
-    e.target.reset();
-  };
-
-  // Load marketplace listings
-  db.collection("marketplace").orderBy("created", "desc").onSnapshot(snapshot => {
-    const list = document.getElementById("listings");
-    list.innerHTML = "";
-    document.getElementById("liveListings").textContent = snapshot.size;
-    snapshot.forEach(doc => {
-      const item = doc.data();
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `
-        <img src="https://via.placeholder.com/150x120?text=${encodeURIComponent(item.name)}" alt="${item.name}" />
-        <h4>${item.name}</h4>
-        <p>R${item.price.toFixed(2)}</p>
-      `;
-      list.appendChild(div);
-    });
-  });
-
-  // Chat feature
-  const chatUI = document.getElementById("chatUI");
-  const chatBody = document.getElementById("chatBody");
-  const msgInput = document.getElementById("msgInput");
-
-  document.getElementById("new-chat-btn").onclick = () => {
-    chatUI.style.display = "flex";
-  };
-  document.getElementById("close-chat").onclick = () => {
-    chatUI.style.display = "none";
-  };
-  document.getElementById("sendMsg").onclick = () => {
-    const msg = msgInput.value.trim();
-    if (msg && currentUser) {
-      db.collection("chat").add({
-        msg,
-        time: Date.now(),
-        uid: currentUser.uid,
-        displayName: currentUser.displayName || "Anonymous"
-      });
-      msgInput.value = "";
-    }
-  };
-
-  db.collection("chat").orderBy("time").onSnapshot(snapshot => {
-    chatBody.innerHTML = "";
-    document.getElementById("unreadChats").textContent = snapshot.size;
-    snapshot.forEach(doc => {
-      const m = doc.data();
-      const div = document.createElement("div");
-      div.className = "message theirs";
-      div.textContent = m.displayName + ": " + m.msg;
-      chatBody.appendChild(div);
-    });
-    chatBody.scrollTop = chatBody.scrollHeight;
-  });
-
-  // Static weather display placeholder
-  document.getElementById("weatherNow").textContent = "26°C";
-
-  // PROFILE MENU & AUTHENTICATION
-
-  const profileBtn = document.getElementById("profileBtn");
-  const profileDropdown = document.getElementById("profileDropdown");
-  const profileNameBtn = document.getElementById("profileNameBtn");
-  const profilePicBtn = document.getElementById("profilePicBtn");
-  const profilePicPreview = document.getElementById("profilePicPreview");
-  const photoInput = document.getElementById("photoInput");
-  const fnameInput = document.getElementById("fnameInput");
-  const lnameInput = document.getElementById("lnameInput");
-  const usernameInput = document.getElementById("usernameInput");
-  const saveProfileBtn = document.getElementById("saveProfileBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const toggleThemeBtn = document.getElementById("toggleThemeBtn");
-
-  let currentUser = null;
-
-  // Toggle dropdown menu
-  profileBtn.onclick = () => {
-    const expanded = profileBtn.getAttribute("aria-expanded") === "true";
-    profileBtn.setAttribute("aria-expanded", String(!expanded));
-    profileDropdown.classList.toggle("active");
-  };
-
-  // Close dropdown if click outside
-  document.addEventListener("click", e => {
-    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-      profileDropdown.classList.remove("active");
-      profileBtn.setAttribute("aria-expanded", "false");
-    }
-  });
-
-  // Load profile data from Firestore + Storage
-  async function loadProfile(uid) {
-    const doc = await db.collection("users").doc(uid).get();
-    const data = doc.exists ? doc.data() : {};
-    fnameInput.value = data.firstName || "";
-    lnameInput.value = data.lastName || "";
-    usernameInput.value = data.username || "";
-
-    if (data.photoURL) {
-      profilePicPreview.src = data.photoURL;
-      profilePicBtn.src = data.photoURL;
-    } else {
-      profilePicPreview.src = "https://via.placeholder.com/80";
-      profilePicBtn.src = "https://via.placeholder.com/32";
-    }
-
-    // Update profile button text
-    const displayName = data.firstName ? `${data.firstName} ${data.lastName || ""}`.trim() : "Profile";
-    profileNameBtn.textContent = displayName;
-  }
-
-  // Save profile changes to Firestore and upload photo to Storage
-  saveProfileBtn.onclick = async () => {
-    if (!currentUser) return alert("You must be logged in.");
-
-    let photoURL = profilePicPreview.src;
-
-    if (photoInput.files.length > 0) {
-      const file = photoInput.files[0];
-      const storageRef = storage.ref().child(`profilePhotos/${currentUser.uid}/${file.name}`);
-      const snapshot = await storageRef.put(file);
-      photoURL = await snapshot.ref.getDownloadURL();
-    }
-
-    const profileData = {
-      firstName: fnameInput.value.trim(),
-      lastName: lnameInput.value.trim(),
-      username: usernameInput.value.trim(),
-      photoURL,
-    };
-
-    await db.collection("users").doc(currentUser.uid).set(profileData, { merge: true });
-    alert("Profile saved.");
-    loadProfile(currentUser.uid);
-  };
-
-  // Preview uploaded photo immediately
-  photoInput.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      profilePicPreview.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-  };
-
-  // Logout button
-  logoutBtn.onclick = () => {
-    auth.signOut();
-  };
-
-  // Theme toggle (save to localStorage)
-  function setTheme(theme) {
-    document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }
-  toggleThemeBtn.onclick = () => {
-    const current = document.body.getAttribute("data-theme");
-    setTheme(current === "light" ? "dark" : "light");
-  };
-  // Load theme from localStorage on startup
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) setTheme(savedTheme);
-
-  // Authentication UI - simple popup if not logged in
-  async function signIn() {
-    // Try Firebase popup Google sign in first
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-      const result = await auth.signInWithPopup(provider);
-      return result.user;
-    } catch (e) {
-      console.error(e);
-      alert("Google sign in failed. Please try again.");
-    }
-  }
-
-  // On auth state change
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      currentUser = user;
-      loadProfile(user.uid);
-      profileBtn.style.display = "flex";
-      document.getElementById("produce-form").style.display = "flex";
-      document.getElementById("new-chat-btn").style.display = "inline-block";
-    } else {
-      currentUser = null;
-      profileBtn.style.display = "none";
-      document.getElementById("produce-form").style.display = "none";
-      document.getElementById("new-chat-btn").style.display = "none";
-      // Show sign in prompt
-      if (confirm("You need to sign in to continue. Sign in with Google?")) {
-        signIn();
-      }
-    }
-  });
-
-  // Hamburger menu toggle for mobile
-  const hamburgerBtn = document.getElementById("hamburgerBtn");
-  hamburgerBtn.onclick = () => {
-    const aside = document.querySelector("aside");
-    if (aside.style.display === "block") {
-      aside.style.display = "none";
-    } else {
-      aside.style.display = "block";
-    }
-  };
-</script>
-</body>
-</html>
+    .description-bg {
+      background: url('background.jpg') center center / cover no-repeat;
+      padding: 40px 30px;
+      border-radius: 16px;
+      color:
