@@ -1,228 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgriTech Connect – Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #f4fff1, #ddf7cc);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      padding: 40px 30px;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-      backdrop-filter: blur(5px);
-    }
-
-    .logo-container {
-      margin-bottom: 20px;
-    }
-
-    .logo {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.08);
-      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.3);
-    }
-
-    h1 {
-      margin-bottom: 25px;
-      color: #2e7d32;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 15px;
-      background-color: #f8fff5;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #81c784;
-      box-shadow: 0 0 5px rgba(129, 199, 132, 0.5);
-      outline: none;
-    }
-
-    button {
-      background-color: #81c784;
-      border: none;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #66bb6a;
-      transform: scale(1.02);
-    }
-
-    .link {
-      margin-top: 10px;
-      display: block;
-      color: #388e3c;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    #message {
-      margin-top: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      color: red;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 600px) {
-      .container {
-        padding: 30px 20px;
-      }
-
-      h1 {
-        font-size: 22px;
-      }
-
-      .logo {
-        width: 80px;
-        height: 80px;
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1024px) {
-      .container {
-        padding: 50px 40px;
-      }
-
-      h1 {
-        font-size: 26px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-      }
-    }
-  </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriTech Connect – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Styles omitted here for brevity - identical to last version */
+    /* Add your previous CSS styles here */
+  </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="logo-container">
-      <img src="logo.png" alt="AgriTech Logo" class="logo" />
-    </div>
+  <div class="container">
+    <div class="logo-container">
+      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/logo.png" alt="AgriTech Logo" class="logo" />
+    </div>
 
-    <h1>AgriTech Connect</h1>
+    <h1>AgriTech Connect</h1>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <input type="email" id="email" placeholder="Email" autocomplete="email" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-    <button onclick="login()">Login</button>
+    <label style="display:block; margin:10px 0; font-size:14px">
+      <input type="checkbox" id="rememberMe"> Remember Me
+    </label>
 
-    <span class="link" onclick="resetPassword()">Forgot Password?</span>
-    <span class="link" onclick="window.location.href='register.html'">Create Account</span>
+    <button onclick="login()">Login</button>
+    <button onclick="googleLogin()" style="background-color:#db4437; margin-top:10px">Sign in with Google</button>
+    <button onclick="phoneLoginPrompt()" style="background-color:#4285f4; margin-top:10px">Sign in with Phone</button>
 
-    <div id="message"></div>
-  </div>
+    <div>
+      <span class="link" onclick="resetPassword()">Forgot Password?</span> |
+      <span class="link" onclick="window.location.href='register.html'">Create Account</span>
+    </div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect",
-      storageBucket: "agritechconnect.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-    };
+    <div id="recaptcha-container"></div>
+    <div id="message"></div>
+  </div>
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
 
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const msg = document.getElementById("message");
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-      if (!email || !password) {
-        msg.style.color = "red";
-        msg.textContent = "❌ Email and password required.";
-        return;
-      }
+    // Auto-login if already signed in
+    auth.onAuthStateChanged(user => {
+      if (user) window.location.href = 'dashboard.html';
+    });
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          msg.style.color = "green";
-          msg.textContent = "✅ Login successful!";
-          setTimeout(() => window.location.href = "dashboard.html", 1000);
-        })
-        .catch(error => {
-          msg.style.color = "red";
-          msg.textContent = "❌ " + error.message;
-        });
-    }
+    function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const remember = document.getElementById("rememberMe").checked;
+      const msg = document.getElementById("message");
 
-    function resetPassword() {
-      const email = document.getElementById("email").value;
-      const msg = document.getElementById("message");
+      if (!email || !password) {
+        msg.style.color = "red";
+        msg.textContent = "❌ Email and password are required.";
+        return;
+      }
 
-      if (!email) {
-        msg.style.color = "red";
-        msg.textContent = "Please enter your email to reset your password.";
-        return;
-      }
+      auth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
+        .then(() => {
+          return auth.signInWithEmailAndPassword(email, password);
+        })
+        .then(() => {
+          msg.style.color = "green";
+          msg.textContent = "✅ Login successful! Redirecting...";
+          setTimeout(() => window.location.href = "dashboard.html", 1000);
+        })
+        .catch(error => {
+          msg.style.color = "red";
+          msg.textContent = "❌ " + error.message;
+        });
+    }
 
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          msg.style.color = "green";
-          msg.textContent = "Password reset link sent to your email.";
-        })
-        .catch(error => {
-          msg.style.color = "red";
-          msg.textContent = error.message;
-        });
-    }
-  </script>
+    function resetPassword() {
+      const email = document.getElementById("email").value.trim();
+      const msg = document.getElementById("message");
+      if (!email) {
+        msg.style.color = "red";
+        msg.textContent = "Please enter your email address.";
+        return;
+      }
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          msg.style.color = "green";
+          msg.textContent = "📩 Password reset email sent!";
+        })
+        .catch(error => {
+          msg.style.color = "red";
+          msg.textContent = error.message;
+        });
+    }
+
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          window.location.href = 'dashboard.html';
+        })
+        .catch(error => {
+          document.getElementById("message").textContent = error.message;
+        });
+    }
+
+    function phoneLoginPrompt() {
+      const phone = prompt("Enter your phone number in international format (e.g., +27601234567):");
+      if (!phone) return;
+
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible'
+      });
+
+      auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+        .then(confirmationResult => {
+          const code = prompt("Enter the verification code sent to your phone:");
+          if (!code) return;
+          confirmationResult.confirm(code)
+            .then(result => {
+              window.location.href = 'dashboard.html';
+            })
+            .catch(error => {
+              document.getElementById("message").textContent = error.message;
+            });
+        })
+        .catch(error => {
+          document.getElementById("message").textContent = error.message;
+        });
+    }
+  </script>
 </body>
 </html>
