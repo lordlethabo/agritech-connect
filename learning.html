@@ -22,6 +22,7 @@
       color: white;
       min-height: 100vh;
       padding-top: 20px;
+      transition: 0.3s;
     }
     aside .logo {
       text-align: center;
@@ -48,6 +49,16 @@
     main {
       flex: 1;
       padding: 30px;
+    }
+    #menuToggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    #menuToggle img {
+      width: 40px;
+      height: 40px;
     }
     h1 {
       font-size: 2rem;
@@ -132,10 +143,23 @@
     .upload-section button:hover {
       background: #8ab73a;
     }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: none;
+        z-index: 1000;
+      }
+      main {
+        padding-left: 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <aside>
+  <aside id="sidebar">
     <div class="logo">
       <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/logo.png" alt="Logo">
     </div>
@@ -150,6 +174,10 @@
   </aside>
 
   <main>
+    <button id="menuToggle">
+      <img src="https://raw.githubusercontent.com/lordlethabo/agritech-connect/main/menu-icon.png" alt="Menu">
+    </button>
+
     <h1>Learning Hub</h1>
     <div class="filters">
       <select id="categoryFilter">
@@ -253,6 +281,19 @@
       if (user) loadVideos();
       else alert("Please sign in to use the Learning Hub features.");
     });
+
+    // Sidebar toggle
+    const toggleBtn = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
+    });
+
+    // Auto-hide on small screens
+    if (window.innerWidth < 768) {
+      sidebar.style.display = "none";
+    }
   </script>
 </body>
 </html>
