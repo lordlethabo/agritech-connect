@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgriTech Connect - Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-color: #f4f9ef;
+    --text-color: #4a4721;
+    --card-bg: white;
+    --btn-bg: #6b8e23;
+    --btn-hover: #8ab73a;
+  }
+  body {
+    margin: 0; font-family: Poppins, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    min-height: 100vh; padding: 30px;
+  }
+  h1 { margin-bottom: 20px; }
+  .btn {
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover {
+    background: var(--btn-hover);
+  }
+  .profile-container {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  #profilePicPreview {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid var(--btn-bg);
+  }
+  input[type="file"] {
+    margin: 10px 0;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  #logoutBtn {
+    margin-top: 20px;
+    background: #c0392b;
+  }
+  #logoutBtn:hover {
+    background: #e74c3c;
+  }
+  #loader {
+    display: none;
+    margin: 20px auto;
+  }
+  #authSection, #profileSection {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  #userEmail {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>AgriTech Connect - User Profile</h1>
+
+<!-- Authentication UI -->
+<div id="authSection">
+  <button id="googleSignInBtn" class="btn">Sign in with Google</button>
+  <p>OR</p>
+  <input type="email" id="emailInput" placeholder="Email" />
+  <input type="password" id="passwordInput" placeholder="Password" />
+  <button id="emailSignInBtn" class="btn">Sign In / Register</button>
+</div>
+
+<!-- Profile UI -->
+<div id="profileSection" style="display:none;">
+  <div id="userEmail"></div>
+  <img id="profilePicPreview" src="https://via.placeholder.com/120" alt="Profile Picture" />
+  <input type="file" id="photoInput" accept="image/*" />
+  <input type="text" id="fname" placeholder="First Name" />
+  <input type="text" id="lname" placeholder="Last Name" />
+  <input type="text" id="username" placeholder="Username" />
+  <button id="saveProfileBtn" class="btn">Save Profile</button>
+  <button id="logoutBtn">Logout</button>
+</div>
+
+<div id="loader">Uploading image... please wait.</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+<script>
+  // Your Firebase config here:
+  const firebaseConfig = {
+    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+    authDomain: "agritechconnect.firebaseapp.com",
+    projectId: "AgriTechConnect",
+    storageBucket: "agritechconnect.appspot.com",
+    messagingSenderId: "1027312049739",
+    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  // UI Elements
+  const authSection = document.getElementById('authSection');
+  const profileSection = document.getElementById('profileSection');
+  const userEmailDiv = document.getElementById('userEmail');
+  const googleSignInBtn = document.getElementById('googleSignInBtn');
+  const emailSignInBtn = document.getElementById('emailSignInBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const photoInput = document.getElementById('photoInput');
+  const profilePicPreview = document.getElementById('profilePicPreview');
+  const fnameInput = document.getElementById('fname');
+  const lnameInput = document.getElementById('lname');
+  const usernameInput = document.getElementById('username');
+  const saveProfileBtn = document.getElementById('saveProfileBtn');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loader = document.getElementById('loader');
+
+  let uploadedPhotoURL = null;
+
+  // Auth State listener
+  auth.onAuthStateChanged(user => {
+    if(user){
+      // User signed in
+      authSection.style.display = 'none';
+      profileSection.style.display = 'block';
+      userEmailDiv.textContent = 'Signed in as: ' + user.email;
+      loadUserProfile(user.uid);
+    } else {
+      // User signed out
+      authSection.style.display = 'block';
+      profileSection.style.display = 'none';
+      clearProfileForm();
+    }
+  });
+
+  // Google Sign In
+  googleSignInBtn.onclick = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(alert);
+  };
+
+  // Email/Password Sign In or Register
+  emailSignInBtn.onclick = () => {
+    const email = emailInput.value.trim();
+    const pass = passwordInput.value;
+    if(!email || !pass) {
+      alert('Please enter email and password');
+      return;
+    }
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(error => {
+        if(error.code === 'auth/user-not-found'){
+          // Register new user
+          auth.createUserWithEmailAndPassword(email, pass).catch(alert);
+        } else {
+          alert(error.message);
+        }
+      });
+  };
+
+  // Logout
+  logoutBtn.onclick = () => {
+    auth.signOut();
+  };
+
+  // Load user profile from Firestore
+  function loadUserProfile(uid){
+    db.collection('users').doc(uid).get()
+    .then(doc => {
+      if(doc.exists){
+        const data = doc.data();
+        fnameInput.value = data.firstName || '';
+        lnameInput.value = data.lastName || '';
+        usernameInput.value = data.username || '';
+        profilePicPreview.src = data.photoURL || 'https://via.placeholder.com/120';
+        uploadedPhotoURL = data.photoURL || null;
+      } else {
+        clearProfileForm();
+      }
+    })
+    .catch(console.error);
+  }
+
+  // Clear form fields
+  function clearProfileForm(){
+    fnameInput.value = '';
+    lnameInput.value = '';
+    usernameInput.value = '';
+    profilePicPreview.src = 'https://via.placeholder.com/120';
+    uploadedPhotoURL = null;
+  }
+
+  // Upload image to Firebase Storage
+  photoInput.onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    loader.style.display = 'block';
+
+    const user = auth.currentUser;
+    if(!user){
+      alert('You must be signed in to upload a photo.');
+      loader.style.display = 'none';
+      return;
+    }
+
+    const storageRef = storage.ref();
+    const photoRef = storageRef.child(`profilePhotos/${user.uid}/${file.name}`);
+
+    photoRef.put(file).then(snapshot => {
+      return snapshot.ref.getDownloadURL();
+    }).then(url => {
+      uploadedPhotoURL = url;
+      profilePicPreview.src = url;
+      loader.style.display = 'none';
+    }).catch(error => {
+      alert('Upload failed: ' + error.message);
+      loader.style.display = 'none';
+    });
+  };
+
+  // Save profile info to Firestore
+  saveProfileBtn.onclick = () => {
+    const user = auth.currentUser;
+    if(!user){
+      alert('You must be signed in.');
+      return;
+    }
+    const firstName = fnameInput.value.trim();
+    const lastName = lnameInput.value.trim();
+    const username = usernameInput.value.trim();
+    if(!firstName || !lastName || !username){
+      alert('Please fill all fields.');
+      return;
+    }
+    db.collection('users').doc(user.uid).set({
+      firstName,
+      lastName,
+      username,
+      photoURL: uploadedPhotoURL || null,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge: true})
+    .then(() => alert('Profile saved successfully!'))
+    .catch(err => alert('Error saving profile: ' + err.message));
+  };
+</script>
+
+</body>
+</html>
