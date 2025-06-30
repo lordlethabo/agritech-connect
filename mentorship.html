@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentorship – AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f9ef;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #6b8e23;
+      color: white;
+      padding: 20px 30px;
+      text-align: center;
+    }
+    main {
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .mentor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .mentor-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+    .mentor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(138, 183, 58, 0.3);
+    }
+    .mentor-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .mentor-card h3 {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+    .mentor-card p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+    .btn {
+      background: #6b8e23;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: #8ab73a;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .search-bar input {
+      width: 300px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌱 Mentorship Program</h1>
+    <p>Connect with experienced agricultural mentors to grow your journey</p>
+  </header>
+  <main>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by expertise (e.g., crops, business)...">
+    </div>
+    <div class="mentor-grid" id="mentorGrid">
+      <!-- Mentor cards will be inserted here dynamically -->
+    </div>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const mentorGrid = document.getElementById("mentorGrid");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderMentorCard(doc) {
+      const data = doc.data();
+      const card = document.createElement("div");
+      card.className = "mentor-card";
+      card.innerHTML = `
+        <img src="${data.photoURL || 'https://via.placeholder.com/300'}" alt="Mentor">
+        <h3>${data.name}</h3>
+        <p><strong>Expertise:</strong> ${data.expertise}</p>
+        <p>${data.bio}</p>
+        <button class="btn" onclick="requestMentor('${doc.id}')">Request Mentorship</button>
+      `;
+      mentorGrid.appendChild(card);
+    }
+
+    function loadMentors(filter = "") {
+      mentorGrid.innerHTML = "";
+      let query = db.collection("mentors");
+      if (filter) query = query.where("expertise", ">=", filter).where("expertise", "<=", filter + "\uf8ff");
+      query.get().then(snapshot => {
+        snapshot.forEach(renderMentorCard);
+      });
+    }
+
+    searchInput.addEventListener("input", () => {
+      const val = searchInput.value.trim().toLowerCase();
+      loadMentors(val);
+    });
+
+    function requestMentor(id) {
+      alert("Request sent to mentor ID: " + id);
+      // Extend with real request storage or messaging
+    }
+
+    loadMentors();
+  </script>
+</body>
+</html>
