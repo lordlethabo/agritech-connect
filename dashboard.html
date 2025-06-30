@@ -2,363 +2,151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AgriTech Connect – Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriTech Connect – Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root {
-      --green: #6b8e23;
-      --light-green: #8ab73a;
-      --brown: #4a4721;
-      --soft-gray: #f4f9ef;
-      --dark-bg: #1a1a1a;
-      --dark-card: #2a2a2a;
-    }
-
-    body {
-      margin: 0;
-      font-family: Poppins, sans-serif;
-      display: flex;
-      background: var(--soft-gray);
-      color: var(--brown);
-      min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body.dark-mode {
-      background: var(--dark-bg);
-      color: #eaeaea;
-    }
-
-    aside {
-      width: 250px;
-      background: var(--brown);
-      color: white;
-      border-top-right-radius: 16px;
-      border-bottom-right-radius: 16px;
-      flex-shrink: 0;
-      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 20px;
-      position: relative;
-    }
-
-    /* Sticky circular logo */
-    .logo {
-      position: sticky;
-      top: 20px;
-      width: 100px;
-      height: 100px;
-      margin-bottom: 25px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 3px solid var(--light-green);
-      box-shadow: 0 4px 15px rgba(107, 142, 35, 0.5);
-      background: white;
-      flex-shrink: 0;
-      z-index: 10;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    /* Hover effect on logo */
-    .logo:hover {
-      transform: scale(1.08);
-      box-shadow: 0 8px 25px rgba(138, 183, 58, 0.8);
-    }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      display: block;
-      user-select: none;
-    }
-
-    aside nav {
-      width: 100%;
-    }
-
-    aside nav a {
-      display: block;
-      padding: 14px 20px;
-      color: white;
-      text-decoration: none;
-      margin: 6px 10px;
-      border-radius: 0 12px 12px 0;
-      border-left: 4px solid transparent;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    aside nav a:hover,
-    aside nav a.active {
-      background: var(--green);
-      font-weight: bold;
-      border-left-color: var(--light-green);
-    }
-
-    main {
-      flex: 1;
-      padding: 40px 30px;
-      margin: 20px;
-      border-radius: 16px;
-      background: var(--soft-gray);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: background 0.3s;
-    }
-
-    body.dark-mode main {
-      background: var(--dark-card);
-    }
-
-    .description-bg {
-      background: url('background.jpg') center / cover no-repeat;
-      padding: 40px 30px;
-      color: white;
-      border-radius: 16px;
-      margin-bottom: 30px;
-      max-width: 600px;
-      margin-inline: auto;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn {
-      background: var(--green);
-      color: white;
-      padding: 12px 28px;
-      margin: 6px;
-      border-radius: 16px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      display: inline-block;
-      transition: 0.3s;
-      box-shadow: 0 4px 8px rgba(107, 142, 35, 0.4);
-    }
-
-    .btn:hover {
-      background: var(--light-green);
-      transform: translateY(-2px);
-      animation: glow 1.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from {
-        box-shadow: 0 0 10px 2px #c1e65a;
-      }
-      to {
-        box-shadow: 0 0 25px 8px #baff5b;
-      }
-    }
-
-    #menuButtonContainer {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 100;
-    }
-
-    #menuButtonContainer img {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-
-    #profileDropdown {
-      position: fixed;
-      top: 70px;
-      right: 15px;
-      width: 280px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      padding: 20px;
-      display: none;
-      z-index: 101;
-    }
-
-    body.dark-mode #profileDropdown {
-      background: var(--dark-card);
-      color: white;
-    }
-
-    #profileDropdown input[type="text"],
-    #profileDropdown input[type="file"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-    }
-
-    #profileDropdown button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 12px;
-      background: var(--green);
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #logoutBtn {
-      background: #c0392b;
-    }
-
-    @media (max-width: 768px) {
-      aside {
-        display: none;
-      }
-    }
+    * { transition: all 0.3s ease; }
+    .dark-mode { background-color: #1a202c; color: #edf2f7; }
+    .sidebar { min-height: 100vh; }
   </style>
 </head>
-<body>
+<body class="flex bg-gray-100 dark-mode:text-white" id="main-body">
 
   <!-- Sidebar -->
-  <aside>
-    <div class="logo" title="AgriTech Connect">
-      <img src="https://github.com/lordlethabo/agritech-connect/blob/main/logo.png?raw=true" alt="AgriTech Logo" />
-    </div>
-    <nav>
-      <a href="dashboard.html" class="active">Home</a>
-      <a href="learning.html">Learning Hub</a>
-      <a href="community.html">Community</a>
-      <a href="marketplace.html">Marketplace</a>
-      <a href="weather.html">Weather & Soil</a>
-      <a href="settings.html">Settings</a>
+  <aside class="sidebar w-64 bg-green-800 text-white p-4 sticky top-0 hidden md:block">
+    <h2 class="text-2xl font-bold mb-6">🌱 AgriTech Connect</h2>
+    <nav class="space-y-3">
+      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded">🏠 Dashboard</a>
+      <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
+      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded">🎓 Learning Hub</a>
+      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded">⛅ Weather</a>
+      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded">🩺 Crop Doctor</a>
+      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded">👥 Mentorship</a>
+      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded">💬 Community Chat</a>
+      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded">🧺 Cart</a>
     </nav>
   </aside>
 
-  <!-- Main -->
-  <main>
-    <h1>Welcome to AgriTech Connect</h1>
-    <div class="description-bg">
-      <p>Your digital platform to empower rural youth and small-scale farmers with market access, learning resources, community, and smart tools.</p>
-    </div>
-    <div>
-      <a href="learning.html" class="btn">Go to Learning Hub</a>
-      <a href="community.html" class="btn">Join the Community</a>
-      <a href="marketplace.html" class="btn">Visit Marketplace</a>
-      <a href="weather.html" class="btn">Check Weather & Soil</a>
-    </div>
-  </main>
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-h-screen">
+    
+    <!-- Header -->
+    <header class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50">
+      <div class="flex items-center gap-2">
+        <button onclick="toggleSidebar()" class="md:hidden text-xl"><i class="fas fa-bars"></i></button>
+        <h1 class="text-xl font-bold">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="toggleDarkMode()" class="text-lg"><i class="fas fa-moon"></i></button>
+        <div class="relative">
+          <img id="userPhoto" src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleMenu()" />
+          <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black">
+            <p class="text-sm" id="userName">User</p>
+            <hr class="my-1" />
+            <a href="profile.html" class="block text-sm py-1 hover:bg-gray-100">⚙️ Profile</a>
+            <button onclick="logout()" class="w-full text-left text-sm py-1 hover:bg-gray-100">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  <!-- Menu icon -->
-  <div id="menuButtonContainer">
-    <img id="menuIcon" src="https://github.com/lordlethabo/agritech-connect/blob/main/menu-icon.png?raw=true" alt="Menu Icon">
+    <!-- Dashboard Content -->
+    <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="bg-white rounded-xl shadow-md p-4">
+        <h2 class="text-lg font-semibold mb-2">📊 User Stats</h2>
+        <canvas id="statsChart" height="150"></canvas>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-4">
+        <h2 class="text-lg font-semibold mb-2">📅 Upcoming Trainings</h2>
+        <ul class="list-disc list-inside">
+          <li>July 3 – Organic Fertilizer Workshop</li>
+          <li>July 10 – Livestock Management Basics</li>
+        </ul>
+      </div>
+
+      <!-- Placeholder for Role-based Dashboard Sections -->
+      <div class="bg-white rounded-xl shadow-md p-4 col-span-1 md:col-span-2" id="roleDashboard">
+        <h2 class="text-lg font-semibold mb-2">👩🏾‍💼 Welcome, Agripreneur</h2>
+        <p>This section will be personalized based on user role.</p>
+      </div>
+
+    </main>
   </div>
 
-  <!-- Dropdown -->
-  <div id="profileDropdown">
-    <form id="profileForm">
-      <input type="text" id="fnameInput" placeholder="First Name" required />
-      <input type="text" id="lnameInput" placeholder="Last Name" required />
-      <input type="text" id="usernameInput" placeholder="Username" required />
-      <input type="file" id="photoInput" accept="image/*" />
-      <button type="submit">Save Profile</button>
-    </form>
-    <button id="toggleThemeBtn">Toggle Dark/Light Mode</button>
-    <button id="logoutBtn">Logout</button>
-  </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-
+  <!-- Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
+      authDomain: "agritechconnect-1d52b.firebaseapp.com",
       projectId: "agritechconnect-1d52b",
-      storageBucket: "agritechconnect.appspot.com",
+      storageBucket: "agritechconnect-1d52b.appspot.com",
       messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:xxx"
+      appId: "1:1027312049739:web:your-app-id"
     };
     firebase.initializeApp(firebaseConfig);
-
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    const menuIcon = document.getElementById("menuIcon");
-    const dropdown = document.getElementById("profileDropdown");
-    const fnameInput = document.getElementById("fnameInput");
-    const lnameInput = document.getElementById("lnameInput");
-    const usernameInput = document.getElementById("usernameInput");
-    const photoInput = document.getElementById("photoInput");
-    const toggleThemeBtn = document.getElementById("toggleThemeBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    let currentUser = null;
-    let photoFile = null;
-
-    menuIcon.onclick = () => dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-
-    window.onclick = (e) => {
-      if (!dropdown.contains(e.target) && e.target !== menuIcon) dropdown.style.display = "none";
-    };
-
-    photoInput.onchange = e => photoFile = e.target.files[0];
-
-    document.getElementById("profileForm").onsubmit = async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-      let photoURL = null;
-      if (photoFile) {
-        const ref = storage.ref(`users/${currentUser.uid}/profile.jpg`);
-        await ref.put(photoFile);
-        photoURL = await ref.getDownloadURL();
-        menuIcon.src = photoURL;
-      }
-      await db.collection("users").doc(currentUser.uid).set({
-        firstName: fnameInput.value,
-        lastName: lnameInput.value,
-        username: usernameInput.value,
-        photoURL: photoURL || menuIcon.src
-      }, { merge: true });
-      alert("Saved!");
-    };
-
-    toggleThemeBtn.onclick = () => {
-      const theme = document.body.classList.toggle("dark-mode") ? "dark" : "light";
-      localStorage.setItem("theme", theme);
-    };
-
-    logoutBtn.onclick = () => {
-      auth.signOut().then(() => {
-        location.href = "login.html";
-      });
-    };
-
-    window.onload = () => {
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-      }
-    };
 
     auth.onAuthStateChanged(user => {
       if (user) {
-        currentUser = user;
-        db.collection("users").doc(user.uid).get().then(doc => {
-          if (doc.exists) {
-            const d = doc.data();
-            fnameInput.value = d.firstName || "";
-            lnameInput.value = d.lastName || "";
-            usernameInput.value = d.username || "";
-            if (d.photoURL) menuIcon.src = d.photoURL;
-          }
-        });
+        document.getElementById('userName').textContent = user.displayName || user.email;
+        document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/32';
+        loadUserRole(user.uid);
       } else {
-        location.href = "login.html";
+        window.location.href = "index.html";
+      }
+    });
+
+    function logout() {
+      auth.signOut();
+    }
+
+    function toggleMenu() {
+      document.getElementById('dropdownMenu').classList.toggle('hidden');
+    }
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('hidden');
+    }
+
+    function toggleDarkMode() {
+      document.getElementById('main-body').classList.toggle('dark-mode');
+    }
+
+    async function loadUserRole(uid) {
+      const doc = await db.collection('users').doc(uid).get();
+      if (doc.exists) {
+        const role = doc.data().role || 'agripreneur';
+        const roleDiv = document.getElementById('roleDashboard');
+        roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2><p>Customized view for role: ${role}</p>`;
+      }
+    }
+
+    // Sample Chart.js Data
+    const ctx = document.getElementById('statsChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+          label: 'Activity Score',
+          data: [3, 7, 4, 6, 9],
+          backgroundColor: 'rgba(34,197,94,0.6)',
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
       }
     });
   </script>
