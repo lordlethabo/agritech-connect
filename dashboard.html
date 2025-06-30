@@ -4,25 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AgriTech Connect – Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * { transition: all 0.3s ease; }
     .dark-mode { background-color: #1a202c; color: #edf2f7; }
-    .sidebar { min-height: 100vh; }
   </style>
 </head>
-<body class="flex bg-gray-100 dark-mode:text-white" id="main-body">
+<body class="flex bg-gray-100 text-gray-900 dark-mode:text-white" id="main-body">
 
   <!-- Sidebar -->
-  <aside class="sidebar w-64 bg-green-800 text-white p-4 sticky top-0 hidden md:block">
+  <aside class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0">
     <h2 class="text-2xl font-bold mb-6">🌱 AgriTech Connect</h2>
     <nav class="space-y-3">
-      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded">🏠 Dashboard</a>
+      <a href="dashboard.html" class="block bg-green-700 p-2 rounded font-semibold">🏠 Dashboard</a>
       <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
       <a href="learning.html" class="block hover:bg-green-700 p-2 rounded">🎓 Learning Hub</a>
       <a href="weather.html" class="block hover:bg-green-700 p-2 rounded">⛅ Weather</a>
@@ -56,40 +54,37 @@
       </div>
     </header>
 
-    <!-- Dashboard Content -->
-    <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Content -->
+    <main class="p-6 space-y-6">
+      <!-- Stats -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-md p-4">
+          <h2 class="text-lg font-semibold mb-2">📊 Activity Overview</h2>
+          <canvas id="statsChart" height="150"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-4">
+          <h2 class="text-lg font-semibold mb-2">📅 Upcoming Trainings</h2>
+          <ul class="list-disc list-inside text-sm">
+            <li>July 3 – Organic Fertilizer Workshop</li>
+            <li>July 10 – Livestock Management Basics</li>
+          </ul>
+        </div>
+      </section>
 
-      <div class="bg-white rounded-xl shadow-md p-4">
-        <h2 class="text-lg font-semibold mb-2">📊 User Stats</h2>
-        <canvas id="statsChart" height="150"></canvas>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-md p-4">
-        <h2 class="text-lg font-semibold mb-2">📅 Upcoming Trainings</h2>
-        <ul class="list-disc list-inside">
-          <li>July 3 – Organic Fertilizer Workshop</li>
-          <li>July 10 – Livestock Management Basics</li>
-        </ul>
-      </div>
-
-      <!-- Placeholder for Role-based Dashboard Sections -->
-      <div class="bg-white rounded-xl shadow-md p-4 col-span-1 md:col-span-2" id="roleDashboard">
-        <h2 class="text-lg font-semibold mb-2">👩🏾‍💼 Welcome, Agripreneur</h2>
-        <p>This section will be personalized based on user role.</p>
-      </div>
-
+      <!-- Role-based Section -->
+      <section class="bg-white rounded-xl shadow-md p-4" id="roleDashboard">
+        <h2 class="text-lg font-semibold mb-2">👤 Welcome, Agripreneur</h2>
+        <p>This dashboard section will change based on your assigned user role.</p>
+      </section>
     </main>
   </div>
 
-  <!-- Firebase Config -->
+  <!-- Firebase Script -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b",
-      storageBucket: "agritechconnect-1d52b.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:your-app-id"
+      projectId: "agritechconnect-1d52b"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
@@ -114,7 +109,7 @@
     }
 
     function toggleSidebar() {
-      document.querySelector('.sidebar').classList.toggle('hidden');
+      document.querySelector('aside').classList.toggle('hidden');
     }
 
     function toggleDarkMode() {
@@ -126,19 +121,20 @@
       if (doc.exists) {
         const role = doc.data().role || 'agripreneur';
         const roleDiv = document.getElementById('roleDashboard');
-        roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2><p>Customized view for role: ${role}</p>`;
+        roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2>
+        <p>Customized view for role: <strong>${role}</strong>.</p>`;
       }
     }
 
-    // Sample Chart.js Data
+    // Chart.js Setup
     const ctx = document.getElementById('statsChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
         datasets: [{
-          label: 'Activity Score',
-          data: [3, 7, 4, 6, 9],
+          label: 'Usage Score',
+          data: [5, 9, 4, 7, 10],
           backgroundColor: 'rgba(34,197,94,0.6)',
         }]
       },
