@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect – Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #6b8e23;
+      --light-green: #8ab73a;
+      --brown: #4a4721;
+      --soft-gray: #f4f9ef;
+      --dark-bg: #1a1a1a;
+      --dark-card: #2a2a2a;
+      --white-glow: rgba(255, 255, 255, 0.9);
+    }
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      background: var(--soft-gray);
+      color: var(--brown);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Product grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+    }
+
+    /* Glowing white border animation */
+    @keyframes glowWhite {
+      0%, 100% {
+        box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 12px 5px rgba(255, 255, 255, 0.7);
+        border-color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    .product-card {
+      background: white;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 8px rgba(107, 142, 35, 0.2);
+      display: flex;
+      flex-direction: column;
+      animation: glowWhite 3s ease-in-out infinite;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .product-card:hover {
+      animation: glowWhite 1.5s ease-in-out infinite;
+      border-color: white;
+      box-shadow: 0 0 20px 6px var(--white-glow);
+      transform: translateY(-5px);
+    }
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    .product-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: var(--brown);
+    }
+    .product-category {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .product-price {
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .add-to-cart-btn {
+      background: var(--green);
+      border: none;
+      border-radius: 12px;
+      padding: 10px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .add-to-cart-btn:hover {
+      background: var(--light-green);
+    }
+
+    /* Product modal */
+    #productModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 90%;
+      max-width: 500px;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      z-index: 1001;
+      animation: glowWhite 3s ease-in-out infinite;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    #productModal.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      border: 3px solid white;
+      box-shadow: 0 8px 40px rgba(255, 255, 255, 0.8);
+    }
+    #productModal img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    #productModal h3 {
+      margin-top: 0;
+      color: var(--brown);
+    }
+    #productModal p {
+      color: #444;
+      margin-bottom: 16px;
+    }
+    #productModal .price {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+    #productModal button {
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    #productModal button:hover {
+      background: var(--light-green);
+    }
+    #productModal .close-btn {
+      background: #c0392b;
+      margin-left: 10px;
+    }
+
+    /* Cart modal */
+    #cartModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 90%;
+      max-width: 450px;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      z-index: 1002;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    #cartModal.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      border: 3px solid white;
+      box-shadow: 0 8px 40px rgba(255, 255, 255, 0.8);
+    }
+    #cartModal h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: var(--brown);
+    }
+    #cartItems {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 6px;
+    }
+    .cart-item-name {
+      font-weight: 600;
+      color: var(--brown);
+    }
+    .cart-item-price {
+      color: var(--green);
+      font-weight: 700;
+    }
+    #checkoutBtn {
+      background: var(--green);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      width: 100%;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #checkoutBtn:hover {
+      background: var(--light-green);
+    }
+    #cartCloseBtn {
+      background: #c0392b;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* Header cart icon */
+    #cartIcon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--green);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(107, 142, 35, 0.6);
+      z-index: 1100;
+      transition: background 0.3s;
+    }
+    #cartIcon:hover {
+      background: var(--light-green);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Marketplace</h1>
+
+  <div class="products-grid" id="productsGrid">
+    <!-- Products inserted here dynamically -->
+  </div>
+
+  <!-- Product Details Modal -->
+  <div id="productModal" role="dialog" aria-modal="true" aria-labelledby="productTitle" aria-hidden="true">
+    <img id="modalImage" alt="Product Image" />
+    <h3 id="productTitle"></h3>
+    <p id="productCategory"></p>
+    <p class="price" id="productPrice"></p>
+    <p id="productDescription"></p>
+    <button id="addToCartBtn">Add to Cart</button>
+    <button class="close-btn" id="closeProductModal">Close</button>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+    <h3 id="cartTitle">Your Cart</h3>
+    <div id="cartItems"></div>
+    <button id="checkoutBtn">Checkout</button>
+    <button id="cartCloseBtn">Close</button>
+  </div>
+
+  <!-- Cart Icon -->
+  <div id="cartIcon" title="View Cart">🛒</div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your Firebase config here:
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:xxx"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let cart = [];
+
+    // Elements
+    const productsGrid = document.getElementById('productsGrid');
+    const productModal = document.getElementById('productModal');
+    const cartModal = document.getElementById('cartModal');
+    const cartIcon = document.getElementById('cartIcon');
+
+    const modalImage = document.getElementById('modalImage');
+    const productTitle = document.getElementById('productTitle');
+    const productCategory = document.getElementById('productCategory');
+    const productPrice = document.getElementById('productPrice');
+    const productDescription = document.getElementById('productDescription');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const closeProductModal = document.getElementById('closeProductModal');
+
+    const cartItemsDiv = document.getElementById('cartItems');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const cartCloseBtn = document.getElementById('cartCloseBtn');
+
+    let selectedProduct = null;
+
+    // Show product modal
+    function openProductModal(product) {
+      selectedProduct = product;
+      modalImage.src = product.imageURL || 'https://via.placeholder.com/400x300?text=No+Image';
+      modalImage.alt = product.name;
+      productTitle.textContent = product.name;
+      productCategory.textContent = `Category: ${product.category}`;
+      productPrice.textContent = `$${product.price.toFixed(2)}`;
+      productDescription.textContent = product.description || '';
+      productModal.classList.add('open');
+      productModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      productModal.classList.remove('open');
+      productModal.setAttribute('aria-hidden', 'true');
+      cartModal.classList.remove('open');
+      cartModal.setAttribute('aria-hidden', 'true');
+    }
+
+    // Render products
+    function renderProducts(products) {
+      productsGrid.innerHTML = '';
+      products.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${prod.imageURL || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${prod.name}">
+          <div class="product-name">${prod.name}</div>
+          <div class="product-category">${prod.category}</div>
+          <div class="product-price">$${prod.price.toFixed(2)}</div>
+          <button class="add-to-cart-btn">Add to Cart</button>
+        `;
+        card.querySelector('button').addEventListener('click', e => {
+          e.stopPropagation();
+          addToCart(prod);
+        });
+        card.addEventListener('click', () => openProductModal(prod));
+        productsGrid.appendChild(card);
+      });
+    }
+
+    // Add to cart
+    function addToCart(product) {
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({...product, quantity: 1});
+      }
+      saveCart();
+      alert(`${product.name} added to cart!`);
+    }
+
+    // Render cart
+    function renderCart() {
+      cartItemsDiv.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsDiv.textContent = "Cart is empty.";
+        checkoutBtn.disabled = true;
+        return;
+      }
+      checkoutBtn.disabled = false;
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <span class="cart-item-name">${item.name} (x${item.quantity})</span>
+          <span class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+        `;
+        cartItemsDiv.appendChild(div);
+      });
+    }
+
+    // Save cart to localStorage and Firestore if logged in
+    function saveCart() {
+      localStorage.setItem('agriCart', JSON.stringify(cart));
+      if (currentUser) {
+        db.collection('carts').doc(currentUser.uid).set({items: cart});
+      }
+      renderCart();
+    }
+
+    // Load cart from localStorage and Firestore if logged in
+    async function loadCart() {
+      const saved = localStorage.getItem('agriCart');
+      if (saved) {
+        cart = JSON.parse(saved);
+      }
+      if (currentUser) {
+        const doc = await db.collection('carts').doc(currentUser.uid).get();
+        if (doc.exists) {
+          cart = doc.data().items || cart;
+        }
+      }
+      renderCart();
+    }
+
+    // Checkout handler
+    async function checkout() {
+      if (!currentUser) {
+        alert('Please login to checkout.');
+        return;
+      }
+      if (cart.length === 0) {
+        alert('Cart is empty.');
+        return;
+      }
+
+      const order = {
+        buyerId: currentUser.uid,
+        buyerName: currentUser.displayName || 'Anonymous',
+        items: cart.map(({id, name, price, quantity}) => ({id, name, price, quantity})),
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection('orders').add(order);
+        cart = [];
+        saveCart();
+        alert('Order placed successfully!');
+        closeModal();
+      } catch (e) {
+        console.error(e);
+        alert('Failed to place order.');
+      }
+    }
+
+    // Auth state listener
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      loadCart();
+      loadProducts();
+    });
+
+    // Load products from Firestore
+    function loadProducts() {
+      db.collection('products').onSnapshot(snapshot => {
+        const products = [];
+        snapshot.forEach(doc => {
+          products.push({id: doc.id, ...doc.data()});
+        });
+        renderProducts(products);
+      });
+    }
+
+    // Event listeners
+    closeProductModal.addEventListener('click', closeModal);
+    cartIcon.addEventListener('click', () => {
+      cartModal.classList.add('open');
+      cartModal.setAttribute('aria-hidden', 'false');
+      renderCart();
+    });
+    cartCloseBtn.addEventListener('click', closeModal);
+    addToCartBtn.addEventListener('click', () => {
+      if (selectedProduct) addToCart(selectedProduct);
+    });
+    checkoutBtn.addEventListener('click', checkout);
+
+    // Close modals on outside click
+    window.addEventListener('click', (e) => {
+      if (e.target === productModal || e.target === cartModal) closeModal();
+    });
+  </script>
+</body>
+</html>
