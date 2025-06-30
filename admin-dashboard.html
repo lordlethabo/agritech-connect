@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4f9ef;
+      color: #333;
+    }
+    header, main {
+      padding: 20px;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    .dashboard-section {
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .product-table, .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .product-table th, .product-table td,
+    .order-table th, .order-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    .product-table th, .order-table th {
+      background: #6b8e23;
+      color: white;
+    }
+    button.edit, button.delete {
+      margin-right: 5px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button.edit { background: #3498db; color: white; }
+    button.delete { background: #e74c3c; color: white; }
+    canvas { max-width: 600px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <main>
+    <div class="dashboard-section">
+      <h2>📊 Product Categories Overview</h2>
+      <canvas id="categoryChart"></canvas>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>🛒 Product Management</h2>
+      <table class="product-table" id="productTable">
+        <thead>
+          <tr><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>📦 Orders</h2>
+      <table class="order-table" id="orderTable">
+        <thead>
+          <tr><th>Order ID</th><th>Buyer</th><th>Items</th><th>Status</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:xxx"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const categoryChartCtx = document.getElementById('categoryChart').getContext('2d');
+    let categoryChart;
+
+    auth.onAuthStateChanged(async user => {
+      if (!user) return location.href = 'login.html';
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (!doc.exists || doc.data().role !== 'admin') return alert('Admins only!');
+      loadProducts();
+      loadOrders();
+      loadCategoryStats();
+    });
+
+    function loadProducts() {
+      db.collection("products").onSnapshot(snapshot => {
+        const tbody = document.querySelector("#productTable tbody");
+        tbody.innerHTML = "";
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${d.name}</td>
+            <td>${d.category}</td>
+            <td>$${d.price}</td>
+            <td>
+              <button class="edit">Edit</button>
+              <button class="delete" onclick="deleteProduct('${doc.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function deleteProduct(id) {
+      if (confirm("Delete this product?")) {
+        db.collection("products").doc(id).delete();
+      }
+    }
+
+    function loadOrders() {
+      db.collection("orders").onSnapshot(snapshot => {
+        const tbody = document.querySelector("#orderTable tbody");
+        tbody.innerHTML = "";
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          const items = d.items.map(i => i.name).join(", ");
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${doc.id}</td>
+            <td>${d.buyerName || 'Anonymous'}</td>
+            <td>${items}</td>
+            <td>${d.status || 'pending'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function loadCategoryStats() {
+      db.collection("products").get().then(snapshot => {
+        const counts = {};
+        snapshot.forEach(doc => {
+          const cat = doc.data().category || 'Uncategorized';
+          counts[cat] = (counts[cat] || 0) + 1;
+        });
+        const labels = Object.keys(counts);
+        const data = Object.values(counts);
+
+        if (categoryChart) categoryChart.destroy();
+        categoryChart = new Chart(categoryChartCtx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Products per Category',
+              data,
+              backgroundColor: '#8ab73a',
+              borderColor: '#6b8e23',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
