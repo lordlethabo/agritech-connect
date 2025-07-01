@@ -1,284 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AgriTech Connect - Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg-color: #f4f9ef;
-    --text-color: #4a4721;
-    --card-bg: white;
-    --btn-bg: #6b8e23;
-    --btn-hover: #8ab73a;
-  }
-  body {
-    margin: 0; font-family: Poppins, sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-start;
-    min-height: 100vh; padding: 30px;
-  }
-  h1 { margin-bottom: 20px; }
-  .btn {
-    background: var(--btn-bg);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin: 10px 0;
-    transition: background-color 0.3s ease;
-  }
-  .btn:hover {
-    background: var(--btn-hover);
-  }
-  .profile-container {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-  }
-  #profilePicPreview {
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 2px solid var(--btn-bg);
-  }
-  input[type="file"] {
-    margin: 10px 0;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-  }
-  #logoutBtn {
-    margin-top: 20px;
-    background: #c0392b;
-  }
-  #logoutBtn:hover {
-    background: #e74c3c;
-  }
-  #loader {
-    display: none;
-    margin: 20px auto;
-  }
-  #authSection, #profileSection {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-  }
-  #userEmail {
-    margin-bottom: 10px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect – Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <style>
+    .dark-mode {
+      background-color: #1a202c;
+      color: #edf2f7;
+    }
+    .logo-border {
+      border: 4px solid #34d399; /* Tailwind green-400 */
+      border-radius: 9999px; /* fully rounded */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
+      cursor: pointer;
+    }
+    .logo-border:hover {
+      border-color: #10b981; /* Tailwind green-500 */
+      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+    }
+  </style>
 </head>
-<body>
+<body id="main-body" class="flex bg-gray-100 text-gray-900 dark-mode:text-white">
+  <aside class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0">
+    <img
+      src="logo.png"
+      alt="AgriTech Connect Logo"
+      class="w-32 mb-6 rounded-full logo-border"
+      onclick="toggleSidebar()"
+    />
+    <nav class="space-y-3">
+      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded">🏠 Dashboard</a>
+      <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
+      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded">🎓 Learning Hub</a>
+      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded">⛅ Weather</a>
+      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded">🩺 Crop Doctor</a>
+      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded">👥 Mentorship</a>
+      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded">💬 Community Chat</a>
+      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded">🧺 Cart</a>
+    </nav>
+  </aside>
 
-<h1>AgriTech Connect - User Profile</h1>
+  <div class="flex-1 flex flex-col min-h-screen">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50">
+      <div class="flex items-center gap-2">
+        <img
+          src="logo.png"
+          alt="Logo"
+          class="w-10 h-10 rounded-full logo-border md:hidden"
+          onclick="toggleSidebar()"
+        />
+        <h1 class="text-xl font-bold">Profile</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="toggleDarkMode()" class="text-lg"><i class="fas fa-moon"></i></button>
+        <div class="relative">
+          <img
+            id="userPhoto"
+            src="https://via.placeholder.com/32"
+            class="w-8 h-8 rounded-full cursor-pointer"
+            onclick="toggleMenu()"
+          />
+          <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black">
+            <p class="text-sm" id="userName">User</p>
+            <hr class="my-1" />
+            <a href="profile.html" class="block text-sm py-1 hover:bg-gray-100">⚙️ Profile</a>
+            <button onclick="logout()" class="w-full text-left text-sm py-1 hover:bg-gray-100">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-<!-- Authentication UI -->
-<div id="authSection">
-  <button id="googleSignInBtn" class="btn">Sign in with Google</button>
-  <p>OR</p>
-  <input type="email" id="emailInput" placeholder="Email" />
-  <input type="password" id="passwordInput" placeholder="Password" />
-  <button id="emailSignInBtn" class="btn">Sign In / Register</button>
-</div>
+    <main class="p-6 space-y-6 flex-1 max-w-3xl mx-auto">
+      <section class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-lg font-semibold mb-4">Update Profile</h2>
+        <form id="profileForm" class="space-y-4">
+          <div>
+            <label for="displayName" class="block font-semibold mb-1">Display Name</label>
+            <input type="text" id="displayName" class="w-full border p-2 rounded" required />
+          </div>
+          <div>
+            <label for="photoURL" class="block font-semibold mb-1">Photo URL</label>
+            <input type="url" id="photoURL" class="w-full border p-2 rounded" />
+          </div>
+          <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">Save Changes</button>
+        </form>
+      </section>
+    </main>
+  </div>
 
-<!-- Profile UI -->
-<div id="profileSection" style="display:none;">
-  <div id="userEmail"></div>
-  <img id="profilePicPreview" src="https://via.placeholder.com/120" alt="Profile Picture" />
-  <input type="file" id="photoInput" accept="image/*" />
-  <input type="text" id="fname" placeholder="First Name" />
-  <input type="text" id="lname" placeholder="Last Name" />
-  <input type="text" id="username" placeholder="Username" />
-  <button id="saveProfileBtn" class="btn">Save Profile</button>
-  <button id="logoutBtn">Logout</button>
-</div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect-1d52b.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-<div id="loader">Uploading image... please wait.</div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-
-<script>
-  // Your Firebase config here:
-  const firebaseConfig = {
-    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-    authDomain: "agritechconnect.firebaseapp.com",
-    projectId: "AgriTechConnect",
-    storageBucket: "agritechconnect.appspot.com",
-    messagingSenderId: "1027312049739",
-    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
-
-  // UI Elements
-  const authSection = document.getElementById('authSection');
-  const profileSection = document.getElementById('profileSection');
-  const userEmailDiv = document.getElementById('userEmail');
-  const googleSignInBtn = document.getElementById('googleSignInBtn');
-  const emailSignInBtn = document.getElementById('emailSignInBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const photoInput = document.getElementById('photoInput');
-  const profilePicPreview = document.getElementById('profilePicPreview');
-  const fnameInput = document.getElementById('fname');
-  const lnameInput = document.getElementById('lname');
-  const usernameInput = document.getElementById('username');
-  const saveProfileBtn = document.getElementById('saveProfileBtn');
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-  const loader = document.getElementById('loader');
-
-  let uploadedPhotoURL = null;
-
-  // Auth State listener
-  auth.onAuthStateChanged(user => {
-    if(user){
-      // User signed in
-      authSection.style.display = 'none';
-      profileSection.style.display = 'block';
-      userEmailDiv.textContent = 'Signed in as: ' + user.email;
-      loadUserProfile(user.uid);
-    } else {
-      // User signed out
-      authSection.style.display = 'block';
-      profileSection.style.display = 'none';
-      clearProfileForm();
-    }
-  });
-
-  // Google Sign In
-  googleSignInBtn.onclick = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(alert);
-  };
-
-  // Email/Password Sign In or Register
-  emailSignInBtn.onclick = () => {
-    const email = emailInput.value.trim();
-    const pass = passwordInput.value;
-    if(!email || !pass) {
-      alert('Please enter email and password');
-      return;
-    }
-    auth.signInWithEmailAndPassword(email, pass)
-      .catch(error => {
-        if(error.code === 'auth/user-not-found'){
-          // Register new user
-          auth.createUserWithEmailAndPassword(email, pass).catch(alert);
-        } else {
-          alert(error.message);
-        }
-      });
-  };
-
-  // Logout
-  logoutBtn.onclick = () => {
-    auth.signOut();
-  };
-
-  // Load user profile from Firestore
-  function loadUserProfile(uid){
-    db.collection('users').doc(uid).get()
-    .then(doc => {
-      if(doc.exists){
-        const data = doc.data();
-        fnameInput.value = data.firstName || '';
-        lnameInput.value = data.lastName || '';
-        usernameInput.value = data.username || '';
-        profilePicPreview.src = data.photoURL || 'https://via.placeholder.com/120';
-        uploadedPhotoURL = data.photoURL || null;
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        document.getElementById("userName").textContent = user.displayName || user.email;
+        document.getElementById("userPhoto").src = user.photoURL || "https://via.placeholder.com/32";
+        document.getElementById("displayName").value = user.displayName || "";
+        document.getElementById("photoURL").value = user.photoURL || "";
       } else {
-        clearProfileForm();
+        window.location.href = "index.html";
       }
-    })
-    .catch(console.error);
-  }
-
-  // Clear form fields
-  function clearProfileForm(){
-    fnameInput.value = '';
-    lnameInput.value = '';
-    usernameInput.value = '';
-    profilePicPreview.src = 'https://via.placeholder.com/120';
-    uploadedPhotoURL = null;
-  }
-
-  // Upload image to Firebase Storage
-  photoInput.onchange = e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    loader.style.display = 'block';
-
-    const user = auth.currentUser;
-    if(!user){
-      alert('You must be signed in to upload a photo.');
-      loader.style.display = 'none';
-      return;
-    }
-
-    const storageRef = storage.ref();
-    const photoRef = storageRef.child(`profilePhotos/${user.uid}/${file.name}`);
-
-    photoRef.put(file).then(snapshot => {
-      return snapshot.ref.getDownloadURL();
-    }).then(url => {
-      uploadedPhotoURL = url;
-      profilePicPreview.src = url;
-      loader.style.display = 'none';
-    }).catch(error => {
-      alert('Upload failed: ' + error.message);
-      loader.style.display = 'none';
     });
-  };
 
-  // Save profile info to Firestore
-  saveProfileBtn.onclick = () => {
-    const user = auth.currentUser;
-    if(!user){
-      alert('You must be signed in.');
-      return;
+    function logout() {
+      auth.signOut();
     }
-    const firstName = fnameInput.value.trim();
-    const lastName = lnameInput.value.trim();
-    const username = usernameInput.value.trim();
-    if(!firstName || !lastName || !username){
-      alert('Please fill all fields.');
-      return;
+    function toggleMenu() {
+      document.getElementById("dropdownMenu").classList.toggle("hidden");
     }
-    db.collection('users').doc(user.uid).set({
-      firstName,
-      lastName,
-      username,
-      photoURL: uploadedPhotoURL || null,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, {merge: true})
-    .then(() => alert('Profile saved successfully!'))
-    .catch(err => alert('Error saving profile: ' + err.message));
-  };
-</script>
+    function toggleSidebar() {
+      document.querySelector("aside").classList.toggle("hidden");
+    }
+    function toggleDarkMode() {
+      document.getElementById("main-body").classList.toggle("dark-mode");
+    }
 
+    document.getElementById("profileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return alert("No user logged in.");
+
+      const displayName = document.getElementById("displayName").value.trim();
+      const photoURL = document.getElementById("photoURL").value.trim();
+
+      try {
+        await user.updateProfile({ displayName, photoURL });
+        alert("Profile updated successfully!");
+        document.getElementById("userName").textContent = displayName || user.email;
+        document.getElementById("userPhoto").src = photoURL || "https://via.placeholder.com/32";
+      } catch (error) {
+        alert("Error updating profile: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
