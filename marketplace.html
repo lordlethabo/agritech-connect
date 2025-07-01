@@ -2,187 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AgriTech Connect – Marketplace</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
   <style>
-    .dark-mode {
-      background-color: #1a202c;
-      color: #edf2f7;
-    }
-
-    .logo-border {
-      border: 4px solid #34d399; /* Tailwind green-400 */
-      border-radius: 9999px; /* fully rounded */
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
-      cursor: pointer;
-    }
-    .logo-border:hover {
-      border-color: #10b981; /* Tailwind green-500 */
-      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+    body {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      font-family: 'Poppins', sans-serif;
     }
   </style>
 </head>
-<body
-  id="main-body"
-  class="flex bg-gray-100 text-gray-900 dark-mode:text-white"
->
-  <aside
-    class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0"
-  >
-    <img
-      src="logo.png"
-      alt="AgriTech Connect Logo"
-      class="w-32 mb-6 rounded-full logo-border"
-      onclick="toggleSidebar()"
-    />
-    <nav class="space-y-3">
-      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded"
-        >🏠 Dashboard</a
-      >
-      <a
-        href="marketplace.html"
-        class="block bg-green-700 p-2 rounded font-semibold"
-        >🛒 Marketplace</a
-      >
-      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded"
-        >🎓 Learning Hub</a
-      >
-      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded"
-        >⛅ Weather</a
-      >
-      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded"
-        >🩺 Crop Doctor</a
-      >
-      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded"
-        >👥 Mentorship</a
-      >
-      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded"
-        >💬 Community Chat</a
-      >
-      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded"
-        >🧺 Cart</a
-      >
-    </nav>
-  </aside>
+<body class="min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-green-400 mb-6">🛒 Marketplace</h1>
 
-  <div class="flex-1 flex flex-col min-h-screen">
-    <header
-      class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50"
-    >
-      <div class="flex items-center gap-2">
-        <img
-          src="logo.png"
-          alt="Logo"
-          class="w-10 h-10 rounded-full logo-border md:hidden"
-          onclick="toggleSidebar()"
-        />
-        <h1 class="text-xl font-bold">Marketplace</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleDarkMode()" class="text-lg">
-          <i class="fas fa-moon"></i>
-        </button>
-        <div class="relative">
-          <img
-            id="userPhoto"
-            src="https://via.placeholder.com/32"
-            class="w-8 h-8 rounded-full cursor-pointer"
-            onclick="toggleMenu()"
-          />
-          <div
-            id="dropdownMenu"
-            class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black"
-          >
-            <p class="text-sm" id="userName">User</p>
-            <hr class="my-1" />
-            <a
-              href="profile.html"
-              class="block text-sm py-1 hover:bg-gray-100"
-              >⚙️ Profile</a
-            >
-            <button
-              onclick="logout()"
-              class="w-full text-left text-sm py-1 hover:bg-gray-100"
-            >
-              🚪 Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div class="flex flex-wrap gap-4 mb-6 items-center">
+      <button onclick="filterByType('all')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">All</button>
+      <button onclick="filterByType('seller')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">Sellers</button>
+      <button onclick="filterByType('buyer')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">Buyers</button>
+      <select onchange="filterByCategory(this.value)" class="px-3 py-2 rounded bg-slate-800 text-white">
+        <option value="all">All Categories</option>
+        <option value="Produce">Produce</option>
+        <option value="Livestock">Livestock</option>
+        <option value="Tools">Tools</option>
+        <option value="Seeds">Seeds</option>
+      </select>
+      <input id="searchInput" oninput="searchProducts(this.value)" type="text" placeholder="Search..." class="ml-auto px-3 py-2 rounded bg-slate-800 text-white w-full sm:w-1/2">
+    </div>
 
-    <main class="p-6 space-y-6">
-      <section>
-        <h2 class="text-lg font-semibold mb-4">🛒 Available Products</h2>
-        <div id="productList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-      </section>
-    </main>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="marketGrid">
+      <!-- Product cards -->
+    </div>
   </div>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b",
+      projectId: "agritechconnect-1d52b"
     };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById("userName").textContent =
-          user.displayName || user.email;
-        document.getElementById("userPhoto").src =
-          user.photoURL || "https://via.placeholder.com/32";
-        loadProducts();
-      } else {
-        window.location.href = "index.html";
-      }
-    });
+    let allProducts = [];
+    let selectedType = 'all';
+    let selectedCategory = 'all';
+    let searchTerm = '';
 
-    function logout() {
-      auth.signOut();
-    }
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("hidden");
-    }
-    function toggleSidebar() {
-      document.querySelector("aside").classList.toggle("hidden");
-    }
-    function toggleDarkMode() {
-      document.getElementById("main-body").classList.toggle("dark-mode");
+    function searchProducts(term) {
+      searchTerm = term.toLowerCase();
+      renderMarketplace();
     }
 
-    async function loadProducts() {
-      const productsRef = db.collection("products").orderBy("createdAt", "desc");
-      const snapshot = await productsRef.get();
-      const container = document.getElementById("productList");
-      container.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const p = doc.data();
-        container.innerHTML += `
-          <div class="border p-3 rounded shadow-sm bg-white dark:bg-gray-800">
-            <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}" class="w-full h-32 object-cover rounded mb-2" />
-            <h3 class="font-semibold text-gray-900 dark:text-white">${p.name}</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">R ${p.price}</p>
-          </div>
-        `;
+    async function loadMarketplace() {
+      db.collection("products").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderMarketplace();
       });
     }
+
+    function renderMarketplace() {
+      const container = document.getElementById("marketGrid");
+      container.innerHTML = "";
+      let filtered = allProducts.filter(p => {
+        const typeMatch = selectedType === 'all' || p.type === selectedType;
+        const catMatch = selectedCategory === 'all' || p.category === selectedCategory;
+        const searchMatch = p.name.toLowerCase().includes(searchTerm);
+        return typeMatch && catMatch && searchMatch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class='text-gray-400 col-span-full'>No items found.</p>`;
+        return;
+      }
+
+      filtered.forEach(data => {
+        const card = document.createElement("div");
+        card.className = "bg-slate-800 text-white rounded-xl shadow p-4 border border-slate-700 hover:border-green-400 transition";
+        card.innerHTML = `
+          <img src="${data.image || 'https://via.placeholder.com/150'}" alt="${data.name}" class="w-full h-40 object-cover rounded mb-3">
+          <h2 class="font-semibold text-lg text-green-400 mb-1">${data.name}</h2>
+          <p class="text-sm text-slate-300">Category: <span class="font-medium">${data.category}</span></p>
+          <p class="text-green-300 font-bold text-xl mt-1">R ${data.price.toFixed(2)}</p>
+          <p class="text-xs text-slate-400 mb-3">Type: ${data.type}</p>
+          <button onclick="addToCart('${data.id}', '${data.name}', ${data.price})" class="w-full py-2 bg-green-500 text-black font-semibold rounded hover:bg-green-600">Add to Cart</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterByType(type) {
+      selectedType = type;
+      renderMarketplace();
+    }
+
+    function filterByCategory(category) {
+      selectedCategory = category;
+      renderMarketplace();
+    }
+
+    async function addToCart(productId, productName, productPrice) {
+      const user = auth.currentUser;
+      if (!user) return alert('Please sign in to add to cart');
+      await db.collection('carts').doc(user.uid).collection('items').add({
+        productId,
+        productName,
+        productPrice,
+        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert(`Added '${productName}' to your cart.`);
+    }
+
+    window.addEventListener("DOMContentLoaded", loadMarketplace);
   </script>
 </body>
 </html>
