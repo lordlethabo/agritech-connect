@@ -17,21 +17,129 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
   <style>
-    .dark-mode {
-      background-color: #1a202c;
-      color: #edf2f7;
+    body.dark-mode {
+      background-color: #0f111a;
+      color: #cbd5e1;
     }
-
     .logo-border {
-      border: 4px solid #34d399; /* Tailwind green-400 */
-      border-radius: 9999px; /* fully rounded */
+      border: 4px solid #34d399;
+      border-radius: 9999px;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
+      box-shadow: 0 0 8px #34d399aa;
       cursor: pointer;
     }
     .logo-border:hover {
-      border-color: #10b981; /* Tailwind green-500 */
-      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+      border-color: #10b981;
+      box-shadow: 0 0 15px #10b981dd;
+    }
+    /* Futuristic minimal cart */
+    #cartItems {
+      background: #1f2937;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow:
+        0 0 12px #22c55e99,
+        inset 0 0 6px #22c55e66;
+      max-height: 450px;
+      overflow-y: auto;
+      color: #d1fae5;
+    }
+    #cartItems::-webkit-scrollbar {
+      width: 8px;
+    }
+    #cartItems::-webkit-scrollbar-thumb {
+      background: #22c55eaa;
+      border-radius: 10px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #22c55e33;
+      padding: 12px 0;
+      transition: background 0.3s ease;
+    }
+    .cart-item:hover {
+      background: #22c55e11;
+      border-radius: 8px;
+    }
+    .item-info {
+      flex: 1;
+    }
+    .item-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #a7f3d0;
+    }
+    .item-price-qty {
+      font-size: 0.875rem;
+      color: #86efac;
+      margin-top: 2px;
+    }
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .control-btn {
+      background: #22c55e;
+      border: none;
+      color: #0f111a;
+      font-weight: 700;
+      font-size: 1.25rem;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      box-shadow: 0 0 6px #22c55eaa;
+      transition: background-color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+    .control-btn:hover {
+      background: #16a34a;
+      box-shadow: 0 0 12px #16a34aee;
+    }
+    .remove-btn {
+      background: transparent;
+      color: #ef4444;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .remove-btn:hover {
+      color: #b91c1c;
+    }
+    #cartTotal {
+      font-weight: 700;
+      font-size: 1.5rem;
+      text-align: right;
+      margin-top: 20px;
+      color: #34d399;
+      text-shadow: 0 0 6px #34d399aa;
+    }
+    #checkoutButton {
+      margin-top: 20px;
+      background: #22c55e;
+      color: #0f111a;
+      padding: 14px 28px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 12px #22c55eaa;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #checkoutButton:hover:not(:disabled) {
+      background: #16a34a;
+      box-shadow: 0 0 20px #16a34aee;
+    }
+    #checkoutButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
     }
   </style>
 </head>
@@ -122,18 +230,14 @@
       </div>
     </header>
 
-    <main class="p-6 space-y-6 flex-1 flex flex-col">
+    <main class="p-6 space-y-6 flex-1 flex flex-col max-w-4xl mx-auto">
       <section>
-        <h2 class="text-lg font-semibold mb-4">🧺 Your Cart</h2>
-        <div id="cartItems" class="space-y-4"></div>
-        <div id="cartTotal" class="mt-6 font-semibold text-right text-lg"></div>
-        <button
-          id="checkoutButton"
-          class="mt-4 bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800 disabled:opacity-50"
-          disabled
-        >
-          Proceed to Checkout
-        </button>
+        <h2 class="text-2xl font-semibold mb-6 tracking-wide text-green-400">
+          🧺 Your Cart
+        </h2>
+        <div id="cartItems"></div>
+        <div id="cartTotal"></div>
+        <button id="checkoutButton" disabled>Proceed to Checkout</button>
       </section>
     </main>
   </div>
@@ -200,7 +304,7 @@
 
       if (cart.length === 0) {
         cartItemsDiv.innerHTML =
-          '<p class="text-gray-600 dark:text-gray-400">Your cart is empty.</p>';
+          '<p class="text-gray-400 text-center py-8 text-lg">Your cart is empty.</p>';
         cartTotalDiv.textContent = "";
         checkoutButton.disabled = true;
         return;
@@ -209,20 +313,20 @@
       let total = 0;
       cart.forEach((item) => {
         total += item.price * item.quantity;
+
         const itemDiv = document.createElement("div");
-        itemDiv.className =
-          "flex items-center justify-between bg-white p-3 rounded shadow-sm dark:bg-gray-800";
+        itemDiv.className = "cart-item";
 
         itemDiv.innerHTML = `
-          <div>
-            <h3 class="font-semibold">${item.name}</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">R ${item.price} × ${item.quantity}</p>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price-qty">R ${item.price.toFixed(2)} × ${item.quantity}</div>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="px-2 bg-gray-300 rounded hover:bg-gray-400">−</button>
+          <div class="item-controls">
+            <button class="control-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})" aria-label="Decrease quantity">−</button>
             <span>${item.quantity}</span>
-            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="px-2 bg-gray-300 rounded hover:bg-gray-400">+</button>
-            <button onclick="removeItem('${item.id}')" class="ml-4 text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+            <button class="control-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})" aria-label="Increase quantity">+</button>
+            <button class="remove-btn" onclick="removeItem('${item.id}')" aria-label="Remove item"><i class="fas fa-trash"></i></button>
           </div>
         `;
         cartItemsDiv.appendChild(itemDiv);
@@ -259,7 +363,9 @@
 
     document
       .getElementById("checkoutButton")
-      .addEventListener("click", () => alert("Checkout functionality coming soon!"));
+      .addEventListener("click", () =>
+        alert("Checkout functionality coming soon!")
+      );
   </script>
 </body>
 </html>
