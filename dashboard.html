@@ -12,13 +12,24 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .dark-mode { background-color: #1a202c; color: #edf2f7; }
+
+    .logo-border {
+      border: 4px solid #34d399; /* Tailwind green-400 */
+      border-radius: 9999px; /* fully rounded */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
+      cursor: pointer;
+    }
+    .logo-border:hover {
+      border-color: #10b981; /* Tailwind green-500 */
+      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+    }
   </style>
 </head>
 <body class="flex bg-gray-100 text-gray-900 dark-mode:text-white" id="main-body">
 
-  <!-- Sidebar -->
   <aside class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0">
-    <h2 class="text-2xl font-bold mb-6">🌱 AgriTech Connect</h2>
+    <img src="logo.png" alt="AgriTech Connect Logo" class="w-32 mb-6 rounded-full logo-border" onclick="toggleSidebar()" />
     <nav class="space-y-3">
       <a href="dashboard.html" class="block bg-green-700 p-2 rounded font-semibold">🏠 Dashboard</a>
       <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
@@ -31,13 +42,10 @@
     </nav>
   </aside>
 
-  <!-- Main Content -->
   <div class="flex-1 flex flex-col min-h-screen">
-    
-    <!-- Header -->
     <header class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50">
       <div class="flex items-center gap-2">
-        <button onclick="toggleSidebar()" class="md:hidden text-xl"><i class="fas fa-bars"></i></button>
+        <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full logo-border md:hidden" onclick="toggleSidebar()" />
         <h1 class="text-xl font-bold">Dashboard</h1>
       </div>
       <div class="flex items-center gap-4">
@@ -54,16 +62,14 @@
       </div>
     </header>
 
-    <!-- Content -->
     <main class="p-6 space-y-6">
-      <!-- Stats -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl shadow-md p-4">
           <h2 class="text-lg font-semibold mb-2">📊 Activity Overview</h2>
           <canvas id="statsChart" height="150"></canvas>
         </div>
         <div class="bg-white rounded-xl shadow-md p-4">
-          <h2 class="text-lg font-semibold mb-2">📅 Upcoming Trainings</h2>
+          <h2 class="text-lg font-semibold mb-2">🗓️ Upcoming Trainings</h2>
           <ul class="list-disc list-inside text-sm">
             <li>July 3 – Organic Fertilizer Workshop</li>
             <li>July 10 – Livestock Management Basics</li>
@@ -71,15 +77,40 @@
         </div>
       </section>
 
-      <!-- Role-based Section -->
+      <section class="bg-yellow-100 text-yellow-900 p-4 rounded-xl shadow-md" id="notificationArea" style="display:none;">
+        <h2 class="font-semibold text-lg mb-1">🔔 Notifications</h2>
+        <ul id="notificationList" class="list-disc list-inside text-sm"></ul>
+      </section>
+
+      <section class="bg-white rounded-xl shadow-md p-4">
+        <h2 class="text-lg font-semibold mb-2">🛒 Latest Marketplace Products</h2>
+        <div id="productList" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow-md p-4">
+        <h2 class="text-lg font-semibold mb-2">🍭 Visit the Marketplace</h2>
+        <p class="text-sm mb-4">Browse and purchase farming tools, seeds, and agri-services from verified sellers.</p>
+        <a href="marketplace.html" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+          Go to Marketplace
+        </a>
+      </section>
+
       <section class="bg-white rounded-xl shadow-md p-4" id="roleDashboard">
-        <h2 class="text-lg font-semibold mb-2">👤 Welcome, Agripreneur</h2>
-        <p>This dashboard section will change based on your assigned user role.</p>
+        <h2 class="text-lg font-semibold mb-2">👤 Welcome</h2>
+        <p>This dashboard section will be customized based on your role.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow-md p-4 hidden" id="adminSection">
+        <h2 class="text-lg font-semibold mb-2">🛠️ Admin Tools</h2>
+        <ul class="list-disc list-inside text-sm">
+          <li><a href="admin-dashboard.html" class="text-green-700 hover:underline">Manage Users</a></li>
+          <li><a href="marketplace.html" class="text-green-700 hover:underline">Review New Products</a></li>
+          <li>View platform usage reports</li>
+        </ul>
       </section>
     </main>
   </div>
 
-  <!-- Firebase Script -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
@@ -100,50 +131,56 @@
       }
     });
 
-    function logout() {
-      auth.signOut();
-    }
-
-    function toggleMenu() {
-      document.getElementById('dropdownMenu').classList.toggle('hidden');
-    }
-
-    function toggleSidebar() {
-      document.querySelector('aside').classList.toggle('hidden');
-    }
-
-    function toggleDarkMode() {
-      document.getElementById('main-body').classList.toggle('dark-mode');
-    }
+    function logout() { auth.signOut(); }
+    function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('hidden'); }
+    function toggleSidebar() { document.querySelector('aside').classList.toggle('hidden'); }
+    function toggleDarkMode() { document.getElementById('main-body').classList.toggle('dark-mode'); }
 
     async function loadUserRole(uid) {
       const doc = await db.collection('users').doc(uid).get();
-      if (doc.exists) {
-        const role = doc.data().role || 'agripreneur';
-        const roleDiv = document.getElementById('roleDashboard');
-        roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2>
+      if (!doc.exists) return;
+      const data = doc.data();
+      const role = data.role || 'agripreneur';
+      const roleDiv = document.getElementById('roleDashboard');
+      roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2>
         <p>Customized view for role: <strong>${role}</strong>.</p>`;
+      if (role === 'admin') document.getElementById('adminSection').classList.remove('hidden');
+
+      const notifications = data.notifications || [];
+      if (notifications.length > 0) {
+        const notifList = document.getElementById('notificationList');
+        notifList.innerHTML = notifications.map(n => `<li>${n}</li>`).join('');
+        document.getElementById('notificationArea').style.display = 'block';
       }
     }
 
-    // Chart.js Setup
-    const ctx = document.getElementById('statsChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-        datasets: [{
-          label: 'Usage Score',
-          data: [5, 9, 4, 7, 10],
-          backgroundColor: 'rgba(34,197,94,0.6)',
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
+    async function loadLatestProducts() {
+      const productsRef = db.collection('products').orderBy('createdAt', 'desc').limit(3);
+      const snapshot = await productsRef.get();
+      const container = document.getElementById('productList');
+      container.innerHTML = '';
+      snapshot.forEach(doc => {
+        const p = doc.data();
+        container.innerHTML += `
+          <div class="border p-3 rounded shadow-sm">
+            <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}" class="w-full h-32 object-cover rounded mb-2">
+            <h3 class="font-semibold">${p.name}</h3>
+            <p class="text-sm text-gray-600">R ${p.price}</p>
+          </div>`;
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLatestProducts();
+      const ctx = document.getElementById('statsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+          datasets: [{ label: 'Usage Score', data: [5, 9, 4, 7, 10], backgroundColor: 'rgba(34,197,94,0.6)' }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      });
     });
   </script>
 </body>
