@@ -1,187 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect – Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .dark-mode { background-color: #1a202c; color: #edf2f7; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Connect – Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4fff1;
+      color: #2e7d32;
+    }
+    header {
+      background: #81c784;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+    }
+    #signOutBtn {
+      background: #66bb6a;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #signOutBtn:hover {
+      background: #4caf50;
+    }
+    main {
+      padding: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .profile-section {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #81c784;
+    }
+    .profile-info {
+      flex-grow: 1;
+    }
+    .profile-info h2 {
+      margin: 0 0 6px;
+    }
+    .input-group {
+      margin-top: 10px;
+    }
+    input[type="file"], input[type="text"] {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 14px;
+    }
+    button.upload-btn {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #81c784;
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    button.upload-btn:hover {
+      background-color: #66bb6a;
+    }
+    section {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    section h3 {
+      margin-top: 0;
+    }
+    #message {
+      margin-top: 10px;
+      color: red;
+      font-weight: 600;
+    }
+  </style>
 
-    .logo-border {
-      border: 4px solid #34d399; /* Tailwind green-400 */
-      border-radius: 9999px; /* fully rounded */
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
-      cursor: pointer;
-    }
-    .logo-border:hover {
-      border-color: #10b981; /* Tailwind green-500 */
-      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
-    }
-  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 </head>
-<body class="flex bg-gray-100 text-gray-900 dark-mode:text-white" id="main-body">
+<body>
+  <header>
+    <h1>AgriTech Connect</h1>
+    <button id="signOutBtn" aria-label="Sign out">Sign Out</button>
+  </header>
+  <main>
+    <section class="profile-section" aria-label="User Profile">
+      <img id="profilePic" src="default-profile.png" alt="Profile Picture" class="profile-pic" />
+      <div class="profile-info">
+        <h2 id="displayName">Loading...</h2>
+        <p id="emailDisplay"></p>
+        <p><strong>Role:</strong> <span id="roleDisplay">Loading...</span></p>
+        <div class="input-group">
+          <label for="profileHeading">Profile Heading / Bio:</label>
+          <input type="text" id="profileHeading" placeholder="Write a heading or bio for your profile" />
+          <button class="upload-btn" id="saveHeadingBtn">Save Heading</button>
+          <div id="headingMsg" role="alert" aria-live="polite"></div>
+        </div>
+        <div class="input-group">
+          <label for="profileImageUpload">Upload Profile Picture:</label>
+          <input type="file" id="profileImageUpload" accept="image/*" />
+          <button class="upload-btn" id="uploadProfilePicBtn">Upload Picture</button>
+          <div id="uploadMsg" role="alert" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
 
-  <aside class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0">
-    <img src="logo.png" alt="AgriTech Connect Logo" class="w-32 mb-6 rounded-full logo-border" onclick="toggleSidebar()" />
-    <nav class="space-y-3">
-      <a href="dashboard.html" class="block bg-green-700 p-2 rounded font-semibold">🏠 Dashboard</a>
-      <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
-      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded">🎓 Learning Hub</a>
-      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded">⛅ Weather</a>
-      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded">🩺 Crop Doctor</a>
-      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded">👥 Mentorship</a>
-      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded">💬 Community Chat</a>
-      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded">🧺 Cart</a>
-    </nav>
-  </aside>
+    <!-- Buyer Section -->
+    <section id="buyerSection" style="display:none;">
+      <h3>🛒 Marketplace</h3>
+      <p>Here you can browse produce and livestock for sale from sellers.</p>
+      <!-- Marketplace dynamic content will go here -->
+    </section>
 
-  <div class="flex-1 flex flex-col min-h-screen">
-    <header class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50">
-      <div class="flex items-center gap-2">
-        <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full logo-border md:hidden" onclick="toggleSidebar()" />
-        <h1 class="text-xl font-bold">Dashboard</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleDarkMode()" class="text-lg"><i class="fas fa-moon"></i></button>
-        <div class="relative">
-          <img id="userPhoto" src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleMenu()" />
-          <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black">
-            <p class="text-sm" id="userName">User</p>
-            <hr class="my-1" />
-            <a href="profile.html" class="block text-sm py-1 hover:bg-gray-100">⚙️ Profile</a>
-            <button onclick="logout()" class="w-full text-left text-sm py-1 hover:bg-gray-100">🚪 Logout</button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <!-- Seller Section -->
+    <section id="sellerSection" style="display:none;">
+      <h3>📦 Your Products & Livestock for Sale</h3>
+      <p>Upload photos and details of the products or livestock you want to sell.</p>
+      <!-- Upload & product management UI to be added -->
+    </section>
 
-    <main class="p-6 space-y-6">
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow-md p-4">
-          <h2 class="text-lg font-semibold mb-2">📊 Activity Overview</h2>
-          <canvas id="statsChart" height="150"></canvas>
-        </div>
-        <div class="bg-white rounded-xl shadow-md p-4">
-          <h2 class="text-lg font-semibold mb-2">🗓️ Upcoming Trainings</h2>
-          <ul class="list-disc list-inside text-sm">
-            <li>July 3 – Organic Fertilizer Workshop</li>
-            <li>July 10 – Livestock Management Basics</li>
-          </ul>
-        </div>
-      </section>
+    <!-- Mentor Section -->
+    <section id="mentorSection" style="display:none;">
+      <h3>🤝 Mentorship</h3>
+      <p>Access mentorship requests and provide guidance to farmers.</p>
+      <!-- Mentorship dashboard content here -->
+    </section>
 
-      <section class="bg-yellow-100 text-yellow-900 p-4 rounded-xl shadow-md" id="notificationArea" style="display:none;">
-        <h2 class="font-semibold text-lg mb-1">🔔 Notifications</h2>
-        <ul id="notificationList" class="list-disc list-inside text-sm"></ul>
-      </section>
+    <!-- Admin Section -->
+    <section id="adminSection" style="display:none;">
+      <h3>⚙️ Admin Panel</h3>
+      <p>Manage users, products, and site content.</p>
+      <!-- Admin management tools here -->
+    </section>
+  </main>
 
-      <section class="bg-white rounded-xl shadow-md p-4">
-        <h2 class="text-lg font-semibold mb-2">🛒 Latest Marketplace Products</h2>
-        <div id="productList" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"></div>
-      </section>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
 
-      <section class="bg-white rounded-xl shadow-md p-4">
-        <h2 class="text-lg font-semibold mb-2">🍭 Visit the Marketplace</h2>
-        <p class="text-sm mb-4">Browse and purchase farming tools, seeds, and agri-services from verified sellers.</p>
-        <a href="marketplace.html" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
-          Go to Marketplace
-        </a>
-      </section>
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-      <section class="bg-white rounded-xl shadow-md p-4" id="roleDashboard">
-        <h2 class="text-lg font-semibold mb-2">👤 Welcome</h2>
-        <p>This dashboard section will be customized based on your role.</p>
-      </section>
+    const profilePic = document.getElementById("profilePic");
+    const displayNameEl = document.getElementById("displayName");
+    const emailDisplay = document.getElementById("emailDisplay");
+    const roleDisplay = document.getElementById("roleDisplay");
+    const profileHeadingInput = document.getElementById("profileHeading");
+    const saveHeadingBtn = document.getElementById("saveHeadingBtn");
+    const headingMsg = document.getElementById("headingMsg");
+    const profileImageUpload = document.getElementById("profileImageUpload");
+    const uploadProfilePicBtn = document.getElementById("uploadProfilePicBtn");
+    const uploadMsg = document.getElementById("uploadMsg");
 
-      <section class="bg-white rounded-xl shadow-md p-4 hidden" id="adminSection">
-        <h2 class="text-lg font-semibold mb-2">🛠️ Admin Tools</h2>
-        <ul class="list-disc list-inside text-sm">
-          <li><a href="admin-dashboard.html" class="text-green-700 hover:underline">Manage Users</a></li>
-          <li><a href="marketplace.html" class="text-green-700 hover:underline">Review New Products</a></li>
-          <li>View platform usage reports</li>
-        </ul>
-      </section>
-    </main>
-  </div>
+    const buyerSection = document.getElementById("buyerSection");
+    const sellerSection = document.getElementById("sellerSection");
+    const mentorSection = document.getElementById("mentorSection");
+    const adminSection = document.getElementById("adminSection");
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    let currentUserUID = null;
+    let userDocRef = null;
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById('userName').textContent = user.displayName || user.email;
-        document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/32';
-        loadUserRole(user.uid);
-      } else {
-        window.location.href = "index.html";
-      }
-    });
+    // Redirect if not logged in, else load user info
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+      currentUserUID = user.uid;
+      userDocRef = db.collection("users").doc(currentUserUID);
 
-    function logout() { auth.signOut(); }
-    function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('hidden'); }
-    function toggleSidebar() { document.querySelector('aside').classList.toggle('hidden'); }
-    function toggleDarkMode() { document.getElementById('main-body').classList.toggle('dark-mode'); }
+      // Load user profile from Firestore
+      const doc = await userDocRef.get();
+      if (!doc.exists) {
+        // If no user doc, create default
+        await userDocRef.set({
+          displayName: user.displayName || "Unknown User",
+          email: user.email,
+          role: "buyer",
+          photoURL: user.photoURL || "",
+          profileHeading: "",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        displayUserProfile(user.displayName || "Unknown User", user.email, "buyer", user.photoURL || "", "");
+        showRoleSections("buyer");
+      } else {
+        const data = doc.data();
+        displayUserProfile(data.displayName, data.email, data.role, data.photoURL, data.profileHeading || "");
+        showRoleSections(data.role);
+      }
 
-    async function loadUserRole(uid) {
-      const doc = await db.collection('users').doc(uid).get();
-      if (!doc.exists) return;
-      const data = doc.data();
-      const role = data.role || 'agripreneur';
-      const roleDiv = document.getElementById('roleDashboard');
-      roleDiv.innerHTML = `<h2 class="text-lg font-semibold mb-2">👤 ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h2>
-        <p>Customized view for role: <strong>${role}</strong>.</p>`;
-      if (role === 'admin') document.getElementById('adminSection').classList.remove('hidden');
+    });
 
-      const notifications = data.notifications || [];
-      if (notifications.length > 0) {
-        const notifList = document.getElementById('notificationList');
-        notifList.innerHTML = notifications.map(n => `<li>${n}</li>`).join('');
-        document.getElementById('notificationArea').style.display = 'block';
-      }
-    }
+    // Display profile info on page
+    function displayUserProfile(name, email, role, photoURL, heading) {
+      displayNameEl.textContent = name;
+      emailDisplay.textContent = email;
+      roleDisplay.textContent = role;
+      profileHeadingInput.value = heading;
+      profilePic.src = photoURL && photoURL !== "" ? photoURL : "default-profile.png";
+    }
 
-    async function loadLatestProducts() {
-      const productsRef = db.collection('products').orderBy('createdAt', 'desc').limit(3);
-      const snapshot = await productsRef.get();
-      const container = document.getElementById('productList');
-      container.innerHTML = '';
-      snapshot.forEach(doc => {
-        const p = doc.data();
-        container.innerHTML += `
-          <div class="border p-3 rounded shadow-sm">
-            <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}" class="w-full h-32 object-cover rounded mb-2">
-            <h3 class="font-semibold">${p.name}</h3>
-            <p class="text-sm text-gray-600">R ${p.price}</p>
-          </div>`;
-      });
-    }
+    // Show relevant sections based on role
+    function showRoleSections(role) {
+      buyerSection.style.display = "none";
+      sellerSection.style.display = "none";
+      mentorSection.style.display = "none";
+      adminSection.style.display = "none";
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadLatestProducts();
-      const ctx = document.getElementById('statsChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-          datasets: [{ label: 'Usage Score', data: [5, 9, 4, 7, 10], backgroundColor: 'rgba(34,197,94,0.6)' }]
-        },
-        options: { responsive: true, scales: { y: { beginAtZero: true } } }
-      });
-    });
-  </script>
+      if (role === "buyer") buyerSection.style.display = "block";
+      if (role === "seller") sellerSection.style.display = "block";
+      if (role === "mentor") mentorSection.style.display = "block";
+      if (role === "admin") adminSection.style.display = "block";
+
+      // Users can have multiple roles; expand this if you want multi-role UI display
+    }
+
+    // Save profile heading to Firestore
+    saveHeadingBtn.addEventListener("click", async () => {
+      const newHeading = profileHeadingInput.value.trim();
+      headingMsg.style.color = "red";
+      headingMsg.textContent = "";
+
+      if (!newHeading) {
+        headingMsg.textContent = "Heading cannot be empty.";
+        return;
+      }
+      try {
+        await userDocRef.update({ profileHeading: newHeading });
+        headingMsg.style.color = "green";
+        headingMsg.textContent = "Heading updated successfully!";
+      } catch (error) {
+        headingMsg.textContent = "Error updating heading: " + error.message;
+      }
+    });
+
+    // Upload profile picture
+    uploadProfilePicBtn.addEventListener("click", () => {
+      uploadMsg.style.color = "red";
+      uploadMsg.textContent = "";
+
+      const file = profileImageUpload.files[0];
+      if (!file) {
+        uploadMsg.textContent = "Please select an image file first.";
+        return;
+      }
+
+      const storageRef = storage.ref();
+      const profilePicRef = storageRef.child(`profilePics/${currentUserUID}_${file.name}`);
+
+      // Upload file
+      const uploadTask = profilePicRef.put(file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Optional: Can add progress bar here
+        }, 
+        (error) => {
+          uploadMsg.textContent = "Upload failed: " + error.message;
+        }, 
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
+            // Update Firestore and Firebase user profile photoURL
+            await userDocRef.update({ photoURL: downloadURL });
+            await auth.currentUser.updateProfile({ photoURL: downloadURL });
+
+            profilePic.src = downloadURL;
+            uploadMsg.style.color = "green";
+            uploadMsg.textContent = "Profile picture updated!";
+          });
+        }
+      );
+    });
+
+    // Sign out
+    document.getElementById("signOutBtn").addEventListener("click", () => {
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    });
+  </script>
 </body>
 </html>
