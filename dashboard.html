@@ -14,15 +14,31 @@
   }
   header {
     background-color: #81c784;
-    padding: 20px 30px;
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
   }
+  /* Logo styling with hover effect */
+  .logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .logo:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.5);
+  }
   header h1 {
-    margin: 0;
-    font-weight: 600;
+    margin: 0 15px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    user-select: none;
   }
   main {
     max-width: 960px;
@@ -136,17 +152,18 @@
     margin-top: 0;
     color: #2e7d32;
   }
-  ul.product-list {
+  ul.product-list, ul.mentorship-list {
     list-style: none;
     padding-left: 0;
   }
-  ul.product-list li {
+  ul.product-list li, ul.mentorship-list li {
     margin-bottom: 12px;
     border-bottom: 1px solid #c8e6c9;
     padding-bottom: 8px;
   }
 </style>
 
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -155,7 +172,10 @@
 <body>
 
 <header>
-  <h1>AgriTech Connect</h1>
+  <div style="display:flex; align-items:center;">
+    <img src="logo.png" alt="AgriTech Logo" class="logo" title="AgriTech Connect Logo" />
+    <h1>AgriTech Connect</h1>
+  </div>
   <button class="logout" onclick="logout()">Logout</button>
 </header>
 
@@ -199,12 +219,12 @@
 
   <section class="mentorship-requests" id="mentorshipRequestsSection" style="display:none;">
     <h3>Your Mentorship Requests</h3>
-    <ul id="mentorshipRequestsList"></ul>
+    <ul class="mentorship-list" id="mentorshipRequestsList"></ul>
   </section>
 </main>
 
 <script>
-  // Firebase config (same for all pages)
+  // Firebase config (replace with your own config)
   const firebaseConfig = {
     apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
     authDomain: "agritechconnect.firebaseapp.com",
@@ -214,6 +234,7 @@
     appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
   };
 
+  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
@@ -235,27 +256,29 @@
   let currentUserId;
   let currentUserData;
 
-  // Auth state observer
+  // Observe auth state
   auth.onAuthStateChanged(async user => {
     if (!user) {
-      window.location.href = "index.html";
+      window.location.href = "index.html"; // redirect to login if not logged in
       return;
     }
 
     currentUserId = user.uid;
 
-    // Load user profile data from Firestore
+    // Fetch user data from Firestore
     const userDoc = await db.collection("users").doc(currentUserId).get();
     currentUserData = userDoc.exists ? userDoc.data() : {};
 
-    // Set display name & roles
+    // Display user name
     userName.textContent = user.displayName || currentUserData.fullName || "Unnamed User";
+
+    // Display roles or default to Buyer
     userRoles.textContent = "Roles: " + (currentUserData.roles ? currentUserData.roles.join(", ") : "Buyer");
 
-    // Load profile heading if exists
+    // Load heading if any
     profileHeading.value = currentUserData.profileHeading || "";
 
-    // Load profile pic or default
+    // Load profile pic (priority: Firestore photoURL, then Firebase Auth user.photoURL, then default)
     if (currentUserData.photoURL) {
       profilePic.src = currentUserData.photoURL;
     } else if (user.photoURL) {
@@ -264,7 +287,7 @@
       profilePic.src = "default-profile.png";
     }
 
-    // Show user products if seller role
+    // Show user products section if user has seller role
     if (currentUserData.roles && currentUserData.roles.includes("seller")) {
       userProductsSection.style.display = "block";
       loadUserProducts();
@@ -281,7 +304,7 @@
     }
   });
 
-  // Update profile heading
+  // Update profile heading in Firestore
   async function updateHeading() {
     const newHeading = profileHeading.value.trim();
     if (!newHeading) {
@@ -299,9 +322,10 @@
     }
   }
 
-  // Profile pic upload flow
+  // Click profile picture to trigger file input
   profilePic.addEventListener("click", () => uploadInput.click());
 
+  // Handle profile picture upload
   uploadInput.addEventListener("change", async () => {
     if (!uploadInput.files.length) return;
 
@@ -333,7 +357,7 @@
     }
   });
 
-  // Load user's products (if seller)
+  // Load products for the current seller user
   async function loadUserProducts() {
     userProductsList.innerHTML = "<li>Loading your products...</li>";
     try {
@@ -351,7 +375,7 @@
       snapshot.forEach(doc => {
         const p = doc.data();
         const li = document.createElement("li");
-        li.textContent = `${p.title} - ${p.price}`;
+        li.textContent = `${p.title} - Price: ${p.price}`;
         userProductsList.appendChild(li);
       });
     } catch (error) {
@@ -359,7 +383,7 @@
     }
   }
 
-  // Load mentorship requests (if mentor)
+  // Load mentorship requests assigned to this mentor
   async function loadMentorshipRequests() {
     mentorshipRequestsList.innerHTML = "<li>Loading mentorship requests...</li>";
     try {
@@ -377,7 +401,7 @@
       snapshot.forEach(doc => {
         const r = doc.data();
         const li = document.createElement("li");
-        li.textContent = `From: ${r.menteeName} - Message: ${r.message}`;
+        li.textContent = `From: ${r.menteeName || "Unknown"} - Message: ${r.message || ""}`;
         mentorshipRequestsList.appendChild(li);
       });
     } catch (error) {
@@ -385,6 +409,7 @@
     }
   }
 
+  // Logout function
   function logout() {
     auth.signOut().then(() => {
       window.location.href = "index.html";
