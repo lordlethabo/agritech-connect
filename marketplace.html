@@ -2,124 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect – Marketplace</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marketplace – AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #0f172a;
-      color: #e2e8f0;
       font-family: 'Poppins', sans-serif;
+      margin: 0; padding: 20px;
+      background: #f4fff1;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+    }
+    #toggleBtn {
+      background: #81c784;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 20px auto;
+      display: block;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #productsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .product {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .product:hover {
+      transform: translateY(-5px);
+    }
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 15px;
+    }
+    .product-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #2e7d32;
+    }
+    .product-price {
+      color: #558b2f;
+      font-weight: bold;
+    }
+    .action-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .action-btn.delete {
+      background-color: #e53935;
+      margin-left: 10px;
     }
   </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-green-400 mb-6">🛒 Marketplace</h1>
+<body>
 
-    <div class="flex flex-wrap gap-4 mb-6 items-center">
-      <button onclick="filterByType('all')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">All</button>
-      <button onclick="filterByType('seller')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">Sellers</button>
-      <button onclick="filterByType('buyer')" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600">Buyers</button>
-      <select onchange="filterByCategory(this.value)" class="px-3 py-2 rounded bg-slate-800 text-white">
-        <option value="all">All Categories</option>
-        <option value="Produce">Produce</option>
-        <option value="Livestock">Livestock</option>
-        <option value="Tools">Tools</option>
-        <option value="Seeds">Seeds</option>
-      </select>
-      <input id="searchInput" oninput="searchProducts(this.value)" type="text" placeholder="Search..." class="ml-auto px-3 py-2 rounded bg-slate-800 text-white w-full sm:w-1/2">
-    </div>
+<h1>🌽 Marketplace</h1>
+<button id="toggleBtn">Switch to Seller Mode</button>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="marketGrid">
-      <!-- Product cards -->
-    </div>
-  </div>
+<div id="productsContainer"></div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+    authDomain: "agritechconnect.firebaseapp.com",
+    projectId: "AgriTechConnect",
+    storageBucket: "agritechconnect.appspot.com",
+    messagingSenderId: "1027312049739",
+    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+  };
 
-    let allProducts = [];
-    let selectedType = 'all';
-    let selectedCategory = 'all';
-    let searchTerm = '';
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    function searchProducts(term) {
-      searchTerm = term.toLowerCase();
-      renderMarketplace();
-    }
+  const productsContainer = document.getElementById("productsContainer");
+  const toggleBtn = document.getElementById("toggleBtn");
 
-    async function loadMarketplace() {
-      db.collection("products").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderMarketplace();
-      });
-    }
+  let currentUser = null;
+  let currentUserData = null;
+  let currentMode = "buyer"; // default
 
-    function renderMarketplace() {
-      const container = document.getElementById("marketGrid");
-      container.innerHTML = "";
-      let filtered = allProducts.filter(p => {
-        const typeMatch = selectedType === 'all' || p.type === selectedType;
-        const catMatch = selectedCategory === 'all' || p.category === selectedCategory;
-        const searchMatch = p.name.toLowerCase().includes(searchTerm);
-        return typeMatch && catMatch && searchMatch;
-      });
+  auth.onAuthStateChanged(async user => {
+    if (!user) return window.location.href = "index.html";
+    currentUser = user;
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<p class='text-gray-400 col-span-full'>No items found.</p>`;
-        return;
+    const doc = await db.collection("users").doc(user.uid).get();
+    currentUserData = doc.exists ? doc.data() : {};
+
+    loadMarketplace();
+  });
+
+  toggleBtn.addEventListener("click", () => {
+    currentMode = currentMode === "buyer" ? "seller" : "buyer";
+    toggleBtn.textContent = `Switch to ${currentMode === "buyer" ? "Seller" : "Buyer"} Mode`;
+    loadMarketplace();
+  });
+
+  async function loadMarketplace() {
+    productsContainer.innerHTML = "Loading...";
+
+    const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
+    productsContainer.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const card = document.createElement("div");
+      card.className = "product";
+
+      card.innerHTML = `
+        <img src="${data.imageUrl}" alt="${data.title}" />
+        <div class="product-info">
+          <div class="product-title">${data.title}</div>
+          <div class="product-price">R${data.price}</div>
+        </div>
+      `;
+
+      if (currentMode === "buyer") {
+        const btn = document.createElement("button");
+        btn.className = "action-btn";
+        btn.textContent = "Add to Cart";
+        btn.onclick = () => alert("Added to cart!");
+        card.querySelector(".product-info").appendChild(btn);
       }
 
-      filtered.forEach(data => {
-        const card = document.createElement("div");
-        card.className = "bg-slate-800 text-white rounded-xl shadow p-4 border border-slate-700 hover:border-green-400 transition";
-        card.innerHTML = `
-          <img src="${data.image || 'https://via.placeholder.com/150'}" alt="${data.name}" class="w-full h-40 object-cover rounded mb-3">
-          <h2 class="font-semibold text-lg text-green-400 mb-1">${data.name}</h2>
-          <p class="text-sm text-slate-300">Category: <span class="font-medium">${data.category}</span></p>
-          <p class="text-green-300 font-bold text-xl mt-1">R ${data.price.toFixed(2)}</p>
-          <p class="text-xs text-slate-400 mb-3">Type: ${data.type}</p>
-          <button onclick="addToCart('${data.id}', '${data.name}', ${data.price})" class="w-full py-2 bg-green-500 text-black font-semibold rounded hover:bg-green-600">Add to Cart</button>
-        `;
-        container.appendChild(card);
-      });
-    }
+      if (currentMode === "seller" && data.ownerId === currentUser.uid) {
+        const editBtn = document.createElement("button");
+        editBtn.className = "action-btn";
+        editBtn.textContent = "Edit";
+        editBtn.onclick = () => alert("Edit feature coming soon");
 
-    function filterByType(type) {
-      selectedType = type;
-      renderMarketplace();
-    }
+        const delBtn = document.createElement("button");
+        delBtn.className = "action-btn delete";
+        delBtn.textContent = "Delete";
+        delBtn.onclick = async () => {
+          if (confirm("Are you sure you want to delete this item?")) {
+            await db.collection("products").doc(doc.id).delete();
+            loadMarketplace();
+          }
+        };
 
-    function filterByCategory(category) {
-      selectedCategory = category;
-      renderMarketplace();
-    }
+        card.querySelector(".product-info").appendChild(editBtn);
+        card.querySelector(".product-info").appendChild(delBtn);
+      }
 
-    async function addToCart(productId, productName, productPrice) {
-      const user = auth.currentUser;
-      if (!user) return alert('Please sign in to add to cart');
-      await db.collection('carts').doc(user.uid).collection('items').add({
-        productId,
-        productName,
-        productPrice,
-        addedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      alert(`Added '${productName}' to your cart.`);
-    }
+      productsContainer.appendChild(card);
+    });
+  }
+</script>
 
-    window.addEventListener("DOMContentLoaded", loadMarketplace);
-  </script>
 </body>
 </html>
