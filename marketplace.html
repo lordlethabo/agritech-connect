@@ -1,181 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Marketplace – AgriTech Connect</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriTech Connect – Marketplace</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0; padding: 20px;
-      background: #f4fff1;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      color: #2e7d32;
-    }
-    #toggleBtn {
-      background: #81c784;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      margin: 20px auto;
-      display: block;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #productsContainer {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-    .product {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease;
-    }
-    .product:hover {
-      transform: translateY(-5px);
-    }
-    .product img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .product-info {
-      padding: 15px;
-    }
-    .product-title {
-      font-weight: bold;
-      font-size: 16px;
-      margin-bottom: 8px;
-      color: #2e7d32;
-    }
-    .product-price {
-      color: #558b2f;
-      font-weight: bold;
-    }
-    .action-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 6px 14px;
-      background-color: #388e3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .action-btn.delete {
-      background-color: #e53935;
-      margin-left: 10px;
-    }
-  </style>
-  <!-- Firebase SDKs -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 </head>
-<body>
+<body class="bg-green-50 text-gray-800">
+  <header class="bg-green-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-semibold">AgriTech Marketplace</h1>
+    <div class="space-x-4">
+      <button id="toggleRole" class="bg-white text-green-600 px-4 py-2 rounded hover:bg-green-100">Switch Role</button>
+      <select id="langSelector" class="bg-white text-green-700 px-2 py-1 rounded">
+        <option value="en">English</option>
+        <option value="sotho">Sesotho</option>
+        <option value="xhosa">isiXhosa</option>
+      </select>
+    </div>
+  </header>
 
-<h1>🌽 Marketplace</h1>
-<button id="toggleBtn">Switch to Seller Mode</button>
+  <main class="p-6">
+    <div class="flex justify-between items-center mb-4">
+      <input id="searchBar" type="text" placeholder="Search products..." class="w-full md:w-1/3 p-2 border border-green-300 rounded-lg shadow-sm">
+      <select id="categoryFilter" class="ml-4 p-2 border rounded">
+        <option value="">All Categories</option>
+        <option value="goats">Goats</option>
+        <option value="cattle">Cattle</option>
+        <option value="white_chicken">White Chicken</option>
+        <option value="traditional_chicken">Traditional Chicken</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
 
-<div id="productsContainer"></div>
+    <section id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamic products here -->
+    </section>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-    authDomain: "agritechconnect.firebaseapp.com",
-    projectId: "AgriTechConnect",
-    storageBucket: "agritechconnect.appspot.com",
-    messagingSenderId: "1027312049739",
-    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-  };
+    <div class="flex justify-center mt-6">
+      <button id="loadMoreBtn" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Load More</button>
+    </div>
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+    <div id="adminControls" class="mt-10 hidden">
+      <h2 class="text-lg font-semibold mb-2">Upload New Product</h2>
+      <form id="uploadForm" class="grid grid-cols-1 gap-4">
+        <input type="text" id="productTitle" placeholder="Product Title" class="p-2 border rounded">
+        <input type="text" id="productPrice" placeholder="Price" class="p-2 border rounded">
+        <select id="productCategory" class="p-2 border rounded">
+          <option value="goats">Goats</option>
+          <option value="cattle">Cattle</option>
+          <option value="white_chicken">White Chicken</option>
+          <option value="traditional_chicken">Traditional Chicken</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="file" id="productImage" class="p-2 border rounded">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Upload</button>
+      </form>
+    </div>
+  </main>
 
-  const productsContainer = document.getElementById("productsContainer");
-  const toggleBtn = document.getElementById("toggleBtn");
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "AgriTechConnect",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
 
-  let currentUser = null;
-  let currentUserData = null;
-  let currentMode = "buyer"; // default
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
 
-  auth.onAuthStateChanged(async user => {
-    if (!user) return window.location.href = "index.html";
-    currentUser = user;
+    let currentUser = null;
+    let userRole = 'buyer';
+    let lastVisible = null;
+    let currentLanguage = 'en';
 
-    const doc = await db.collection("users").doc(user.uid).get();
-    currentUserData = doc.exists ? doc.data() : {};
+    const productGrid = document.getElementById('productGrid');
+    const uploadForm = document.getElementById('uploadForm');
+    const adminControls = document.getElementById('adminControls');
+    const toggleRole = document.getElementById('toggleRole');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-    loadMarketplace();
-  });
+    function translateText(text, lang) {
+      const translations = {
+        en: text,
+        sotho: {
+          'Goats': 'Dinku', 'Cattle': 'Mehlape', 'White Chicken': 'Lehe le Lesweu',
+          'Traditional Chicken': 'Lehe la Setso', 'Other': 'Tse Ling'
+        },
+        xhosa: {
+          'Goats': 'Iibhokhwe', 'Cattle': 'Iinkomo', 'White Chicken': 'Inkukhu emhlophe',
+          'Traditional Chicken': 'Inkukhu yesiNtu', 'Other': 'Ezinye'
+        }
+      };
+      return translations[lang] && translations[lang][text] ? translations[lang][text] : text;
+    }
 
-  toggleBtn.addEventListener("click", () => {
-    currentMode = currentMode === "buyer" ? "seller" : "buyer";
-    toggleBtn.textContent = `Switch to ${currentMode === "buyer" ? "Seller" : "Buyer"} Mode`;
-    loadMarketplace();
-  });
+    function renderProduct(doc) {
+      const p = doc.data();
+      const div = document.createElement('div');
+      div.className = 'bg-white p-4 rounded shadow';
 
-  async function loadMarketplace() {
-    productsContainer.innerHTML = "Loading...";
-
-    const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
-    productsContainer.innerHTML = "";
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const card = document.createElement("div");
-      card.className = "product";
-
-      card.innerHTML = `
-        <img src="${data.imageUrl}" alt="${data.title}" />
-        <div class="product-info">
-          <div class="product-title">${data.title}</div>
-          <div class="product-price">R${data.price}</div>
-        </div>
+      div.innerHTML = `
+        <img src="${p.imageUrl}" alt="${p.title}" class="w-full h-40 object-cover rounded">
+        <h3 class="font-bold text-lg mt-2">${p.title}</h3>
+        <p class="text-green-700 font-semibold">R${p.price}</p>
+        <p class="text-sm text-gray-500">${translateText(p.category, currentLanguage)}</p>
+        <button class="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Add to Cart</button>
+        ${currentUser && currentUser.uid === p.ownerId ? `
+        <div class="mt-2 space-x-2">
+          <button class="text-sm bg-yellow-400 px-2 py-1 rounded">Edit</button>
+          <button class="text-sm bg-red-500 text-white px-2 py-1 rounded" onclick="deleteProduct('${doc.id}')">Delete</button>
+        </div>` : ''}
       `;
+      productGrid.appendChild(div);
+    }
 
-      if (currentMode === "buyer") {
-        const btn = document.createElement("button");
-        btn.className = "action-btn";
-        btn.textContent = "Add to Cart";
-        btn.onclick = () => alert("Added to cart!");
-        card.querySelector(".product-info").appendChild(btn);
-      }
+    function fetchProducts(reset = false) {
+      let query = db.collection('products').orderBy('createdAt', 'desc').limit(6);
+      if (lastVisible) query = query.startAfter(lastVisible);
 
-      if (currentMode === "seller" && data.ownerId === currentUser.uid) {
-        const editBtn = document.createElement("button");
-        editBtn.className = "action-btn";
-        editBtn.textContent = "Edit";
-        editBtn.onclick = () => alert("Edit feature coming soon");
+      query.get().then(snapshot => {
+        if (reset) productGrid.innerHTML = '';
+        lastVisible = snapshot.docs[snapshot.docs.length - 1];
+        snapshot.forEach(doc => renderProduct(doc));
+      });
+    }
 
-        const delBtn = document.createElement("button");
-        delBtn.className = "action-btn delete";
-        delBtn.textContent = "Delete";
-        delBtn.onclick = async () => {
-          if (confirm("Are you sure you want to delete this item?")) {
-            await db.collection("products").doc(doc.id).delete();
-            loadMarketplace();
-          }
-        };
+    function deleteProduct(id) {
+      db.collection('products').doc(id).delete().then(() => {
+        alert('Deleted');
+        fetchProducts(true);
+      });
+    }
 
-        card.querySelector(".product-info").appendChild(editBtn);
-        card.querySelector(".product-info").appendChild(delBtn);
-      }
-
-      productsContainer.appendChild(card);
+    uploadForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const title = document.getElementById('productTitle').value;
+      const price = document.getElementById('productPrice').value;
+      const category = document.getElementById('productCategory').value;
+      const imageFile = document.getElementById('productImage').files[0];
+      const imageRef = storage.ref(`products/${Date.now()}_${imageFile.name}`);
+      imageRef.put(imageFile).then(snapshot => snapshot.ref.getDownloadURL()).then(url => {
+        return db.collection('products').add({
+          title, price, category,
+          imageUrl: url,
+          ownerId: currentUser.uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }).then(() => {
+        alert('Product added');
+        fetchProducts(true);
+      });
     });
-  }
-</script>
 
+    toggleRole.addEventListener('click', () => {
+      userRole = userRole === 'buyer' ? 'seller' : 'buyer';
+      alert(`You are now a ${userRole}`);
+      adminControls.classList.toggle('hidden', userRole !== 'seller');
+    });
+
+    document.getElementById('langSelector').addEventListener('change', e => {
+      currentLanguage = e.target.value;
+      fetchProducts(true);
+    });
+
+    document.getElementById('searchBar').addEventListener('input', e => {
+      const search = e.target.value.toLowerCase();
+      const cards = productGrid.children;
+      for (let card of cards) {
+        card.style.display = card.textContent.toLowerCase().includes(search) ? 'block' : 'none';
+      }
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', e => {
+      const cat = e.target.value;
+      const cards = productGrid.children;
+      for (let card of cards) {
+        card.style.display = cat === '' || card.textContent.includes(cat) ? 'block' : 'none';
+      }
+    });
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        fetchProducts(true);
+      }
+    });
+
+    loadMoreBtn.addEventListener('click', () => fetchProducts());
+  </script>
 </body>
 </html>
