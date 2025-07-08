@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AgriTech Connect – Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -10,162 +10,237 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #f4fff1, #ddf7cc);
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e8f5e9 0%, #a5d6a7 100%);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
+      padding: 20px;
     }
     .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      padding: 40px 30px;
-      text-align: center;
-      width: 90%;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(46, 125, 50, 0.15);
+      width: 100%;
       max-width: 400px;
-      backdrop-filter: blur(5px);
+      padding: 48px 36px 40px;
+      text-align: center;
+      backdrop-filter: saturate(180%) blur(12px);
     }
+    /* Circular logo container with hover effect */
     .logo-container {
-      margin-bottom: 20px;
-    }
-    .logo {
-      width: 90px;
-      height: 90px;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 28px;
       border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      box-shadow:
+        0 4px 10px rgba(46, 125, 50, 0.25),
+        inset 0 0 8px rgba(46, 125, 50, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .logo:hover {
-      transform: scale(1.08);
-      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.3);
+    .logo-container:hover {
+      transform: scale(1.1);
+      box-shadow:
+        0 8px 22px rgba(46, 125, 50, 0.35),
+        inset 0 0 12px rgba(46, 125, 50, 0.3);
+    }
+    .logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     h1 {
-      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 700;
       color: #2e7d32;
-      font-size: 24px;
-      font-weight: 600;
+      margin-bottom: 32px;
     }
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 15px;
-      background-color: #f8fff5;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      border: 1.8px solid #b2dfdb;
+      font-size: 16px;
+      background-color: #f9fff9;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
     input[type="email"]:focus,
     input[type="password"]:focus {
-      border-color: #81c784;
-      box-shadow: 0 0 5px rgba(129, 199, 132, 0.5);
+      border-color: #388e3c;
+      box-shadow: 0 0 8px rgba(56, 142, 60, 0.4);
       outline: none;
     }
     .remember {
-      margin: 10px 0;
-      font-size: 14px;
       display: flex;
       align-items: center;
+      font-size: 15px;
+      color: #2e7d32;
+      margin-bottom: 26px;
     }
     .remember input {
-      margin-right: 8px;
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
     }
     button {
-      background-color: #81c784;
-      border: none;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
       width: 100%;
-      margin-top: 10px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 14px 0;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(45deg, #2e7d32, #66bb6a);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.4);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     }
     button:hover {
-      background-color: #66bb6a;
-      transform: scale(1.02);
-    }
-    .link {
-      margin-top: 10px;
-      display: block;
-      color: #388e3c;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      color: red;
-      min-height: 24px;
+      background: linear-gradient(45deg, #66bb6a, #2e7d32);
+      transform: scale(1.04);
+      box-shadow: 0 8px 22px rgba(46, 125, 50, 0.5);
     }
     .social-btn {
-      background-color: #ffffff;
-      color: #333;
-      border: 1px solid #ccc;
-      margin-top: 15px;
+      margin-top: 18px;
+      background-color: #fff;
+      border: 2px solid #2e7d32;
+      color: #2e7d32;
+      font-weight: 600;
+      box-shadow: none;
     }
+    .social-btn:hover {
+      background-color: #2e7d32;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.5);
+    }
+    .link {
+      display: inline-block;
+      margin-top: 22px;
+      font-size: 15px;
+      color: #2e7d32;
+      text-decoration: underline;
+      cursor: pointer;
+      user-select: none;
+      margin-left: 12px;
+    }
+    #message {
+      margin-top: 28px;
+      min-height: 26px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #d32f2f;
+      user-select: none;
+    }
+    /* Responsive */
     @media (max-width: 600px) {
       .container {
-        padding: 30px 20px;
+        padding: 40px 28px 36px;
       }
       h1 {
-        font-size: 22px;
+        font-size: 24px;
+        margin-bottom: 28px;
       }
-      .logo {
-        width: 80px;
-        height: 80px;
+      .logo-container {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 24px;
+      }
+      input[type="email"],
+      input[type="password"] {
+        font-size: 15px;
+        padding: 12px 14px;
+      }
+      button,
+      .social-btn {
+        font-size: 16px;
+        padding: 12px 0;
       }
     }
     @media (min-width: 768px) and (max-width: 1024px) {
       .container {
-        padding: 50px 40px;
+        padding: 50px 44px 44px;
       }
       h1 {
-        font-size: 26px;
+        font-size: 28px;
       }
-      .logo {
-        width: 100px;
-        height: 100px;
+      .logo-container {
+        width: 110px;
+        height: 110px;
+        margin-bottom: 30px;
       }
     }
   </style>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="container" role="main">
+  <main class="container" role="main" aria-label="Login form">
     <div class="logo-container" aria-label="AgriTech Connect Logo">
       <img src="logo.png" alt="AgriTech Connect Logo" class="logo" />
     </div>
     <h1>AgriTech Connect</h1>
-    <input type="email" id="email" placeholder="Email" aria-label="Email" autocomplete="username" required />
-    <input type="password" id="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required />
-    <div class="remember">
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Email"
+      aria-label="Email"
+      autocomplete="username"
+      required
+    />
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      aria-label="Password"
+      autocomplete="current-password"
+      required
+    />
+
+    <label class="remember" for="rememberMe">
       <input type="checkbox" id="rememberMe" />
-      <label for="rememberMe">Remember Me</label>
+      Remember Me
+    </label>
+
+    <button id="loginBtn" onclick="login()" aria-label="Login to your account">Login</button>
+
+    <button class="social-btn" onclick="googleLogin()" aria-label="Sign in with Google">
+      Sign in with Google
+    </button>
+
+    <div>
+      <span
+        class="link"
+        onclick="resetPassword()"
+        role="button"
+        tabindex="0"
+        aria-label="Forgot password? Click to reset"
+        >Forgot Password?</span
+      >
+      <span
+        class="link"
+        onclick="window.location.href='register.html'"
+        role="button"
+        tabindex="0"
+        aria-label="Create a new account"
+        >Create Account</span
+      >
     </div>
-    <button id="loginBtn" onclick="login()" aria-label="Login">Login</button>
-    <button class="social-btn" onclick="googleLogin()" aria-label="Sign in with Google">Sign in with Google</button>
-    <span class="link" onclick="resetPassword()" role="button" tabindex="0" aria-label="Forgot Password">Forgot Password?</span>
-    <span class="link" onclick="window.location.href='register.html'" role="button" tabindex="0" aria-label="Create Account">Create Account</span>
+
     <div id="message" role="alert" aria-live="polite"></div>
-  </div>
+  </main>
 
   <script>
-    // Firebase config object
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -180,10 +255,10 @@
 
     const msgEl = document.getElementById("message");
 
-    // Auto redirect logged-in users to dashboard
+    // Redirect logged-in users to dashboard
     auth.onAuthStateChanged(user => {
       if (user) {
-        window.location.href = 'dashboard.html';
+        window.location.href = "dashboard.html";
       }
     });
 
@@ -201,15 +276,15 @@
       }
 
       try {
-        // Set persistence: LOCAL for Remember Me, SESSION otherwise
-        await auth.setPersistence(rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-
-        // Sign in with email & password
+        await auth.setPersistence(
+          rememberMe
+            ? firebase.auth.Auth.Persistence.LOCAL
+            : firebase.auth.Auth.Persistence.SESSION
+        );
         await auth.signInWithEmailAndPassword(email, password);
         msgEl.style.color = "green";
         msgEl.textContent = "✅ Login successful! Redirecting...";
-
-        setTimeout(() => window.location.href = "dashboard.html", 1000);
+        setTimeout(() => (window.location.href = "dashboard.html"), 1000);
       } catch (error) {
         msgEl.textContent = "❌ " + error.message;
       }
@@ -243,7 +318,6 @@
         const result = await auth.signInWithPopup(provider);
         const user = result.user;
 
-        // Check if user doc exists in Firestore; create if not (default role buyer)
         const userDoc = await db.collection("users").doc(user.uid).get();
         if (!userDoc.exists) {
           await db.collection("users").doc(user.uid).set({
@@ -257,7 +331,7 @@
 
         msgEl.style.color = "green";
         msgEl.textContent = "✅ Login successful! Redirecting...";
-        setTimeout(() => window.location.href = "dashboard.html", 1000);
+        setTimeout(() => (window.location.href = "dashboard.html"), 1000);
       } catch (error) {
         if (error.code === "auth/popup-closed-by-user") {
           msgEl.textContent = "Login cancelled.";
@@ -267,10 +341,10 @@
       }
     }
 
-    // Optional: prevent form submit on Enter key to avoid accidental reload
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
+    // Prevent form submit on Enter key to avoid accidental reload
+    document.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
           e.preventDefault();
           login();
         }
