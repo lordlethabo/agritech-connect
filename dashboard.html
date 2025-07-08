@@ -1,146 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Dashboard</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgriTech Connect – Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  body {
+    margin: 0; 
+    font-family: 'Poppins', sans-serif;
+    background: #f4fff1;
+    color: #2e7d32;
+  }
+  header {
+    background-color: #81c784;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+  }
+  main {
+    max-width: 960px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .profile-pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2e7d32;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  .profile-pic:hover {
+    box-shadow: 0 0 12px #558b2f;
+  }
+  .profile-info {
+    flex-grow: 1;
+  }
+  .profile-info h2 {
+    margin: 0 0 6px 0;
+    font-weight: 700;
+  }
+  .profile-info .roles {
+    font-size: 14px;
+    color: #558b2f;
+    font-weight: 600;
+  }
+  .heading-input {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 2px solid #81c784;
+    border-radius: 10px;
+  }
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    box-shadow: 0 10px 30px rgba(46,125,50,0.4);
+    transform: translateY(-5px);
+  }
+  .card h3 {
+    margin: 0;
+    font-weight: 600;
+    color: #2e7d32;
+  }
+  .upload-label {
+    margin-top: 12px;
+    display: inline-block;
+    background-color: #81c784;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .upload-label:hover {
+    background-color: #66bb6a;
+  }
+  #uploadInput {
+    display: none;
+  }
+  #message {
+    margin-top: 15px;
+    font-weight: 600;
+  }
+  button.logout {
+    background: #ef5350;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.3s ease;
+  }
+  button.logout:hover {
+    background: #d32f2f;
+  }
+  .user-products, .mentorship-requests {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(46,125,50,0.15);
+    margin-bottom: 30px;
+  }
+  .user-products h3, .mentorship-requests h3 {
+    margin-top: 0;
+    color: #2e7d32;
+  }
+  ul.product-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  ul.product-list li {
+    margin-bottom: 12px;
+    border-bottom: 1px solid #c8e6c9;
+    padding-bottom: 8px;
+  }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 </head>
-<body class="bg-green-50 min-h-screen p-6 font-sans">
-  <header class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-green-800">🌿 AgriTech Dashboard</h1>
-    <div class="flex items-center gap-4">
-      <button id="roleToggle" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Switch to Seller</button>
-      <img id="userPhoto" class="w-10 h-10 rounded-full" src="" alt="Profile" />
+<body>
+
+<header>
+  <h1>AgriTech Connect</h1>
+  <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<main>
+  <section class="profile">
+    <img src="default-profile.png" alt="Profile Picture" id="profilePic" class="profile-pic" title="Click to change profile picture" />
+    <div class="profile-info">
+      <h2 id="userName">Loading...</h2>
+      <div class="roles" id="userRoles">Roles: Loading...</div>
+      <input type="text" id="profileHeading" class="heading-input" placeholder="Enter a heading or tagline for your profile" />
+      <button onclick="updateHeading()" style="margin-top:8px; padding:8px 16px; background:#558b2f; color:#fff; border:none; border-radius:10px; cursor:pointer;">Save Heading</button>
+      <div id="message"></div>
     </div>
-  </header>
-
-  <section id="buyerSection" class="hidden">
-    <h2 class="text-xl font-semibold mb-4">🛒 Available Products</h2>
-    <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </section>
 
-  <section id="sellerSection" class="hidden">
-    <h2 class="text-xl font-semibold mb-4">📤 Upload Product or Livestock</h2>
-    <form id="uploadForm" class="bg-white p-4 rounded shadow-md">
-      <input type="text" id="productName" placeholder="Name" class="w-full mb-2 p-2 border rounded" required />
-      <input type="number" id="productPrice" placeholder="Price" class="w-full mb-2 p-2 border rounded" required />
-      <input type="file" id="productImage" class="w-full mb-2" accept="image/*" required />
-      <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" type="submit">Upload</button>
-    </form>
-    <div id="myProducts" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <input type="file" id="uploadInput" accept="image/*" />
+
+  <section class="links-grid">
+    <div class="card" onclick="location.href='marketplace.html'">
+      <h3>Marketplace</h3>
+      <p>Browse & sell products and livestock</p>
+    </div>
+    <div class="card" onclick="location.href='weather.html'">
+      <h3>Weather Advisor</h3>
+      <p>Get current weather & crop advice</p>
+    </div>
+    <div class="card" onclick="location.href='sickness.html'">
+      <h3>Sickness Diagnostic</h3>
+      <p>Upload images for diagnosis</p>
+    </div>
+    <div class="card" onclick="location.href='mentorship.html'">
+      <h3>Mentorship</h3>
+      <p>Connect with agricultural mentors</p>
+    </div>
   </section>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect"
-    };
+  <section class="user-products" id="userProductsSection" style="display:none;">
+    <h3>Your Products for Sale</h3>
+    <ul class="product-list" id="userProductsList"></ul>
+  </section>
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+  <section class="mentorship-requests" id="mentorshipRequestsSection" style="display:none;">
+    <h3>Your Mentorship Requests</h3>
+    <ul id="mentorshipRequestsList"></ul>
+  </section>
+</main>
 
-    let currentUser;
-    let currentRole = "buyer";
+<script>
+  // Firebase config (same for all pages)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+    authDomain: "agritechconnect.firebaseapp.com",
+    projectId: "AgriTechConnect",
+    storageBucket: "agritechconnect.appspot.com",
+    messagingSenderId: "1027312049739",
+    appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+  };
 
-    const roleToggleBtn = document.getElementById("roleToggle");
-    const buyerSection = document.getElementById("buyerSection");
-    const sellerSection = document.getElementById("sellerSection");
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-    auth.onAuthStateChanged(user => {
-      if (!user) return location.href = 'index.html';
-      currentUser = user;
-      document.getElementById("userPhoto").src = user.photoURL || "https://via.placeholder.com/100";
-      loadUserRole();
-      loadProducts();
-    });
+  const profilePic = document.getElementById("profilePic");
+  const userName = document.getElementById("userName");
+  const userRoles = document.getElementById("userRoles");
+  const profileHeading = document.getElementById("profileHeading");
+  const uploadInput = document.getElementById("uploadInput");
+  const messageDiv = document.getElementById("message");
 
-    function loadUserRole() {
-      db.collection("roles").doc(currentUser.uid).get().then(doc => {
-        if (doc.exists) {
-          currentRole = doc.data().role;
-          updateRoleUI();
-        } else {
-          db.collection("roles").doc(currentUser.uid).set({ role: "buyer" });
-          currentRole = "buyer";
-          updateRoleUI();
-        }
-      });
+  const userProductsSection = document.getElementById("userProductsSection");
+  const userProductsList = document.getElementById("userProductsList");
+
+  const mentorshipRequestsSection = document.getElementById("mentorshipRequestsSection");
+  const mentorshipRequestsList = document.getElementById("mentorshipRequestsList");
+
+  let currentUserId;
+  let currentUserData;
+
+  // Auth state observer
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      window.location.href = "index.html";
+      return;
     }
 
-    function updateRoleUI() {
-      if (currentRole === "seller") {
-        buyerSection.classList.add("hidden");
-        sellerSection.classList.remove("hidden");
-        roleToggleBtn.textContent = "Switch to Buyer";
-      } else {
-        sellerSection.classList.add("hidden");
-        buyerSection.classList.remove("hidden");
-        roleToggleBtn.textContent = "Switch to Seller";
+    currentUserId = user.uid;
+
+    // Load user profile data from Firestore
+    const userDoc = await db.collection("users").doc(currentUserId).get();
+    currentUserData = userDoc.exists ? userDoc.data() : {};
+
+    // Set display name & roles
+    userName.textContent = user.displayName || currentUserData.fullName || "Unnamed User";
+    userRoles.textContent = "Roles: " + (currentUserData.roles ? currentUserData.roles.join(", ") : "Buyer");
+
+    // Load profile heading if exists
+    profileHeading.value = currentUserData.profileHeading || "";
+
+    // Load profile pic or default
+    if (currentUserData.photoURL) {
+      profilePic.src = currentUserData.photoURL;
+    } else if (user.photoURL) {
+      profilePic.src = user.photoURL;
+    } else {
+      profilePic.src = "default-profile.png";
+    }
+
+    // Show user products if seller role
+    if (currentUserData.roles && currentUserData.roles.includes("seller")) {
+      userProductsSection.style.display = "block";
+      loadUserProducts();
+    } else {
+      userProductsSection.style.display = "none";
+    }
+
+    // Show mentorship requests if mentor role
+    if (currentUserData.roles && currentUserData.roles.includes("mentor")) {
+      mentorshipRequestsSection.style.display = "block";
+      loadMentorshipRequests();
+    } else {
+      mentorshipRequestsSection.style.display = "none";
+    }
+  });
+
+  // Update profile heading
+  async function updateHeading() {
+    const newHeading = profileHeading.value.trim();
+    if (!newHeading) {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Heading cannot be empty.";
+      return;
+    }
+    try {
+      await db.collection("users").doc(currentUserId).set({ profileHeading: newHeading }, { merge: true });
+      messageDiv.style.color = "green";
+      messageDiv.textContent = "Heading updated!";
+    } catch (error) {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Error updating heading: " + error.message;
+    }
+  }
+
+  // Profile pic upload flow
+  profilePic.addEventListener("click", () => uploadInput.click());
+
+  uploadInput.addEventListener("change", async () => {
+    if (!uploadInput.files.length) return;
+
+    const file = uploadInput.files[0];
+    if (!file.type.startsWith("image/")) {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Please upload a valid image file.";
+      return;
+    }
+
+    messageDiv.style.color = "#558b2f";
+    messageDiv.textContent = "Uploading image...";
+
+    const storageRef = storage.ref(`profile_pictures/${currentUserId}/${file.name}`);
+    try {
+      const snapshot = await storageRef.put(file);
+      const photoURL = await snapshot.ref.getDownloadURL();
+
+      // Update Firestore user doc and Firebase Auth profile photoURL
+      await db.collection("users").doc(currentUserId).set({ photoURL }, { merge: true });
+      await auth.currentUser.updateProfile({ photoURL });
+
+      profilePic.src = photoURL;
+      messageDiv.style.color = "green";
+      messageDiv.textContent = "Profile picture updated!";
+    } catch (error) {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Upload failed: " + error.message;
+    }
+  });
+
+  // Load user's products (if seller)
+  async function loadUserProducts() {
+    userProductsList.innerHTML = "<li>Loading your products...</li>";
+    try {
+      const snapshot = await db.collection("products")
+        .where("ownerId", "==", currentUserId)
+        .orderBy("createdAt", "desc")
+        .get();
+
+      if (snapshot.empty) {
+        userProductsList.innerHTML = "<li>You have no products listed.</li>";
+        return;
       }
+
+      userProductsList.innerHTML = "";
+      snapshot.forEach(doc => {
+        const p = doc.data();
+        const li = document.createElement("li");
+        li.textContent = `${p.title} - ${p.price}`;
+        userProductsList.appendChild(li);
+      });
+    } catch (error) {
+      userProductsList.innerHTML = `<li>Error loading products: ${error.message}</li>`;
     }
+  }
 
-    roleToggleBtn.addEventListener("click", () => {
-      const newRole = currentRole === "buyer" ? "seller" : "buyer";
-      db.collection("roles").doc(currentUser.uid).set({ role: newRole }).then(() => {
-        currentRole = newRole;
-        updateRoleUI();
+  // Load mentorship requests (if mentor)
+  async function loadMentorshipRequests() {
+    mentorshipRequestsList.innerHTML = "<li>Loading mentorship requests...</li>";
+    try {
+      const snapshot = await db.collection("mentorshipRequests")
+        .where("mentorId", "==", currentUserId)
+        .orderBy("createdAt", "desc")
+        .get();
+
+      if (snapshot.empty) {
+        mentorshipRequestsList.innerHTML = "<li>No mentorship requests yet.</li>";
+        return;
+      }
+
+      mentorshipRequestsList.innerHTML = "";
+      snapshot.forEach(doc => {
+        const r = doc.data();
+        const li = document.createElement("li");
+        li.textContent = `From: ${r.menteeName} - Message: ${r.message}`;
+        mentorshipRequestsList.appendChild(li);
       });
-    });
-
-    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("productName").value;
-      const price = document.getElementById("productPrice").value;
-      const imageFile = document.getElementById("productImage").files[0];
-      if (!imageFile) return alert("Select image");
-
-      const storageRef = firebase.storage().ref();
-      const imgRef = storageRef.child(`products/${Date.now()}-${imageFile.name}`);
-      await imgRef.put(imageFile);
-      const imageUrl = await imgRef.getDownloadURL();
-
-      db.collection("products").add({
-        uid: currentUser.uid,
-        name,
-        price: parseFloat(price),
-        imageUrl,
-        createdAt: Date.now()
-      }).then(() => {
-        alert("Product uploaded");
-        loadProducts();
-        document.getElementById("uploadForm").reset();
-      });
-    });
-
-    function loadProducts() {
-      db.collection("products").orderBy("createdAt", "desc").get().then(snapshot => {
-        const productList = document.getElementById("productList");
-        const myProducts = document.getElementById("myProducts");
-        productList.innerHTML = "";
-        myProducts.innerHTML = "";
-
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const card = `<div class="bg-white p-3 rounded shadow">
-            <img src="${data.imageUrl}" class="w-full h-40 object-cover rounded mb-2" />
-            <h3 class="text-lg font-bold">${data.name}</h3>
-            <p class="text-green-700">R ${data.price}</p>
-          </div>`;
-
-          if (data.uid === currentUser.uid) {
-            myProducts.innerHTML += card;
-          } else {
-            productList.innerHTML += card;
-          }
-        });
-      });
+    } catch (error) {
+      mentorshipRequestsList.innerHTML = `<li>Error loading requests: ${error.message}</li>`;
     }
-  </script>
+  }
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "index.html";
+    });
+  }
+</script>
+
 </body>
 </html>
