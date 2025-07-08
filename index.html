@@ -1,262 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect – Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #f4fff1, #ddf7cc);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      padding: 40px 30px;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-      backdrop-filter: blur(5px);
-    }
-
-    .logo-container {
-      margin-bottom: 20px;
-    }
-
-    .logo {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.08);
-      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.3);
-    }
-
-    h1 {
-      margin-bottom: 25px;
-      color: #2e7d32;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 15px;
-      background-color: #f8fff5;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #81c784;
-      box-shadow: 0 0 5px rgba(129, 199, 132, 0.5);
-      outline: none;
-    }
-
-    .remember {
-      margin: 10px 0;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-    }
-
-    .remember input {
-      margin-right: 8px;
-    }
-
-    button {
-      background-color: #81c784;
-      border: none;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #66bb6a;
-      transform: scale(1.02);
-    }
-
-    .link {
-      margin-top: 10px;
-      display: block;
-      color: #388e3c;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    #message {
-      margin-top: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      color: red;
-    }
-
-    .social-btn {
-      background-color: #ffffff;
-      color: #333;
-      border: 1px solid #ccc;
-      margin-top: 15px;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 30px 20px;
-      }
-
-      h1 {
-        font-size: 22px;
-      }
-
-      .logo {
-        width: 80px;
-        height: 80px;
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1024px) {
-      .container {
-        padding: 50px 40px;
-      }
-
-      h1 {
-        font-size: 26px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-      }
-    }
-  </style>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriTech Connect – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #f4fff1, #ddf7cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      padding: 40px 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      backdrop-filter: blur(5px);
+    }
+    .logo-container {
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logo:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.3);
+    }
+    h1 {
+      margin-bottom: 25px;
+      color: #2e7d32;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 15px;
+      background-color: #f8fff5;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #81c784;
+      box-shadow: 0 0 5px rgba(129, 199, 132, 0.5);
+      outline: none;
+    }
+    .remember {
+      margin: 10px 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    .remember input {
+      margin-right: 8px;
+    }
+    button {
+      background-color: #81c784;
+      border: none;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #66bb6a;
+      transform: scale(1.02);
+    }
+    .link {
+      margin-top: 10px;
+      display: block;
+      color: #388e3c;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: red;
+      min-height: 24px;
+    }
+    .social-btn {
+      background-color: #ffffff;
+      color: #333;
+      border: 1px solid #ccc;
+      margin-top: 15px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .container {
+        padding: 50px 40px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="logo-container">
-      <img src="logo.png" alt="AgriTech Logo" class="logo" />
-    </div>
-    <h1>AgriTech Connect</h1>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <div class="remember">
-      <input type="checkbox" id="rememberMe"> Remember Me
-    </div>
-    <button onclick="login()">Login</button>
-    <button class="social-btn" onclick="googleLogin()">Sign in with Google</button>
-    <span class="link" onclick="resetPassword()">Forgot Password?</span>
-    <span class="link" onclick="window.location.href='register.html'">Create Account</span>
-    <div id="message"></div>
-  </div>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect",
-      storageBucket: "agritechconnect.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <div class="container" role="main">
+    <div class="logo-container" aria-label="AgriTech Connect Logo">
+      <img src="logo.png" alt="AgriTech Connect Logo" class="logo" />
+    </div>
+    <h1>AgriTech Connect</h1>
+    <input type="email" id="email" placeholder="Email" aria-label="Email" autocomplete="username" required />
+    <input type="password" id="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required />
+    <div class="remember">
+      <input type="checkbox" id="rememberMe" />
+      <label for="rememberMe">Remember Me</label>
+    </div>
+    <button id="loginBtn" onclick="login()" aria-label="Login">Login</button>
+    <button class="social-btn" onclick="googleLogin()" aria-label="Sign in with Google">Sign in with Google</button>
+    <span class="link" onclick="resetPassword()" role="button" tabindex="0" aria-label="Forgot Password">Forgot Password?</span>
+    <span class="link" onclick="window.location.href='register.html'" role="button" tabindex="0" aria-label="Create Account">Create Account</span>
+    <div id="message" role="alert" aria-live="polite"></div>
+  </div>
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        window.location.href = 'dashboard.html';
-      }
-    });
+  <script>
+    // Firebase config object
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const rememberMe = document.getElementById("rememberMe").checked;
-      const msg = document.getElementById("message");
+    const msgEl = document.getElementById("message");
 
-      if (!email || !password) {
-        msg.style.color = "red";
-        msg.textContent = "❌ Email and password required.";
-        return;
-      }
+    // Auto redirect logged-in users to dashboard
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
+    });
 
-      auth.setPersistence(rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
-        .then(() => {
-          return auth.signInWithEmailAndPassword(email, password);
-        })
-        .then(() => {
-          msg.style.color = "green";
-          msg.textContent = "✅ Login successful!";
-          setTimeout(() => window.location.href = "dashboard.html", 1000);
-        })
-        .catch(error => {
-          msg.style.color = "red";
-          msg.textContent = "❌ " + error.message;
-        });
-    }
+    async function login() {
+      msgEl.style.color = "red";
+      msgEl.textContent = "";
 
-    function resetPassword() {
-      const email = document.getElementById("email").value;
-      const msg = document.getElementById("message");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const rememberMe = document.getElementById("rememberMe").checked;
 
-      if (!email) {
-        msg.style.color = "red";
-        msg.textContent = "Please enter your email to reset your password.";
-        return;
-      }
+      if (!email || !password) {
+        msgEl.textContent = "❌ Email and password required.";
+        return;
+      }
 
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          msg.style.color = "green";
-          msg.textContent = "Password reset link sent to your email.";
-        })
-        .catch(error => {
-          msg.style.color = "red";
-          msg.textContent = error.message;
-        });
-    }
+      try {
+        // Set persistence: LOCAL for Remember Me, SESSION otherwise
+        await auth.setPersistence(rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
 
-    function googleLogin() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then(result => {
-          window.location.href = 'dashboard.html';
-        })
-        .catch(error => {
-          document.getElementById("message").textContent = error.message;
-        });
-    }
-  </script>
+        // Sign in with email & password
+        await auth.signInWithEmailAndPassword(email, password);
+        msgEl.style.color = "green";
+        msgEl.textContent = "✅ Login successful! Redirecting...";
+
+        setTimeout(() => window.location.href = "dashboard.html", 1000);
+      } catch (error) {
+        msgEl.textContent = "❌ " + error.message;
+      }
+    }
+
+    async function resetPassword() {
+      msgEl.style.color = "red";
+      msgEl.textContent = "";
+
+      const email = document.getElementById("email").value.trim();
+      if (!email) {
+        msgEl.textContent = "Please enter your email to reset your password.";
+        return;
+      }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        msgEl.style.color = "green";
+        msgEl.textContent = "Password reset link sent to your email.";
+      } catch (error) {
+        msgEl.textContent = error.message;
+      }
+    }
+
+    async function googleLogin() {
+      msgEl.style.color = "red";
+      msgEl.textContent = "";
+
+      const provider = new firebase.auth.GoogleAuthProvider();
+
+      try {
+        const result = await auth.signInWithPopup(provider);
+        const user = result.user;
+
+        // Check if user doc exists in Firestore; create if not (default role buyer)
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        if (!userDoc.exists) {
+          await db.collection("users").doc(user.uid).set({
+            displayName: user.displayName || "Anonymous",
+            email: user.email,
+            role: "buyer",
+            photoURL: user.photoURL || "",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+
+        msgEl.style.color = "green";
+        msgEl.textContent = "✅ Login successful! Redirecting...";
+        setTimeout(() => window.location.href = "dashboard.html", 1000);
+      } catch (error) {
+        if (error.code === "auth/popup-closed-by-user") {
+          msgEl.textContent = "Login cancelled.";
+        } else {
+          msgEl.textContent = "❌ " + error.message;
+        }
+      }
+    }
+
+    // Optional: prevent form submit on Enter key to avoid accidental reload
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          login();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
