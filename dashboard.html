@@ -3,94 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriTech Connect – Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>AgriTech Dashboard</title>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <header class="bg-white shadow-md p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold text-green-700">🌾 AgriTech Dashboard</h1>
+<body class="bg-green-50 min-h-screen p-6 font-sans">
+  <header class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-green-800">🌿 AgriTech Dashboard</h1>
     <div class="flex items-center gap-4">
-      <button id="roleSwitchBtn" onclick="toggleRole()" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
-        🔁 Switch Role
-      </button>
-      <div class="relative">
-        <img id="userPhoto" src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleMenu()" />
-        <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black">
-          <p class="text-sm" id="userName">User</p>
-          <hr class="my-1" />
-          <a href="profile.html" class="block text-sm py-1 hover:bg-gray-100">⚙️ Profile</a>
-          <button onclick="logout()" class="w-full text-left text-sm py-1 hover:bg-gray-100">🚪 Logout</button>
-        </div>
-      </div>
+      <button id="roleToggle" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Switch to Seller</button>
+      <img id="userPhoto" class="w-10 h-10 rounded-full" src="" alt="Profile" />
     </div>
   </header>
 
-  <main class="p-6">
-    <h2 class="text-lg font-semibold">Welcome to your personalized dashboard!</h2>
-    <p>Your content will adjust based on your selected role.</p>
-  </main>
+  <section id="buyerSection" class="hidden">
+    <h2 class="text-xl font-semibold mb-4">🛒 Available Products</h2>
+    <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <section id="sellerSection" class="hidden">
+    <h2 class="text-xl font-semibold mb-4">📤 Upload Product or Livestock</h2>
+    <form id="uploadForm" class="bg-white p-4 rounded shadow-md">
+      <input type="text" id="productName" placeholder="Name" class="w-full mb-2 p-2 border rounded" required />
+      <input type="number" id="productPrice" placeholder="Price" class="w-full mb-2 p-2 border rounded" required />
+      <input type="file" id="productImage" class="w-full mb-2" accept="image/*" required />
+      <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" type="submit">Upload</button>
+    </form>
+    <div id="myProducts" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
-      projectId: "AgriTechConnect",
-      storageBucket: "agritechconnect.appspot.com",
-      messagingSenderId: "1027312049739",
-      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
+      projectId: "AgriTechConnect"
     };
-    
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let currentUser = null;
+    let currentUser;
+    let currentRole = "buyer";
 
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("hidden");
-    }
-
-    function logout() {
-      auth.signOut();
-    }
-
-    function updateRoleUI(role) {
-      const btn = document.getElementById("roleSwitchBtn");
-      btn.textContent = role === "buyer" ? "🔁 Switch to Seller" : "🔁 Switch to Buyer";
-    }
-
-    function toggleRole() {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const userRef = db.collection("users").doc(user.uid);
-      userRef.get().then(doc => {
-        const currentRole = doc.data().role || "buyer";
-        const newRole = currentRole === "buyer" ? "seller" : "buyer";
-        return userRef.update({ role: newRole });
-      }).then(() => {
-        updateRoleUI(newRole);
-        alert("Role switched successfully!");
-      }).catch(err => console.error("Error switching role:", err));
-    }
+    const roleToggleBtn = document.getElementById("roleToggle");
+    const buyerSection = document.getElementById("buyerSection");
+    const sellerSection = document.getElementById("sellerSection");
 
     auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUser = user;
-        document.getElementById("userName").textContent = user.displayName || user.email;
-        document.getElementById("userPhoto").src = user.photoURL || "https://via.placeholder.com/32";
-
-        db.collection("users").doc(user.uid).get().then(doc => {
-          const role = doc.exists && doc.data().role || "buyer";
-          updateRoleUI(role);
-        });
-      } else {
-        window.location.href = "index.html";
-      }
+      if (!user) return location.href = 'index.html';
+      currentUser = user;
+      document.getElementById("userPhoto").src = user.photoURL || "https://via.placeholder.com/100";
+      loadUserRole();
+      loadProducts();
     });
+
+    function loadUserRole() {
+      db.collection("roles").doc(currentUser.uid).get().then(doc => {
+        if (doc.exists) {
+          currentRole = doc.data().role;
+          updateRoleUI();
+        } else {
+          db.collection("roles").doc(currentUser.uid).set({ role: "buyer" });
+          currentRole = "buyer";
+          updateRoleUI();
+        }
+      });
+    }
+
+    function updateRoleUI() {
+      if (currentRole === "seller") {
+        buyerSection.classList.add("hidden");
+        sellerSection.classList.remove("hidden");
+        roleToggleBtn.textContent = "Switch to Buyer";
+      } else {
+        sellerSection.classList.add("hidden");
+        buyerSection.classList.remove("hidden");
+        roleToggleBtn.textContent = "Switch to Seller";
+      }
+    }
+
+    roleToggleBtn.addEventListener("click", () => {
+      const newRole = currentRole === "buyer" ? "seller" : "buyer";
+      db.collection("roles").doc(currentUser.uid).set({ role: newRole }).then(() => {
+        currentRole = newRole;
+        updateRoleUI();
+      });
+    });
+
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("productName").value;
+      const price = document.getElementById("productPrice").value;
+      const imageFile = document.getElementById("productImage").files[0];
+      if (!imageFile) return alert("Select image");
+
+      const storageRef = firebase.storage().ref();
+      const imgRef = storageRef.child(`products/${Date.now()}-${imageFile.name}`);
+      await imgRef.put(imageFile);
+      const imageUrl = await imgRef.getDownloadURL();
+
+      db.collection("products").add({
+        uid: currentUser.uid,
+        name,
+        price: parseFloat(price),
+        imageUrl,
+        createdAt: Date.now()
+      }).then(() => {
+        alert("Product uploaded");
+        loadProducts();
+        document.getElementById("uploadForm").reset();
+      });
+    });
+
+    function loadProducts() {
+      db.collection("products").orderBy("createdAt", "desc").get().then(snapshot => {
+        const productList = document.getElementById("productList");
+        const myProducts = document.getElementById("myProducts");
+        productList.innerHTML = "";
+        myProducts.innerHTML = "";
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const card = `<div class="bg-white p-3 rounded shadow">
+            <img src="${data.imageUrl}" class="w-full h-40 object-cover rounded mb-2" />
+            <h3 class="text-lg font-bold">${data.name}</h3>
+            <p class="text-green-700">R ${data.price}</p>
+          </div>`;
+
+          if (data.uid === currentUser.uid) {
+            myProducts.innerHTML += card;
+          } else {
+            productList.innerHTML += card;
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>
