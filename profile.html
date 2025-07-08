@@ -4,152 +4,123 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AgriTech Connect – Profile</title>
-
-  <!-- Tailwind CSS & Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
   <style>
-    .dark-mode { background-color: #1a202c; color: #edf2f7; }
-    .logo-border {
-      border: 4px solid #34d399;
+    .preview-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
       border-radius: 9999px;
-      box-shadow: 0 0 8px #34d399aa;
-      transition: 0.3s ease;
-      cursor: pointer;
-    }
-    .logo-border:hover {
-      border-color: #10b981;
-      box-shadow: 0 0 15px #10b981dd;
+      border: 3px solid #34d399;
+      margin-bottom: 10px;
     }
   </style>
 </head>
-<body id="main-body" class="flex bg-gray-100 text-gray-900">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0">
-    <img src="logo.png" alt="AgriTech Logo" class="w-32 mb-6 rounded-full logo-border" onclick="toggleSidebar()" />
-    <nav class="space-y-3">
-      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded">🏠 Dashboard</a>
-      <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded">🛒 Marketplace</a>
-      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded">🎓 Learning Hub</a>
-      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded">⛅ Weather</a>
-      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded">🩺 Crop Doctor</a>
-      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded">👥 Mentorship</a>
-      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded">💬 Community Chat</a>
-      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded">🧺 Cart</a>
-    </nav>
-  </aside>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center py-10">
 
-  <!-- Main Content -->
-  <div class="flex-1 flex flex-col min-h-screen">
-    <header class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50">
-      <div class="flex items-center gap-2">
-        <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full logo-border md:hidden" onclick="toggleSidebar()" />
-        <h1 class="text-xl font-bold">Profile</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleDarkMode()" class="text-lg" title="Toggle dark mode">
-          <i class="fas fa-moon"></i>
-        </button>
-        <div class="relative">
-          <img id="userPhoto" src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleMenu()" />
-          <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black z-50">
-            <p class="text-sm" id="userName">User</p>
-            <hr class="my-1" />
-            <a href="profile.html" class="block text-sm py-1 hover:bg-gray-100">⚙️ Profile</a>
-            <button onclick="logout()" class="w-full text-left text-sm py-1 hover:bg-gray-100">🚪 Logout</button>
-          </div>
-        </div>
-      </div>
-    </header>
+  <h1 class="text-3xl font-bold text-green-700 mb-6">👤 My Profile</h1>
 
-    <main class="p-6 space-y-6 flex-1 max-w-3xl mx-auto">
-      <section class="bg-white rounded-xl shadow-md p-6">
-        <h2 class="text-lg font-semibold mb-4">Update Profile</h2>
-        <form id="profileForm" class="space-y-4">
-          <div>
-            <label for="displayName" class="block font-semibold mb-1">Display Name</label>
-            <input type="text" id="displayName" class="w-full border p-2 rounded" required />
-          </div>
-          <div>
-            <label for="photoURL" class="block font-semibold mb-1">Photo URL</label>
-            <input type="url" id="photoURL" class="w-full border p-2 rounded" />
-          </div>
-          <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">Save Changes</button>
-        </form>
-      </section>
-    </main>
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+    <form id="profileForm" class="space-y-4 text-left">
+      <div class="text-center">
+        <img id="profilePreview" src="https://via.placeholder.com/100" class="preview-img mx-auto" alt="Profile Photo" />
+        <input type="file" id="photoUpload" accept="image/*" class="mt-2 block mx-auto" />
+      </div>
+
+      <div>
+        <label for="displayName" class="font-semibold">Display Name</label>
+        <input type="text" id="displayName" class="w-full border p-2 rounded mt-1" required />
+      </div>
+
+      <div>
+        <label for="profileHeading" class="font-semibold">Profile Heading</label>
+        <input type="text" id="profileHeading" placeholder="e.g., Organic Maize Farmer" class="w-full border p-2 rounded mt-1" />
+      </div>
+
+      <button type="submit" class="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700">💾 Save Changes</button>
+    </form>
   </div>
 
-  <!-- Firebase Logic -->
   <script>
+    // ✅ Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b"
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    // Load user profile when authenticated
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "index.html";
-        return;
+    const displayNameInput = document.getElementById("displayName");
+    const headingInput = document.getElementById("profileHeading");
+    const profilePreview = document.getElementById("profilePreview");
+    const photoUpload = document.getElementById("photoUpload");
+
+    let currentUser = null;
+
+    // ✅ Load profile data on login
+    auth.onAuthStateChanged(async user => {
+      if (!user) return (window.location.href = "index.html");
+      currentUser = user;
+
+      const doc = await db.collection("users").doc(user.uid).get();
+      if (doc.exists) {
+        const data = doc.data();
+        displayNameInput.value = data.displayName || "";
+        headingInput.value = data.heading || "";
+        profilePreview.src = data.photoURL || "https://via.placeholder.com/100";
+      } else {
+        displayNameInput.value = user.displayName || "";
+        profilePreview.src = user.photoURL || "https://via.placeholder.com/100";
       }
-
-      document.getElementById("userName").textContent = user.displayName || user.email;
-      document.getElementById("userPhoto").src = user.photoURL || "https://via.placeholder.com/32";
-      document.getElementById("displayName").value = user.displayName || "";
-      document.getElementById("photoURL").value = user.photoURL || "";
     });
 
-    function logout() {
-      auth.signOut();
-    }
+    // ✅ Upload and preview image
+    photoUpload.addEventListener("change", () => {
+      const file = photoUpload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => (profilePreview.src = reader.result);
+        reader.readAsDataURL(file);
+      }
+    });
 
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("hidden");
-    }
-
-    function toggleSidebar() {
-      document.querySelector("aside").classList.toggle("hidden");
-    }
-
-    function toggleDarkMode() {
-      document.getElementById("main-body").classList.toggle("dark-mode");
-    }
-
+    // ✅ Handle form submit
     document.getElementById("profileForm").addEventListener("submit", async e => {
       e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
+      const name = displayNameInput.value.trim();
+      const heading = headingInput.value.trim();
 
-      const displayName = document.getElementById("displayName").value.trim();
-      const photoURL = document.getElementById("photoURL").value.trim();
+      let photoURL = profilePreview.src;
 
-      try {
-        await user.updateProfile({ displayName, photoURL });
-        alert("✅ Profile updated!");
-        document.getElementById("userName").textContent = displayName || user.email;
-        document.getElementById("userPhoto").src = photoURL || "https://via.placeholder.com/32";
-
-        // Optional: Update Firestore user document
-        await db.collection("users").doc(user.uid).set({
-          displayName,
-          photoURL,
-          email: user.email
-        }, { merge: true });
-      } catch (err) {
-        alert("❌ Error updating profile: " + err.message);
+      // ✅ If new photo selected, upload to Firebase Storage
+      if (photoUpload.files.length > 0) {
+        const file = photoUpload.files[0];
+        const storageRef = storage.ref(`profilePhotos/${currentUser.uid}`);
+        await storageRef.put(file);
+        photoURL = await storageRef.getDownloadURL();
       }
+
+      // ✅ Update Firebase Auth profile
+      await currentUser.updateProfile({ displayName: name, photoURL });
+
+      // ✅ Save to Firestore
+      await db.collection("users").doc(currentUser.uid).set({
+        displayName: name,
+        heading: heading,
+        photoURL: photoURL,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      alert("✅ Profile updated successfully!");
     });
   </script>
 </body>
