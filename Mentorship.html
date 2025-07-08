@@ -2,191 +2,177 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AgriTech Connect – Mentorship</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentorship – AgriTech Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    .dark-mode {
-      background-color: #1a202c;
-      color: #edf2f7;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f9ef;
+      margin: 0;
+      padding: 0;
+      color: #333;
     }
-
-    .logo-border {
-      border: 4px solid #34d399; /* Tailwind green-400 */
-      border-radius: 9999px; /* fully rounded */
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
+    header {
+      background: #6b8e23;
+      color: white;
+      padding: 20px 30px;
+      text-align: center;
+    }
+    main {
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .mentor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .mentor-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+    .mentor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(138, 183, 58, 0.3);
+    }
+    .mentor-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .mentor-card h3 {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+    .mentor-card p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+    .btn {
+      background: #6b8e23;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-top: 10px;
       cursor: pointer;
+      font-weight: bold;
     }
-    .logo-border:hover {
-      border-color: #10b981; /* Tailwind green-500 */
-      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+    .btn:hover {
+      background: #8ab73a;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .search-bar input {
+      width: 300px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .no-results {
+      text-align: center;
+      color: #999;
+      font-size: 1rem;
+      margin-top: 40px;
     }
   </style>
 </head>
-<body
-  id="main-body"
-  class="flex bg-gray-100 text-gray-900 dark-mode:text-white"
->
-  <aside
-    class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0"
-  >
-    <img
-      src="logo.png"
-      alt="AgriTech Connect Logo"
-      class="w-32 mb-6 rounded-full logo-border"
-      onclick="toggleSidebar()"
-    />
-    <nav class="space-y-3">
-      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded"
-        >🏠 Dashboard</a
-      >
-      <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded"
-        >🛒 Marketplace</a
-      >
-      <a href="learning.html" class="block hover:bg-green-700 p-2 rounded"
-        >🎓 Learning Hub</a
-      >
-      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded"
-        >⛅ Weather</a
-      >
-      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded"
-        >🩺 Crop Doctor</a
-      >
-      <a href="mentorship.html" class="block bg-green-700 p-2 rounded font-semibold"
-        >👥 Mentorship</a
-      >
-      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded"
-        >💬 Community Chat</a
-      >
-      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded"
-        >🧺 Cart</a
-      >
-    </nav>
-  </aside>
+<body>
+  <header>
+    <h1>🌱 Mentorship Program</h1>
+    <p>Connect with experienced agricultural mentors to grow your journey</p>
+  </header>
 
-  <div class="flex-1 flex flex-col min-h-screen">
-    <header
-      class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50"
-    >
-      <div class="flex items-center gap-2">
-        <img
-          src="logo.png"
-          alt="Logo"
-          class="w-10 h-10 rounded-full logo-border md:hidden"
-          onclick="toggleSidebar()"
-        />
-        <h1 class="text-xl font-bold">Mentorship</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleDarkMode()" class="text-lg">
-          <i class="fas fa-moon"></i>
-        </button>
-        <div class="relative">
-          <img
-            id="userPhoto"
-            src="https://via.placeholder.com/32"
-            class="w-8 h-8 rounded-full cursor-pointer"
-            onclick="toggleMenu()"
-          />
-          <div
-            id="dropdownMenu"
-            class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black"
-          >
-            <p class="text-sm" id="userName">User</p>
-            <hr class="my-1" />
-            <a
-              href="profile.html"
-              class="block text-sm py-1 hover:bg-gray-100"
-              >⚙️ Profile</a
-            >
-            <button
-              onclick="logout()"
-              class="w-full text-left text-sm py-1 hover:bg-gray-100"
-            >
-              🚪 Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+  <main>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by expertise (e.g., crops, business)..." />
+    </div>
 
-    <main class="p-6 space-y-6">
-      <section>
-        <h2 class="text-lg font-semibold mb-4">👥 Mentorship Opportunities</h2>
-        <p class="mb-4">
-          Connect with experienced agripreneurs and extension agents for guidance,
-          advice, and support.
-        </p>
+    <div class="mentor-grid" id="mentorGrid">
+      <!-- Mentor cards inserted dynamically -->
+    </div>
+  </main>
 
-        <!-- Sample mentorship listings -->
-        <ul class="list-disc list-inside space-y-2">
-          <li>
-            <strong>Jane Doe</strong> – Organic Farming Expert
-            <a href="chat.html" class="text-green-700 font-semibold hover:underline"
-              >Chat</a
-            >
-          </li>
-          <li>
-            <strong>John Smith</strong> – Livestock Specialist
-            <a href="chat.html" class="text-green-700 font-semibold hover:underline"
-              >Chat</a
-            >
-          </li>
-          <li>
-            <strong>Mary Johnson</strong> – Market Access Mentor
-            <a href="chat.html" class="text-green-700 font-semibold hover:underline"
-              >Chat</a
-            >
-          </li>
-        </ul>
-      </section>
-    </main>
-  </div>
-
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
   <script>
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
+      authDomain: "agritechconnect.firebaseapp.com",
       projectId: "agritechconnect-1d52b",
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById("userName").textContent =
-          user.displayName || user.email;
-        document.getElementById("userPhoto").src =
-          user.photoURL || "https://via.placeholder.com/32";
-      } else {
-        window.location.href = "index.html";
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const mentorGrid = document.getElementById("mentorGrid");
+    const searchInput = document.getElementById("searchInput");
+
+    // Render a single mentor card
+    function renderMentorCard(doc) {
+      const data = doc.data();
+      const card = document.createElement("div");
+      card.className = "mentor-card";
+      card.innerHTML = `
+        <img src="${data.photoURL || 'https://via.placeholder.com/300'}" alt="Mentor" />
+        <h3>${data.name || "Unnamed Mentor"}</h3>
+        <p><strong>Expertise:</strong> ${data.expertise || "N/A"}</p>
+        <p>${data.bio || "No bio available."}</p>
+        <button class="btn" onclick="requestMentor('${doc.id}')">Request Mentorship</button>
+      `;
+      mentorGrid.appendChild(card);
+    }
+
+    // Load mentors (optionally with expertise filtering)
+    function loadMentors(filter = "") {
+      mentorGrid.innerHTML = "";
+
+      let query = db.collection("mentors");
+
+      if (filter) {
+        query = query
+          .where("expertise", ">=", filter)
+          .where("expertise", "<=", filter + "\uf8ff");
       }
+
+      query.get().then(snapshot => {
+        if (snapshot.empty) {
+          mentorGrid.innerHTML = `<p class="no-results">No mentors match that search.</p>`;
+        } else {
+          snapshot.forEach(renderMentorCard);
+        }
+      }).catch(error => {
+        mentorGrid.innerHTML = `<p class="no-results">Error loading mentors: ${error.message}</p>`;
+      });
+    }
+
+    // Search input event
+    searchInput.addEventListener("input", () => {
+      const val = searchInput.value.trim().toLowerCase();
+      loadMentors(val);
     });
 
-    function logout() {
-      auth.signOut();
+    // Placeholder for request functionality
+    function requestMentor(id) {
+      alert("✅ Request sent to mentor (ID: " + id + "). This should be saved to Firestore.");
+      // Future: Save request to Firestore or send a notification
     }
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("hidden");
-    }
-    function toggleSidebar() {
-      document.querySelector("aside").classList.toggle("hidden");
-    }
-    function toggleDarkMode() {
-      document.getElementById("main-body").classList.toggle("dark-mode");
-    }
+
+    // Initial load
+    loadMentors();
   </script>
 </body>
 </html>
