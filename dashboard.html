@@ -2,298 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AgriTech Connect – Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/a2e0d6fd4c.js" crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
-    :root {
-      --primary: #2e7d32;
-      --light: #f1f8e9;
-      --bg: #ffffff;
-      --card-bg: #eaf3db;
-      --card-hover: #d2e4b8;
+    .feature-tile {
+      @apply flex flex-col items-center justify-center bg-white p-6 rounded-xl shadow text-center text-green-800 font-medium text-lg hover:scale-105 transition transform duration-200;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
+    .feature-tile span {
+      margin-top: 0.5rem;
+      font-size: 1rem;
     }
-    body {
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      background: var(--light);
-      overflow-x: hidden;
-    }
-    /* Hamburger menu on top left */
-    #hamburger {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1100;
-      font-size: 28px;
-      color: var(--primary);
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-    }
-    #hamburger:hover {
-      color: #1b4d17;
-    }
-    #notification-badge {
-      background: #d32f2f; /* red */
-      color: white;
-      border-radius: 12px;
-      padding: 2px 6px;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      user-select: none;
-      user-drag: none;
-    }
-    #notif-count {
-      min-width: 16px;
-      text-align: center;
-    }
-    /* Sidebar styling */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -280px; /* Hidden by default */
-      width: 280px;
-      height: 100vh;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      box-shadow: 3px 0 12px rgba(0,0,0,0.15);
-      transition: left 0.3s ease;
-      z-index: 1050;
-    }
-    .sidebar.active {
-      left: 0;
-    }
-    /* Sidebar header with logo and text */
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-      user-select: none;
-      flex-shrink: 0;
-    }
-    .sidebar-header img {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-      user-drag: none;
-    }
-    .sidebar-header img:hover {
-      transform: scale(1.05);
-    }
-    .sidebar-header h2 {
-      font-size: 20px;
-      font-weight: 700;
-      color: white;
-      user-select: none;
-    }
-    /* Profile box */
-    .profile-box {
-      text-align: center;
-      margin-bottom: 30px;
-      user-select: none;
-      flex-shrink: 0;
-    }
-    .profile-box img {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      margin: 0 auto 10px auto;
-      transition: transform 0.3s ease;
-      object-fit: cover;
-      display: block;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      user-drag: none;
-    }
-    .profile-box img:hover {
-      transform: scale(1.05);
-    }
-    .profile-box h3 {
-      font-size: 20px;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: white;
-    }
-    .profile-box p {
-      font-size: 14px;
-      margin: 2px 0;
-      color: #d1d1d1;
-    }
-    /* Logout button */
-    .logout {
-      background: rgba(255,255,255,0.3);
-      padding: 12px 30px;
-      border: none;
-      color: white;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: auto;
-      transition: background 0.3s ease;
-      width: 100%;
-      max-width: 220px;
-      align-self: center;
-      user-select: none;
-    }
-    .logout:hover {
-      background: rgba(255,255,255,0.5);
-    }
-    /* Main content */
-    .main {
-      margin-left: 0;
-      padding: 40px 30px;
-      transition: margin-left 0.3s ease;
-    }
-    .main.shifted {
-      margin-left: 280px;
-    }
-    .welcome {
-      margin-bottom: 25px;
-      color: var(--primary);
-      font-size: 28px;
-      font-weight: 600;
-      user-select: none;
-    }
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-    }
-    .feature-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(46, 125, 50, 0.15);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      user-select: none;
-    }
-    .feature-card:hover,
-    .feature-card:focus {
-      background-color: var(--card-hover);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.25);
-      outline: none;
-    }
-    .feature-card i {
-      font-size: 40px;
-      color: var(--primary);
-      margin-bottom: 12px;
-    }
-    .feature-card span {
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--primary);
-      display: block;
-    }
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main {
-        padding: 20px;
-      }
-      .sidebar {
-        width: 220px;
-        left: -220px;
-      }
-      .sidebar.active {
-        left: 0;
-      }
-      .main.shifted {
-        margin-left: 220px;
-      }
+    #sidebar.show {
+      transform: translateX(0) !important;
     }
   </style>
 </head>
-<body>
-  <!-- Hamburger menu always visible -->
-  <div id="hamburger" role="button" aria-label="Toggle sidebar with notifications" tabindex="0" aria-expanded="false">
-    <i class="fas fa-bars" aria-hidden="true"></i>
-    <div id="notification-badge" aria-label="Unread notifications" hidden>
-      🔔 <span id="notif-count">0</span>
+<body class="bg-gray-100">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50 flex items-center justify-between px-4 py-3 md:px-8">
+    <div class="flex items-center space-x-3">
+      <img src="logo.png" alt="AgriTech Logo" class="w-10 h-10 rounded-full shadow hover:scale-105 transition" />
+      <span class="text-lg md:text-xl font-semibold text-green-800">AgriTech Innovators Connect</span>
     </div>
-  </div>
+    <div class="flex items-center space-x-4">
+      <div class="relative">
+        <button id="notifBtn" class="text-gray-700 hover:text-green-700 focus:outline-none text-xl">🔔</button>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full animate-pulse">3</span>
+      </div>
+      <button id="menuToggle" class="text-2xl text-gray-700 hover:text-green-800 focus:outline-none md:hidden">☰</button>
+    </div>
+  </header>
+  <div class="pt-20"></div>
 
   <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main sidebar navigation" aria-hidden="true">
-    <div class="sidebar-header">
-      <img src="logo.png" alt="AgriTech Connect Logo" />
-      <h2>AgriTech Innovators Connect</h2>
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-lg z-40 transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 hidden md:block">
+    <div class="p-4 text-center">
+      <img src="https://via.placeholder.com/80" alt="User Photo" id="userPhoto" class="w-20 h-20 rounded-full mx-auto mb-2 shadow" />
+      <h2 id="userName" class="text-lg font-semibold text-green-800">John Doe</h2>
+      <p id="userBio" class="text-sm text-gray-600">Farmer & Innovator</p>
+      <p id="userLocation" class="text-xs text-gray-400 mt-1">Limpopo, South Africa</p>
+      <div class="mt-6 space-y-3">
+        <button id="logoutBtn" onclick="logout()" class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600">Log Out</button>
+        <button id="roleSwitchBtn" onclick="openRoleSwitcher()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 hidden">Switch Role</button>
+      </div>
     </div>
-    <div class="profile-box" aria-label="User profile information">
-      <img src="logo.png" alt="User profile photo" id="profilePic" />
-      <h3 id="profileName">Loading...</h3>
-      <p id="profileBio"></p>
-      <p id="profileLocation"></p>
-    </div>
-    <button class="logout" onclick="logout()" aria-label="Logout from AgriTech Connect">Logout</button>
   </aside>
 
-  <!-- Main content -->
-  <main class="main" id="main" role="main" tabindex="0">
-    <div class="welcome">Welcome back, <span id="welcomeName">User</span>!</div>
-    <div class="feature-grid" aria-label="Main features">
-      <div class="feature-card" onclick="navigateTo('dashboard.html')" role="button" tabindex="0" aria-label="Dashboard Home">
-        <i class="fas fa-home"></i>
-        <span>Dashboard Home</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('learning.html')" role="button" tabindex="0" aria-label="Learning Hub">
-        <i class="fas fa-book"></i>
-        <span>Learning Hub</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('marketplace.html')" role="button" tabindex="0" aria-label="Marketplace">
-        <i class="fas fa-store"></i>
-        <span>Marketplace</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('weather.html')" role="button" tabindex="0" aria-label="Weather Advisor">
-        <i class="fas fa-cloud-sun"></i>
-        <span>Weather Advisor</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('sickness.html')" role="button" tabindex="0" aria-label="Sickness Diagnosis">
-        <i class="fas fa-stethoscope"></i>
-        <span>Sickness Diagnosis</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('mentorship.html')" role="button" tabindex="0" aria-label="Mentorship">
-        <i class="fas fa-user-friends"></i>
-        <span>Mentorship</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('chat.html')" role="button" tabindex="0" aria-label="Community Chat">
-        <i class="fas fa-comments"></i>
-        <span>Community Chat</span>
-      </div>
-      <div class="feature-card" onclick="navigateTo('cart.html')" role="button" tabindex="0" aria-label="Cart">
-        <i class="fas fa-shopping-cart"></i>
-        <span>Cart</span>
-      </div>
+  <!-- Main Dashboard Content -->
+  <main class="ml-0 md:ml-64 p-4 md:p-8 bg-gray-50 min-h-screen transition-all duration-300">
+    <h1 class="text-2xl font-semibold text-green-800 mb-6">Welcome to Your Dashboard</h1>
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <a href="learning.html" class="feature-tile">📚<span>Learning Hub</span></a>
+      <a href="marketplace.html" class="feature-tile">🛒<span>Marketplace</span></a>
+      <a href="weather.html" class="feature-tile">☀️<span>Weather</span></a>
+      <a href="sickness.html" class="feature-tile">🧬<span>Sickness Diagnosis</span></a>
+      <a href="mentorship.html" class="feature-tile">👨‍🏫<span>Mentorship</span></a>
+      <a href="community.html" class="feature-tile">🤝<span>Community</span></a>
+      <a href="chat.html" class="feature-tile">💬<span>Chat</span></a>
+      <a href="cart.html" class="feature-tile">🧺<span>Cart</span></a>
+      <a href="notifications.html" class="feature-tile">🔔<span>Notifications</span></a>
     </div>
   </main>
 
+  <!-- Role Switch Modal -->
+  <div id="roleModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 text-center">
+      <h2 class="text-xl font-semibold text-green-800 mb-4">Switch Your Role</h2>
+      <p class="text-sm text-gray-600 mb-6">Choose how you'd like to use the platform now:</p>
+      <div id="roleOptions" class="space-y-3 mb-6"></div>
+      <button onclick="closeRoleModal()" class="text-sm text-gray-600 hover:text-red-600">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
   <script>
-    // Firebase config (your project)
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
       authDomain: "agritechconnect.firebaseapp.com",
@@ -305,80 +92,62 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    // Elements
-    const profileName = document.getElementById("profileName");
-    const profileBio = document.getElementById("profileBio");
-    const profileLocation = document.getElementById("profileLocation");
-    const profilePic = document.getElementById("profilePic");
-    const welcomeName = document.getElementById("welcomeName");
-    const sidebar = document.getElementById("sidebar");
-    const hamburger = document.getElementById("hamburger");
-
-    // Auth state observer
     auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = "index.html";
-        return;
-      }
-      try {
-        const doc = await db.collection("users").doc(user.uid).get();
-        const data = doc.data();
-        profileName.textContent = data?.displayName || "User";
-        welcomeName.textContent = data?.displayName || "User";
-        profileBio.textContent = data?.bio || "";
-        profileLocation.textContent = data?.location || "";
-        profilePic.src = data?.photoURL || "logo.png";
-      } catch (error) {
-        console.error("Error loading user data:", error);
-      }
+      if (!user) return (window.location.href = "index.html");
+      const doc = await db.collection("users").doc(user.uid).get();
+      const data = doc.data();
+      document.getElementById("userName").textContent = data.displayName || "No Name";
+      document.getElementById("userBio").textContent = data.bio || "No bio provided";
+      document.getElementById("userLocation").textContent = data.location || "No location set";
+      if (data.photoURL) document.getElementById("userPhoto").src = data.photoURL;
+      if (["admin", "mentor", "seller"].includes(data.role)) document.getElementById("roleSwitchBtn").classList.remove("hidden");
     });
 
-    // Logout function
     function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "index.html";
+      auth.signOut().then(() => window.location.href = "index.html");
+    }
+
+    function openRoleSwitcher() {
+      document.getElementById("roleModal").classList.remove("hidden");
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      const roleOptions = document.getElementById("roleOptions");
+      roleOptions.innerHTML = "<p>Loading roles...</p>";
+      db.collection("users").doc(uid).get().then(doc => {
+        const data = doc.data();
+        const roles = data.roles || [data.role || "buyer"];
+        roleOptions.innerHTML = "";
+        roles.forEach(role => {
+          const btn = document.createElement("button");
+          btn.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+          btn.className = "w-full bg-green-600 text-white py-2 rounded hover:bg-green-700";
+          btn.onclick = () => switchUserRole(role);
+          roleOptions.appendChild(btn);
+        });
       });
     }
 
-    // Navigation helper
-    function navigateTo(url) {
-      window.location.href = url;
+    function closeRoleModal() {
+      document.getElementById("roleModal").classList.add("hidden");
     }
 
-    // Sidebar toggle
-    function toggleSidebar() {
-      const isActive = sidebar.classList.toggle("active");
-      hamburger.setAttribute("aria-expanded", isActive ? "true" : "false");
-      // Shift main content margin
-      document.getElementById("main").classList.toggle("shifted", isActive);
+    function switchUserRole(newRole) {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      db.collection("users").doc(uid).update({ role: newRole }).then(() => {
+        alert("✅ Switched to " + newRole);
+        closeRoleModal();
+        location.reload();
+      });
     }
-    hamburger.addEventListener("click", toggleSidebar);
-    hamburger.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleSidebar();
-      }
+
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("hidden");
+      sidebar.classList.toggle("show");
     });
-
-    // Notification badge update
-    function updateNotificationCount(count) {
-      const badge = document.getElementById('notification-badge');
-      const countEl = document.getElementById('notif-count');
-      if (count > 0) {
-        badge.hidden = false;
-        countEl.textContent = count > 99 ? '99+' : count;
-      } else {
-        badge.hidden = true;
-        countEl.textContent = '0';
-      }
-    }
-
-    // Demo: simulate notification after 3 seconds
-    setTimeout(() => {
-      updateNotificationCount(3);
-    }, 3000);
-
   </script>
 </body>
 </html>
