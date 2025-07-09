@@ -5,28 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AgriTech Connect – Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a2e0d6fd4c.js" crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
       --light: #f1f8e9;
       --bg: #ffffff;
     }
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--light);
       display: flex;
       min-height: 100vh;
+      background: var(--light);
     }
     .sidebar {
       width: 260px;
       background: var(--primary);
-      color: #fff;
-      padding: 20px 15px;
+      color: white;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      padding: 20px 15px;
       transition: transform 0.3s ease;
     }
     .sidebar.hidden {
@@ -34,109 +40,128 @@
       position: absolute;
       z-index: 999;
     }
+    .toggle-btn {
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .toggle-btn img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: white;
+      padding: 5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .toggle-btn img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
     .profile-box {
       text-align: center;
-      margin-bottom: 20px;
     }
     .profile-box img {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      object-fit: cover;
       margin-bottom: 10px;
+      transition: transform 0.3s ease;
+      object-fit: cover;
+    }
+    .profile-box img:hover {
+      transform: scale(1.05);
     }
     .profile-box h3 {
-      margin: 5px 0;
       font-size: 18px;
+      margin: 5px 0;
     }
     .profile-box p {
-      margin: 2px 0;
       font-size: 13px;
+      margin: 2px 0;
     }
-    .sidebar nav a {
+    nav a {
       color: white;
-      text-decoration: none;
       display: block;
       padding: 10px 0;
+      text-decoration: none;
       font-size: 15px;
+      transition: background 0.3s ease, padding-left 0.3s ease;
     }
-    .sidebar nav a:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
+    nav a i {
+      margin-right: 8px;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding-left: 10px;
     }
     .logout {
-      background: rgba(255,255,255,0.15);
-      color: white;
+      background: rgba(255,255,255,0.2);
       padding: 10px;
       border: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-      margin-top: 15px;
-      width: 100%;
+      color: white;
       border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+    .logout:hover {
+      background: rgba(255,255,255,0.3);
     }
     .main {
       flex: 1;
-      padding: 40px;
-      background: var(--bg);
-      margin-left: 260px;
-      transition: margin-left 0.3s;
-    }
-    .main.collapsed {
-      margin-left: 0;
+      padding: 30px;
     }
     .main h1 {
       color: var(--primary);
-      font-size: 28px;
+      margin-bottom: 10px;
     }
     @media (max-width: 768px) {
       .sidebar {
         position: absolute;
+        height: 100vh;
         z-index: 1000;
-        height: 100%;
-        transform: translateX(-100%);
       }
       .sidebar.show {
         transform: translateX(0);
       }
       .main {
-        margin-left: 0 !important;
         padding: 20px;
-      }
-      .main h1 {
-        font-size: 24px;
       }
     }
   </style>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <aside class="sidebar" id="sidebar">
+  <div class="sidebar" id="sidebar" role="navigation" aria-label="Main sidebar navigation">
     <div>
-      <div class="profile-box" id="profileBox">
-        <img src="logo.png" alt="Profile Picture" id="profilePic" />
+      <div class="toggle-btn" onclick="toggleSidebar()" role="button" tabindex="0" aria-label="Toggle sidebar">
+        <img src="logo.png" alt="AgriTech Connect Logo" />
+      </div>
+      <div class="profile-box" aria-label="User profile information">
+        <img src="logo.png" alt="User profile photo" id="profilePic" />
         <h3 id="profileName">Loading...</h3>
         <p id="profileBio"></p>
         <p id="profileLocation"></p>
       </div>
       <nav>
-        <a href="marketplace.html">Marketplace</a>
-        <a href="weather.html">Weather Advisor</a>
-        <a href="sickness.html">Sickness Diagnostic</a>
-        <a href="mentorship.html">Mentorship</a>
-        <a href="cart.html">Cart</a>
-        <a href="chat.html">Chats</a>
+        <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard Home</a>
+        <a href="learning.html"><i class="fas fa-book"></i> Learning Hub</a>
+        <a href="marketplace.html"><i class="fas fa-store"></i> Marketplace</a>
+        <a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather Advisor</a>
+        <a href="sickness.html"><i class="fas fa-stethoscope"></i> Sickness Diagnosis</a>
+        <a href="mentorship.html"><i class="fas fa-user-friends"></i> Mentorship</a>
+        <a href="chat.html"><i class="fas fa-comments"></i> Community Chat</a>
+        <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
       </nav>
     </div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </aside>
+    <button class="logout" onclick="logout()" aria-label="Logout from AgriTech Connect">Logout</button>
+  </div>
 
-  <main class="main" id="mainContent">
-    <h1>Welcome to AgriTech Connect</h1>
-    <p>This is your dashboard. Use the sidebar to explore features.</p>
+  <main class="main" id="main" role="main">
+    <h1>Welcome back, <span id="welcomeName">User</span>!</h1>
+    <p>Select a feature from the sidebar to begin.</p>
   </main>
 
   <script>
@@ -156,26 +181,35 @@
     const profileBio = document.getElementById("profileBio");
     const profileLocation = document.getElementById("profileLocation");
     const profilePic = document.getElementById("profilePic");
+    const welcomeName = document.getElementById("welcomeName");
 
-    auth.onAuthStateChanged(async user => {
-      if (!user) return window.location.href = "index.html";
-
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
       try {
         const doc = await db.collection("users").doc(user.uid).get();
         const data = doc.data();
-
-        profileName.textContent = data.displayName || "User";
-        profileBio.textContent = data.bio || "No bio";
-        profileLocation.textContent = data.location || "Unknown location";
-        profilePic.src = data.photoURL || "logo.png";
-
-      } catch (e) {
-        console.error("Error fetching user data:", e);
+        profileName.textContent = data?.displayName || "User";
+        welcomeName.textContent = data?.displayName || "User";
+        profileBio.textContent = data?.bio || "No bio yet";
+        profileLocation.textContent = data?.location || "No location";
+        profilePic.src = data?.photoURL || "logo.png";
+      } catch (error) {
+        console.error("Error loading user data:", error);
       }
     });
 
     function logout() {
-      auth.signOut().then(() => window.location.href = "index.html");
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("hidden");
     }
   </script>
 </body>
