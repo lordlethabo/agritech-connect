@@ -6,109 +6,104 @@
   <title>AgriTech Connect – Register</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #f4fff1, #ddf7cc);
+      background: linear-gradient(135deg, #e8f5e9 0%, #a5d6a7 100%);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
     .container {
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       padding: 40px 30px;
-      text-align: center;
-      width: 90%;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(46, 125, 50, 0.15);
       max-width: 400px;
-      backdrop-filter: blur(5px);
+      width: 100%;
+      text-align: center;
     }
     h1 {
-      margin-bottom: 25px;
       color: #2e7d32;
-      font-size: 24px;
-      font-weight: 600;
+      margin-bottom: 30px;
     }
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
+    input, select {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 15px;
-      background-color: #f8fff5;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border-radius: 14px;
+      border: 1.8px solid #b2dfdb;
+      background-color: #f9fff9;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #81c784;
-      box-shadow: 0 0 5px rgba(129, 199, 132, 0.5);
+    input:focus, select:focus {
+      border-color: #388e3c;
+      box-shadow: 0 0 8px rgba(56, 142, 60, 0.4);
       outline: none;
     }
     button {
-      background-color: #81c784;
-      border: none;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
       width: 100%;
-      margin-top: 10px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 14px 0;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(45deg, #2e7d32, #66bb6a);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.4);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     }
     button:hover {
-      background-color: #66bb6a;
-      transform: scale(1.02);
-    }
-    .link {
-      margin-top: 10px;
-      display: block;
-      color: #388e3c;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
+      background: linear-gradient(45deg, #66bb6a, #2e7d32);
+      transform: scale(1.04);
+      box-shadow: 0 8px 22px rgba(46, 125, 50, 0.5);
     }
     #message {
       margin-top: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      color: red;
-      min-height: 24px;
+      font-weight: 600;
+      min-height: 26px;
     }
-    @media (max-width: 600px) {
-      .container {
-        padding: 30px 20px;
-      }
-      h1 {
-        font-size: 22px;
-      }
+    #message.error {
+      color: #d32f2f;
+    }
+    #message.success {
+      color: #388e3c;
+    }
+    .link {
+      margin-top: 12px;
+      display: inline-block;
+      color: #2e7d32;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 15px;
     }
   </style>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="container" role="main">
+  <main class="container" role="main" aria-label="Register form">
     <h1>Create an Account</h1>
-    <input type="text" id="fullName" placeholder="Full Name" aria-label="Full Name" autocomplete="name" required />
-    <input type="email" id="email" placeholder="Email" aria-label="Email" autocomplete="email" required />
-    <input type="password" id="password" placeholder="Password (min 6 characters)" aria-label="Password" autocomplete="new-password" required />
-    <button onclick="register()">Register</button>
-    <span class="link" onclick="window.location.href='index.html'" role="button" tabindex="0" aria-label="Back to Login">Back to Login</span>
+    <input type="text" id="displayName" placeholder="Full Name" aria-label="Full Name" required />
+    <input type="email" id="email" placeholder="Email" aria-label="Email" required />
+    <input type="password" id="password" placeholder="Password" aria-label="Password" required />
+    <select id="role" aria-label="Select Role" required>
+      <option value="" disabled selected>Select your role</option>
+      <option value="buyer">Buyer</option>
+      <option value="seller">Seller</option>
+      <option value="mentor">Mentor</option>
+    </select>
+    <button onclick="register()">Sign Up</button>
     <div id="message" role="alert" aria-live="polite"></div>
-  </div>
+    <div class="link" onclick="window.location.href='index.html'" role="button" tabindex="0" aria-label="Go to Login Page">Already have an account? Login</div>
+  </main>
 
   <script>
     const firebaseConfig = {
@@ -119,7 +114,6 @@
       messagingSenderId: "1027312049739",
       appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -127,20 +121,17 @@
     const msgEl = document.getElementById("message");
 
     async function register() {
-      msgEl.style.color = "red";
       msgEl.textContent = "";
+      msgEl.className = "";
 
-      const fullName = document.getElementById("fullName").value.trim();
+      const displayName = document.getElementById("displayName").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
 
-      // Basic validation
-      if (!fullName || !email || !password) {
+      if (!displayName || !email || !password || !role) {
         msgEl.textContent = "Please fill in all fields.";
-        return;
-      }
-      if (password.length < 6) {
-        msgEl.textContent = "Password must be at least 6 characters.";
+        msgEl.className = "error";
         return;
       }
 
@@ -149,38 +140,28 @@
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // Update user profile display name
-        await user.updateProfile({ displayName: fullName });
+        // Update profile display name
+        await user.updateProfile({ displayName });
 
-        // Create Firestore user doc with role buyer by default
+        // Save user data to Firestore with role
         await db.collection("users").doc(user.uid).set({
-          displayName: fullName,
-          email: email,
-          role: "buyer", // default role
-          photoURL: "", // default empty
+          displayName,
+          email,
+          role,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        msgEl.style.color = "green";
-        msgEl.textContent = "Registration successful! Redirecting...";
+        msgEl.textContent = "Account created successfully! Redirecting...";
+        msgEl.className = "success";
 
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 1500);
       } catch (error) {
         msgEl.textContent = error.message;
+        msgEl.className = "error";
       }
     }
-
-    // Optional: allow enter key submit
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          register();
-        }
-      });
-    });
   </script>
 </body>
 </html>
