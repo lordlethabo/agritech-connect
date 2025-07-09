@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Hub | AgriTech Innovators Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold text-green-800">Community Hub</h1>
+    </div>
+    <a href="dashboard.html" class="text-green-600 hover:underline">← Back to Dashboard</a>
+  </header>
+
+  <!-- Dropdown Navigation -->
+  <nav class="bg-green-100 px-4 py-3">
+    <label for="section-select" class="mr-2 font-medium text-green-800">Jump to section:</label>
+    <select id="section-select" onchange="scrollToSection(this.value)" class="p-2 rounded border border-green-300 bg-white">
+      <option value="">-- Select --</option>
+      <option value="trending">🔥 Trending Topics</option>
+      <option value="ask">❓ Ask the Community</option>
+      <option value="mentors">👩🏾‍🏫 Mentorship Corner</option>
+      <option value="events">📅 Events</option>
+      <option value="stories">📸 Farmer Stories</option>
+      <option value="chat">💬 Chat Rooms</option>
+      <option value="rules">📜 Guidelines</option>
+    </select>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-10">
+
+    <section id="trending">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">🔥 Trending Topics</h2>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="mb-2 font-medium">💡 "How do I protect my crops during frost?"</p>
+        <button class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm hover:bg-green-200">👍 Like</button>
+      </div>
+    </section>
+
+    <section id="ask">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">❓ Ask the Community</h2>
+      <form id="ask-form" class="bg-white p-4 rounded shadow space-y-4">
+        <input type="text" placeholder="Your Question Title" class="w-full border border-gray-300 p-2 rounded" required />
+        <textarea rows="4" placeholder="Details about your question..." class="w-full border border-gray-300 p-2 rounded" required></textarea>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Post Question</button>
+      </form>
+    </section>
+
+    <section id="mentors">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">👩🏾‍🏫 Mentorship Corner</h2>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-medium">📍 Mentor: Dr. Lufuno M. – Soil Health Specialist</p>
+        <button class="mt-2 text-sm text-green-700 hover:underline">Ask a Question</button>
+      </div>
+    </section>
+
+    <section id="events">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">📅 Events & Webinars</h2>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-medium">🌱 Webinar: Drip Irrigation Basics – July 15, 2025</p>
+        <button class="mt-2 bg-green-100 text-green-800 px-3 py-1 rounded text-sm hover:bg-green-200">RSVP</button>
+      </div>
+    </section>
+
+    <section id="stories">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">📸 Farmer Stories</h2>
+      <div class="bg-white p-4 rounded shadow">
+        <p>“Thanks to advice here, I tripled my spinach harvest!” – <strong>Mbali, Eastern Cape</strong></p>
+      </div>
+    </section>
+
+    <section id="chat">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">💬 Community Chat Rooms</h2>
+      <div class="bg-white p-4 rounded shadow">
+        <p>👥 Join: <strong>AgriYouth South Africa</strong> on WhatsApp</p>
+        <a href="#" class="text-green-600 hover:underline text-sm">Join Now</a>
+      </div>
+    </section>
+
+    <section id="rules">
+      <h2 class="text-xl font-semibold text-green-700 mb-3">📜 Community Guidelines</h2>
+      <div class="bg-white p-4 rounded shadow text-sm text-gray-700">
+        <ul class="list-disc list-inside space-y-1">
+          <li>Be respectful to others</li>
+          <li>No spam or irrelevant posts</li>
+          <li>Constructive feedback only</li>
+          <li>Support new farmers kindly</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function scrollToSection(id) {
+      if (!id) return;
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
