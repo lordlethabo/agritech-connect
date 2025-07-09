@@ -14,6 +14,8 @@
       --primary: #2e7d32;
       --light: #f1f8e9;
       --bg: #ffffff;
+      --card-bg: #eaf3db;
+      --card-hover: #d2e4b8;
     }
     * {
       box-sizing: border-box;
@@ -31,9 +33,11 @@
       color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
+      align-items: center;
       padding: 20px 15px;
       transition: transform 0.3s ease;
+      position: relative;
     }
     .sidebar.hidden {
       transform: translateX(-100%);
@@ -41,82 +45,114 @@
       z-index: 999;
     }
     .toggle-btn {
-      width: 100%;
-      text-align: center;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 25px;
       cursor: pointer;
-      margin-bottom: 20px;
-    }
-    .toggle-btn img {
-      width: 50px;
-      height: 50px;
       border-radius: 50%;
       background: white;
-      padding: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .toggle-btn img:hover {
+    .toggle-btn img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .toggle-btn:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
     }
     .profile-box {
       text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
     }
     .profile-box img {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      margin-bottom: 10px;
+      margin: 0 auto 10px auto;
       transition: transform 0.3s ease;
       object-fit: cover;
+      display: block;
     }
     .profile-box img:hover {
       transform: scale(1.05);
     }
     .profile-box h3 {
-      font-size: 18px;
-      margin: 5px 0;
+      font-size: 20px;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
     .profile-box p {
-      font-size: 13px;
+      font-size: 14px;
       margin: 2px 0;
-    }
-    nav a {
-      color: white;
-      display: block;
-      padding: 10px 0;
-      text-decoration: none;
-      font-size: 15px;
-      transition: background 0.3s ease, padding-left 0.3s ease;
-    }
-    nav a i {
-      margin-right: 8px;
-    }
-    nav a:hover {
-      background: rgba(255,255,255,0.15);
-      border-radius: 6px;
-      padding-left: 10px;
+      color: #d1d1d1;
     }
     .logout {
-      background: rgba(255,255,255,0.2);
-      padding: 10px;
+      background: rgba(255,255,255,0.3);
+      padding: 12px 30px;
       border: none;
       color: white;
-      border-radius: 6px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: auto;
       transition: background 0.3s ease;
-      margin-top: 10px;
+      width: 100%;
+      max-width: 200px;
+      align-self: center;
     }
     .logout:hover {
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.5);
     }
     .main {
       flex: 1;
       padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
-    .main h1 {
+    .welcome {
+      margin-bottom: 25px;
       color: var(--primary);
-      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 600;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(46, 125, 50, 0.15);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    .feature-card:hover {
+      background-color: var(--card-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.25);
+    }
+    .feature-card i {
+      font-size: 40px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .feature-card span {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--primary);
+      display: block;
     }
     @media (max-width: 768px) {
       .sidebar {
@@ -124,8 +160,8 @@
         height: 100vh;
         z-index: 1000;
       }
-      .sidebar.show {
-        transform: translateX(0);
+      .sidebar.hidden {
+        transform: translateX(-100%);
       }
       .main {
         padding: 20px;
@@ -134,34 +170,55 @@
   </style>
 </head>
 <body>
-  <div class="sidebar" id="sidebar" role="navigation" aria-label="Main sidebar navigation">
-    <div>
-      <div class="toggle-btn" onclick="toggleSidebar()" role="button" tabindex="0" aria-label="Toggle sidebar">
-        <img src="logo.png" alt="AgriTech Connect Logo" />
-      </div>
-      <div class="profile-box" aria-label="User profile information">
-        <img src="logo.png" alt="User profile photo" id="profilePic" />
-        <h3 id="profileName">Loading...</h3>
-        <p id="profileBio"></p>
-        <p id="profileLocation"></p>
-      </div>
-      <nav>
-        <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard Home</a>
-        <a href="learning.html"><i class="fas fa-book"></i> Learning Hub</a>
-        <a href="marketplace.html"><i class="fas fa-store"></i> Marketplace</a>
-        <a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather Advisor</a>
-        <a href="sickness.html"><i class="fas fa-stethoscope"></i> Sickness Diagnosis</a>
-        <a href="mentorship.html"><i class="fas fa-user-friends"></i> Mentorship</a>
-        <a href="chat.html"><i class="fas fa-comments"></i> Community Chat</a>
-        <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
-      </nav>
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main sidebar navigation">
+    <div class="toggle-btn" onclick="toggleSidebar()" role="button" tabindex="0" aria-label="Toggle sidebar">
+      <img src="logo.png" alt="AgriTech Connect Logo" />
+    </div>
+    <div class="profile-box" aria-label="User profile information">
+      <img src="logo.png" alt="User profile photo" id="profilePic" />
+      <h3 id="profileName">Loading...</h3>
+      <p id="profileBio"></p>
+      <p id="profileLocation"></p>
     </div>
     <button class="logout" onclick="logout()" aria-label="Logout from AgriTech Connect">Logout</button>
-  </div>
+  </aside>
 
   <main class="main" id="main" role="main">
-    <h1>Welcome back, <span id="welcomeName">User</span>!</h1>
-    <p>Select a feature from the sidebar to begin.</p>
+    <div class="welcome">Welcome back, <span id="welcomeName">User</span>!</div>
+    <div class="feature-grid" aria-label="Main features">
+      <div class="feature-card" onclick="navigateTo('dashboard.html')" role="button" tabindex="0" aria-label="Dashboard Home">
+        <i class="fas fa-home"></i>
+        <span>Dashboard Home</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('learning.html')" role="button" tabindex="0" aria-label="Learning Hub">
+        <i class="fas fa-book"></i>
+        <span>Learning Hub</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('marketplace.html')" role="button" tabindex="0" aria-label="Marketplace">
+        <i class="fas fa-store"></i>
+        <span>Marketplace</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('weather.html')" role="button" tabindex="0" aria-label="Weather Advisor">
+        <i class="fas fa-cloud-sun"></i>
+        <span>Weather Advisor</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('sickness.html')" role="button" tabindex="0" aria-label="Sickness Diagnosis">
+        <i class="fas fa-stethoscope"></i>
+        <span>Sickness Diagnosis</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('mentorship.html')" role="button" tabindex="0" aria-label="Mentorship">
+        <i class="fas fa-user-friends"></i>
+        <span>Mentorship</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('chat.html')" role="button" tabindex="0" aria-label="Community Chat">
+        <i class="fas fa-comments"></i>
+        <span>Community Chat</span>
+      </div>
+      <div class="feature-card" onclick="navigateTo('cart.html')" role="button" tabindex="0" aria-label="Cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -193,8 +250,8 @@
         const data = doc.data();
         profileName.textContent = data?.displayName || "User";
         welcomeName.textContent = data?.displayName || "User";
-        profileBio.textContent = data?.bio || "No bio yet";
-        profileLocation.textContent = data?.location || "No location";
+        profileBio.textContent = data?.bio || "";
+        profileLocation.textContent = data?.location || "";
         profilePic.src = data?.photoURL || "logo.png";
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -210,6 +267,10 @@
     function toggleSidebar() {
       const sidebar = document.getElementById("sidebar");
       sidebar.classList.toggle("hidden");
+    }
+
+    function navigateTo(url) {
+      window.location.href = url;
     }
   </script>
 </body>
