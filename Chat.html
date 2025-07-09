@@ -4,102 +4,319 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AgriTech Connect – Community Chat</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
   <style>
-    #chatMessages { height: 400px; overflow-y: auto; padding: 10px; background: white; border-radius: 8px; color: black; }
-    .message { margin-bottom: 10px; background-color: #f0fdf4; padding: 8px; border-radius: 8px; }
-    .message strong { color: #059669; }
-    .badge { font-size: 0.75rem; background-color: #bbf7d0; color: #065f46; padding: 2px 6px; border-radius: 9999px; margin-left: 8px; }
+    body {
+      background-color: #f3f4f6; /* Tailwind gray-100 */
+      color: #1f2937; /* Tailwind gray-800 */
+    }
+    .sidebar {
+      background-color: #065f46; /* Tailwind green-800 */
+      color: white;
+      min-height: 100vh;
+    }
+    .logo-border {
+      border: 4px solid #34d399; /* Tailwind green-400 */
+      border-radius: 9999px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 8px #34d399aa;
+      cursor: pointer;
+    }
+    .logo-border:hover {
+      border-color: #10b981; /* Tailwind green-500 */
+      box-shadow: 0 0 15px #10b981dd;
+    }
+    #chatMessages {
+      height: 400px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    }
+    .message {
+      margin-bottom: 12px;
+    }
+    .message strong {
+      color: #10b981;
+    }
+    .role-tag {
+      background-color: #34d399;
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      margin-left: 0.5rem;
+    }
+    .notification-badge {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #dc2626; /* red-600 */
+      color: white;
+      border-radius: 9999px;
+      padding: 4px 10px;
+      font-weight: bold;
+      display: none;
+      z-index: 9999;
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <main class="max-w-2xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">💬 Community Chat</h1>
+<body>
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 p-6 hidden md:block sticky top-0">
+      <img
+        src="logo.png"
+        alt="AgriTech Connect Logo"
+        class="w-32 mb-6 rounded-full logo-border"
+        onclick="toggleSidebar()"
+      />
+      <nav class="space-y-3">
+        <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded"
+          >🏠 Dashboard</a
+        >
+        <a href="marketplace.html" class="block hover:bg-green-700 p-2 rounded"
+          >🛒 Marketplace</a
+        >
+        <a href="learning.html" class="block hover:bg-green-700 p-2 rounded"
+          >🎓 Learning Hub</a
+        >
+        <a href="weather.html" class="block hover:bg-green-700 p-2 rounded"
+          >⛅ Weather</a
+        >
+        <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded"
+          >🩺 Crop Doctor</a
+        >
+        <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded"
+          >👥 Mentorship</a
+        >
+        <a href="chat.html" class="block bg-green-700 p-2 rounded font-semibold"
+          >💬 Community Chat</a
+        >
+        <a href="cart.html" class="block hover:bg-green-700 p-2 rounded"
+          >🧺 Cart</a
+        >
+      </nav>
+    </aside>
 
-    <label for="roomSelector" class="block mb-2">Select Room:</label>
-    <select id="roomSelector" class="mb-4 p-2 border rounded">
-      <option value="general">🌍 General</option>
-      <option value="youth">🌱 Youth Farmers</option>
-      <option value="mentors">👩🏾‍🏫 Mentors</option>
-    </select>
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col min-h-screen p-6">
+      <header
+        class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50 rounded"
+      >
+        <div class="flex items-center gap-2">
+          <img
+            src="logo.png"
+            alt="Logo"
+            class="w-10 h-10 rounded-full logo-border md:hidden cursor-pointer"
+            onclick="toggleSidebar()"
+          />
+          <h1 class="text-xl font-bold">Community Chat</h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <select
+            id="roomSelect"
+            class="border border-green-600 rounded px-3 py-1 text-green-800 font-semibold"
+            title="Select Chat Room"
+          >
+            <option value="general">General</option>
+            <option value="youth">Youth</option>
+            <option value="mentors">Mentors</option>
+            <option value="market">Marketplace</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+            Logout
+          </button>
+        </div>
+      </header>
 
-    <div id="chatMessages"></div>
+      <main class="flex-1 flex flex-col mt-4">
+        <div id="chatMessages" class="flex-1 mb-4 overflow-y-auto"></div>
+        <form id="chatForm" class="flex gap-2">
+          <input
+            id="messageInput"
+            type="text"
+            placeholder="Type your message..."
+            class="flex-1 p-3 border border-gray-300 rounded focus:outline-green-500"
+            required
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            class="bg-green-700 text-white px-6 rounded hover:bg-green-800"
+          >
+            Send
+          </button>
+        </form>
+      </main>
+    </div>
+  </div>
 
-    <form id="chatForm" class="mt-4 flex gap-2">
-      <input id="messageInput" type="text" placeholder="Type your message..." class="flex-1 p-2 border rounded" required />
-      <button type="submit" class="bg-green-700 text-white px-4 rounded hover:bg-green-800">Send</button>
-    </form>
-  </main>
-
-  <audio id="notifSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <div id="notifBadge" class="notification-badge">0 new messages</div>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b"
+      authDomain: "agritechconnect.firebaseapp.com",
+      projectId: "agritechconnect-1d52b",
+      storageBucket: "agritechconnect.appspot.com",
+      messagingSenderId: "1027312049739",
+      appId: "1:1027312049739:web:d4475b869a027b767cb7ce"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const chatMessages = document.getElementById("chatMessages");
-    const chatForm = document.getElementById("chatForm");
-    const messageInput = document.getElementById("messageInput");
-    const roomSelector = document.getElementById("roomSelector");
-    const notifSound = document.getElementById("notifSound");
-
     let currentUser = null;
-    let currentRoom = "general";
-    let unsubscribe = null;
+    let currentRoom = 'general';
+    let unreadCount = 0;
+    let windowFocused = true;
 
+    // Auth state observer
     auth.onAuthStateChanged(async (user) => {
-      if (!user) return window.location.href = "index.html";
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
       currentUser = user;
-      loadMessages();
+      loadUserDetails();
+      listenForMessages();
     });
 
-    roomSelector.addEventListener("change", () => {
-      currentRoom = roomSelector.value;
-      if (unsubscribe) unsubscribe();
-      loadMessages();
-    });
-
-    async function loadMessages() {
-      const roomRef = db.collection("chatRooms").doc(currentRoom).collection("messages").orderBy("timestamp", "asc");
-      unsubscribe = roomRef.onSnapshot(async (snapshot) => {
-        chatMessages.innerHTML = "";
-        for (const doc of snapshot.docs) {
-          const msg = doc.data();
-          const userDoc = await db.collection("users").doc(msg.userId).get();
-          const userData = userDoc.data();
-          const role = userData?.role || "User";
-
-          const messageEl = document.createElement("div");
-          messageEl.classList.add("message");
-          messageEl.innerHTML = `<strong>${msg.userName}</strong><span class='badge'>${role}</span>: ${msg.text}`;
-          chatMessages.appendChild(messageEl);
+    function loadUserDetails() {
+      // Load user displayName and role from Firestore
+      db.collection('users').doc(currentUser.uid).get().then(doc => {
+        if (doc.exists) {
+          currentUser.displayName = doc.data().displayName || currentUser.email;
+          currentUser.role = doc.data().role || 'buyer';
+        } else {
+          currentUser.displayName = currentUser.email;
+          currentUser.role = 'buyer';
         }
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        if (!document.hasFocus()) notifSound.play();
       });
     }
 
-    chatForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!messageInput.value.trim()) return;
+    // Listen for messages in the selected room
+    function listenForMessages() {
+      if (window.unsubscribeMessages) {
+        window.unsubscribeMessages();
+      }
+      window.unsubscribeMessages = db.collection('chatMessages')
+        .where('room', '==', currentRoom)
+        .orderBy('timestamp', 'asc')
+        .onSnapshot(snapshot => {
+          if (!windowFocused) {
+            unreadCount += snapshot.docChanges().length;
+            showNotificationBadge(unreadCount);
+          } else {
+            unreadCount = 0;
+            hideNotificationBadge();
+          }
+          renderMessages(snapshot.docs);
+        });
+    }
 
-      await db.collection("chatRooms").doc(currentRoom).collection("messages").add({
+    function renderMessages(docs) {
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = '';
+      docs.forEach(doc => {
+        const msg = doc.data();
+        // Role tag
+        let roleTag = '';
+        if (msg.role && msg.role !== 'buyer') {
+          roleTag = `<span class="role-tag">${msg.role.charAt(0).toUpperCase() + msg.role.slice(1)}</span>`;
+        }
+        const messageEl = document.createElement('div');
+        messageEl.classList.add('message');
+        messageEl.innerHTML = `<strong>${msg.userName || 'Anonymous'}</strong> ${roleTag}: ${escapeHTML(msg.text)}`;
+        chatMessages.appendChild(messageEl);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
+    // Handle room change
+    document.getElementById('roomSelect').addEventListener('change', e => {
+      currentRoom = e.target.value;
+      unreadCount = 0;
+      hideNotificationBadge();
+      listenForMessages();
+    });
+
+    // Send message handler
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = document.getElementById('messageInput').value.trim();
+      if (!text) return;
+      await db.collection('chatMessages').add({
         userId: currentUser.uid,
         userName: currentUser.displayName || currentUser.email,
-        text: messageInput.value.trim(),
+        role: currentUser.role || 'buyer',
+        text,
+        room: currentRoom,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
-      messageInput.value = "";
+      document.getElementById('messageInput').value = '';
     });
+
+    // Logout function
+    function logout() {
+      auth.signOut();
+    }
+
+    // Notification badge functions
+    const notifBadge = document.getElementById('notifBadge');
+
+    function showNotificationBadge(count) {
+      notifBadge.textContent = `${count} new message${count > 1 ? 's' : ''}`;
+      notifBadge.style.display = 'block';
+      document.title = `(${count}) New Messages - AgriTech Chat`;
+    }
+
+    function hideNotificationBadge() {
+      notifBadge.style.display = 'none';
+      document.title = 'AgriTech Connect – Community Chat';
+    }
+
+    // Detect window focus/blur for notifications
+    window.addEventListener('focus', () => {
+      windowFocused = true;
+      unreadCount = 0;
+      hideNotificationBadge();
+    });
+
+    window.addEventListener('blur', () => {
+      windowFocused = false;
+    });
+
+    // Sidebar toggle on small screens
+    function toggleSidebar() {
+      document.querySelector('aside.sidebar').classList.toggle('hidden');
+    }
   </script>
 </body>
 </html>
