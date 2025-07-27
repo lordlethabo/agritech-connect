@@ -1,145 +1,262 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Learning Hub - AgriTech Connect</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+
+  <!-- Tailwind CSS CDN -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+  
+  <!-- Font Awesome for icons -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+  />
+  
   <style>
+    /* Body with subtle dark gradient background */
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #d1d5db; /* Tailwind gray-300 */
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header style */
+    header {
+      background: rgba(20, 83, 45, 0.8);
+      backdrop-filter: saturate(180%) blur(12px);
+      box-shadow: 0 0 15px #22c55e88;
+    }
+    
+    /* Circular logo with neon glow */
+    .logo-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 9999px;
+      border: 3px solid #22c55e; /* Tailwind green-500 */
+      box-shadow:
+        0 0 6px #22c55e88,
+        0 0 12px #22c55eaa;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    .logo-circle:hover {
+      border-color: #4ade80; /* green-400 */
+      box-shadow:
+        0 0 15px #4ade8088,
+        0 0 30px #4ade80bb;
+      transform: scale(1.1);
+    }
+
+    /* Neon glowing text for titles */
+    h1, h2, h3 {
+      text-shadow:
+        0 0 4px #22c55eaa,
+        0 0 8px #22c55e99;
+      color: #a7f3d0; /* Tailwind green-200 */
+    }
+
+    /* Video card container */
+    .video-card {
+      background: rgba(31, 41, 55, 0.8); /* slate-800, translucent */
+      border-radius: 0.75rem;
+      box-shadow:
+        0 0 12px #22c55e44,
+        inset 0 0 6px #22c55e22;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
     .video-card:hover {
-      transform: scale(1.03);
-      transition: transform 0.3s ease;
+      transform: scale(1.04);
+      box-shadow:
+        0 0 18px #4ade8099,
+        inset 0 0 8px #4ade8055;
+    }
+
+    /* Video iframe */
+    .video-card iframe {
+      width: 100%;
+      height: 14rem;
+      border: none;
+      filter: drop-shadow(0 2px 2px #22c55e44);
+      transition: filter 0.3s ease;
+    }
+    .video-card:hover iframe {
+      filter: drop-shadow(0 4px 6px #4ade8099);
+    }
+
+    /* Video title */
+    .video-title {
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: #bbf7d0; /* lighter green */
+      text-align: center;
+      user-select: none;
+      letter-spacing: 0.02em;
+    }
+
+    /* Layout adjustments */
+    main {
+      padding: 2rem 1rem 4rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Responsive grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: #22c55eaa;
+      text-shadow: 0 0 6px #22c55e88;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    /* Scrollbar styling for modern look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e99;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4ade8099;
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body>
 
-  <!-- Navbar -->
-  <header class="flex items-center justify-between bg-white shadow p-4">
-    <div class="flex items-center space-x-3">
-      <img src="logo.png" alt="Logo" class="h-10 w-auto" />
-      <h1 class="text-2xl font-bold text-green-700">AgriTech Connect</h1>
+  <!-- Header -->
+  <header class="flex items-center justify-between px-8 py-4 sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <img src="logo.png" alt="AgriTech Connect Logo" class="logo-circle" />
+      <h1 class="text-3xl font-bold select-none">AgriTech Connect</h1>
     </div>
     <nav>
-      <a href="dashboard.html" class="text-green-700 hover:text-green-900 px-3 font-semibold">Dashboard</a>
-      <a href="profile.html" class="text-green-700 hover:text-green-900 px-3 font-semibold">Profile</a>
+      <a href="dashboard.html" class="text-green-400 hover:text-green-200 font-semibold mx-3">Dashboard</a>
+      <a href="profile.html" class="text-green-400 hover:text-green-200 font-semibold mx-3">Profile</a>
     </nav>
   </header>
 
-  <!-- Page Content -->
-  <main class="p-4 md:p-8">
-    <h2 class="text-3xl font-bold mb-6 text-center text-green-800">Learning Hub</h2>
+  <!-- Main Content -->
+  <main>
+    <h2 class="text-4xl font-extrabold mb-10 text-center select-none">Learning Hub</h2>
 
-    <!-- Category Sections -->
-    <section class="space-y-10">
+    <!-- Categories and Videos -->
+    <section class="space-y-14">
 
-      <!-- Category Template -->
-      <!-- Repeat this for each category -->
+      <!-- Financial Literacy -->
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🌱 Introduction to Agriculture</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">What is Agriculture?</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">💰 Financial Literacy for Farmers</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/vb1gGeyYxqU" allowfullscreen></iframe>
+            <p class="video-title">Financial Planning Tips</p>
+          </div>
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/d5EyYg0H6cw" allowfullscreen></iframe>
+            <p class="video-title">Budgeting Basics</p>
           </div>
         </div>
       </div>
 
+      <!-- Getting Funded -->
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">💰 Financial Literacy for Farmers</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Financial Planning Tips</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">💸 How to Get Funded</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/j9A5YTaa5v0" allowfullscreen></iframe>
+            <p class="video-title">Grant & Funding Tips</p>
+          </div>
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/RnLMlGE3cHk" allowfullscreen></iframe>
+            <p class="video-title">Applying for Agriculture Loans</p>
           </div>
         </div>
       </div>
 
+      <!-- Farming by Region -->
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">💸 How to Get Funded</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Grant & Funding Tips</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🌍 Farming by Region</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/z5QOETnmLgs" allowfullscreen></iframe>
+            <p class="video-title">Farming in West Africa</p>
           </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🌍 Farming by Region</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Farming in West Africa</p>
-            </div>
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/bOZftz_Tp9M" allowfullscreen></iframe>
+            <p class="video-title">Farming in East Africa</p>
           </div>
         </div>
       </div>
 
       <!-- Specializations -->
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🧅 Onion Farming</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_5" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">How to Grow Onions</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🧅 Onion Farming</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/G4SCSzYk-RU" allowfullscreen></iframe>
+            <p class="video-title">How to Grow Onions</p>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥬 Spinach Farming</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_6" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Spinach Farming Basics</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🥬 Spinach Farming</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/M-MJhIkZ9jU" allowfullscreen></iframe>
+            <p class="video-title">Spinach Farming Basics</p>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥬 Cabbage Farming</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_7" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Grow Cabbage Efficiently</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🥬 Cabbage Farming</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/zSQUoRk8QGo" allowfullscreen></iframe>
+            <p class="video-title">Grow Cabbage Efficiently</p>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥕 Vegetables & Fruits Farming</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_8" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Start a Vegetable Farm</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🥕 Vegetables & Fruits Farming</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/3YAx2YKL4xg" allowfullscreen></iframe>
+            <p class="video-title">Start a Vegetable Farm</p>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-2xl font-semibold text-green-700 mb-3">🐄 Livestock & Product Selling</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
-            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_9" frameborder="0" allowfullscreen></iframe>
-            <div class="p-3">
-              <p class="text-lg font-semibold">Basics of Livestock Business</p>
-            </div>
+        <h3 class="text-2xl mb-5 select-none">🐄 Livestock & Product Selling</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/cM4T-f8OhYQ" allowfullscreen></iframe>
+            <p class="video-title">Basics of Livestock Business</p>
           </div>
         </div>
       </div>
@@ -148,9 +265,9 @@
   </main>
 
   <!-- Footer -->
-  <footer class="text-center text-gray-600 py-4 mt-10 border-t">
+  <footer>
     © 2025 AgriTech Connect. All rights reserved.
   </footer>
-
+  
 </body>
 </html>
