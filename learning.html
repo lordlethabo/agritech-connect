@@ -2,83 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Learning Hub - AgriTech Connect</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    iframe {
-      width: 100%;
-      height: 250px;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900">
+
+  <!-- Sidebar -->
   <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-green-800 text-white p-4 space-y-4">
-      <h1 class="text-xl font-bold">Learning Hub</h1>
-      <nav class="space-y-2">
-        <a href="#financial" class="block hover:bg-green-700 p-2 rounded">Financial Literacy</a>
-        <a href="#funding" class="block hover:bg-green-700 p-2 rounded">Funding for Agriculture</a>
-        <a href="#regional" class="block hover:bg-green-700 p-2 rounded">Farming by Region</a>
-        <a href="#specialized" class="block hover:bg-green-700 p-2 rounded">Specialized Farming</a>
+    <aside class="w-64 bg-green-900 text-white p-4 flex flex-col items-center">
+      <img src="/images/logo.png" alt="AgriTech Connect" class="w-24 mb-6 rounded-full shadow-lg"/>
+      <nav class="space-y-4 w-full text-sm">
+        <a href="dashboard.html" class="block py-2 px-4 rounded hover:bg-green-800">Dashboard</a>
+        <a href="marketplace.html" class="block py-2 px-4 rounded hover:bg-green-800">Marketplace</a>
+        <a href="learning.html" class="block py-2 px-4 bg-green-800 rounded">Learning Hub</a>
+        <a href="weather.html" class="block py-2 px-4 rounded hover:bg-green-800">Weather</a>
+        <a href="profile.html" class="block py-2 px-4 rounded hover:bg-green-800">Profile</a>
       </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 p-6 overflow-y-auto">
+      <h1 class="text-3xl font-bold mb-4">Learning Hub</h1>
+      <p class="text-gray-600 mb-6">Explore videos on farming techniques, finance, funding, and business skills tailored to African agripreneurs.</p>
 
-      <!-- Financial Literacy -->
-      <section id="financial" class="mb-10">
-        <h2 class="text-2xl font-semibold mb-4">Financial Literacy for Beginners</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <iframe src="https://www.youtube.com/embed/k0aRLu3L_hk" allowfullscreen></iframe>
-          <iframe src="https://www.youtube.com/embed/JhdNsVP4JFM" allowfullscreen></iframe>
-        </div>
-      </section>
+      <div class="space-y-12">
 
-      <!-- Funding for Agriculture -->
-      <section id="funding" class="mb-10">
-        <h2 class="text-2xl font-semibold mb-4">How to Get Funded in Agriculture</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <iframe src="https://www.youtube.com/embed/EYEbnkWPl58" allowfullscreen></iframe>
-          <iframe src="https://www.youtube.com/embed/NoAXFPVsKJk" allowfullscreen></iframe>
-        </div>
-      </section>
+        <!-- Financial Literacy -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">💰 Financial Literacy for Beginners</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/YXq3FKp2by4" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/VwqKz7rV0pA" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
 
-      <!-- Farming by Region -->
-      <section id="regional" class="mb-10">
-        <h2 class="text-2xl font-semibold mb-4">Farming by Region</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <iframe src="https://www.youtube.com/embed/wbGImjMc_8o" allowfullscreen title="West Africa"></iframe>
-          <iframe src="https://www.youtube.com/embed/O2hrU5Bgz4I" allowfullscreen title="East Africa"></iframe>
-          <iframe src="https://www.youtube.com/embed/Xxd4QHENmvQ" allowfullscreen title="Southern Africa"></iframe>
-        </div>
-      </section>
+        <!-- Funding in Agriculture -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🌱 How to Get Funded in Agriculture</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/5I1q4wWwLZ4" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/oAgTXMbnmpE" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
 
-      <!-- Specialized Farming -->
-      <section id="specialized" class="mb-10">
-        <h2 class="text-2xl font-semibold mb-4">Specialized Farming: Vegetables, Fruits, Livestock & Product Sales</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Onions -->
-          <iframe src="https://www.youtube.com/embed/2OnXqxWyR2o" allowfullscreen title="Onion Farming"></iframe>
-          <!-- Spinach -->
-          <iframe src="https://www.youtube.com/embed/ONLb0QDfvvA" allowfullscreen title="Spinach Farming"></iframe>
-          <!-- Cabbage -->
-          <iframe src="https://www.youtube.com/embed/4RSYykmb3_o" allowfullscreen title="Cabbage Farming"></iframe>
-          <!-- General Vegetables -->
-          <iframe src="https://www.youtube.com/embed/ySvhU3HJJz4" allowfullscreen title="Vegetable Farming"></iframe>
-          <!-- Fruits -->
-          <iframe src="https://www.youtube.com/embed/cqwZQbgcbvY" allowfullscreen title="Fruit Farming"></iframe>
-          <!-- Livestock -->
-          <iframe src="https://www.youtube.com/embed/DLO1OBGkqgU" allowfullscreen title="Livestock Farming"></iframe>
-          <!-- Product Selling -->
-          <iframe src="https://www.youtube.com/embed/Nx7kR5iEYi8" allowfullscreen title="Agriculture Product Sales"></iframe>
-        </div>
-      </section>
+        <!-- Regional Farming -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🌍 Regional Farming: West, East, Southern Africa</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <iframe src="https://www.youtube.com/embed/30IPxu5ErRI" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/kSzNySPtwxQ" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/gQqDLa7dW68" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
+
+        <!-- Onion Farming -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🧅 Onion Farming</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/EtzXxKVo7Vs" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/Ty-mk1Z7a8A" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
+
+        <!-- Spinach & Cabbage Farming -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🥬 Spinach & Cabbage Farming</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/8_JvcxKIVdI" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/6NBpM9bQeHg" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
+
+        <!-- Vegetable & Fruit Farming -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🍅 Vegetable & Fruit Farming</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/vsPI3XQ7Fdw" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/N7PHKNZfT7k" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
+
+        <!-- Livestock & Product Selling -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🐄 Livestock & Product Selling</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe src="https://www.youtube.com/embed/y2ElytkxL-Y" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+            <iframe src="https://www.youtube.com/embed/IoixH_NCHeY" frameborder="0" allowfullscreen class="w-full h-64 rounded"></iframe>
+          </div>
+        </section>
+
+      </div>
     </main>
   </div>
 </body>
