@@ -3,139 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Learning Hub | AgriTech Connect</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Learning Hub - AgriTech Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f4f6f4;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      background-color: #2e7d32;
-      color: white;
-      padding: 10px 20px;
-    }
-
-    header img {
-      height: 40px;
-      margin-right: 15px;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .category {
-      margin-bottom: 30px;
-    }
-
-    .category h2 {
-      color: #2e7d32;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 5px;
-    }
-
-    .videos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 15px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 180px;
-      border-radius: 8px;
-    }
-
-    @media (max-width: 600px) {
-      iframe {
-        height: 200px;
-      }
+    .video-card:hover {
+      transform: scale(1.03);
+      transition: transform 0.3s ease;
     }
   </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans">
 
-<header>
-  <img src="logo.png" alt="AgriTech Connect Logo" />
-  <h1>AgriTech Connect Learning Hub</h1>
-</header>
-
-<div class="container">
-
-  <div class="category">
-    <h2>💰 Financial Literacy for Beginners</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/vb1gGeyYxqU" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/d5EyYg0H6cw" allowfullscreen></iframe>
+  <!-- Navbar -->
+  <header class="flex items-center justify-between bg-white shadow p-4">
+    <div class="flex items-center space-x-3">
+      <img src="logo.png" alt="Logo" class="h-10 w-auto" />
+      <h1 class="text-2xl font-bold text-green-700">AgriTech Connect</h1>
     </div>
-  </div>
+    <nav>
+      <a href="dashboard.html" class="text-green-700 hover:text-green-900 px-3 font-semibold">Dashboard</a>
+      <a href="profile.html" class="text-green-700 hover:text-green-900 px-3 font-semibold">Profile</a>
+    </nav>
+  </header>
 
-  <div class="category">
-    <h2>🌱 Getting Funded in Agriculture</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/j9A5YTaa5v0" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/RnLMlGE3cHk" allowfullscreen></iframe>
-    </div>
-  </div>
+  <!-- Page Content -->
+  <main class="p-4 md:p-8">
+    <h2 class="text-3xl font-bold mb-6 text-center text-green-800">Learning Hub</h2>
 
-  <div class="category">
-    <h2>🌍 Farming by Region</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/z5QOETnmLgs" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/bOZftz_Tp9M" allowfullscreen></iframe>
-    </div>
-  </div>
+    <!-- Category Sections -->
+    <section class="space-y-10">
 
-  <div class="category">
-    <h2>🧅 Onion Farming</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/G4SCSzYk-RU" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/fakeVideo2" allowfullscreen></iframe>
-    </div>
-  </div>
+      <!-- Category Template -->
+      <!-- Repeat this for each category -->
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🌱 Introduction to Agriculture</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">What is Agriculture?</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="category">
-    <h2>🥬 Spinach Farming</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/M-MJhIkZ9jU" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/fakeVideo3" allowfullscreen></iframe>
-    </div>
-  </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">💰 Financial Literacy for Farmers</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Financial Planning Tips</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="category">
-    <h2>🥦 Cabbage Farming</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/zSQUoRk8QGo" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/fakeVideo4" allowfullscreen></iframe>
-    </div>
-  </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">💸 How to Get Funded</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Grant & Funding Tips</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="category">
-    <h2>🥕 Vegetable & Fruit Farming</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/3YAx2YKL4xg" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/fakeVideo5" allowfullscreen></iframe>
-    </div>
-  </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🌍 Farming by Region</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Farming in West Africa</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="category">
-    <h2>🐄 Livestock & Product Selling</h2>
-    <div class="videos">
-      <iframe src="https://www.youtube.com/embed/cM4T-f8OhYQ" allowfullscreen></iframe>
-      <iframe src="https://www.youtube.com/embed/fakeVideo6" allowfullscreen></iframe>
-    </div>
-  </div>
+      <!-- Specializations -->
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🧅 Onion Farming</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_5" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">How to Grow Onions</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-</div>
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥬 Spinach Farming</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_6" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Spinach Farming Basics</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥬 Cabbage Farming</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_7" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Grow Cabbage Efficiently</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🥕 Vegetables & Fruits Farming</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_8" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Start a Vegetable Farm</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-semibold text-green-700 mb-3">🐄 Livestock & Product Selling</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="video-card bg-white rounded-lg shadow hover:shadow-lg overflow-hidden">
+            <iframe class="w-full h-56" src="https://www.youtube.com/embed/VIDEO_ID_9" frameborder="0" allowfullscreen></iframe>
+            <div class="p-3">
+              <p class="text-lg font-semibold">Basics of Livestock Business</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-600 py-4 mt-10 border-t">
+    © 2025 AgriTech Connect. All rights reserved.
+  </footer>
 
 </body>
 </html>
