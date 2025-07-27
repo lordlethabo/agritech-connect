@@ -2,189 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AgriTech Connect – Learning Hub</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Hub - AgriTech Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    .dark-mode {
-      background-color: #1a202c;
-      color: #edf2f7;
+    html {
+      scroll-behavior: smooth;
     }
-
-    .logo-border {
-      border: 4px solid #34d399; /* Tailwind green-400 */
-      border-radius: 9999px; /* fully rounded */
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 8px #34d399aa; /* subtle glow */
-      cursor: pointer;
-    }
-    .logo-border:hover {
-      border-color: #10b981; /* Tailwind green-500 */
-      box-shadow: 0 0 15px #10b981dd; /* brighter glow */
+    iframe {
+      width: 100%;
+      height: 250px;
     }
   </style>
 </head>
-<body
-  id="main-body"
-  class="flex bg-gray-100 text-gray-900 dark-mode:text-white"
->
-  <aside
-    class="w-64 bg-green-800 text-white p-4 hidden md:block min-h-screen sticky top-0"
-  >
-    <img
-      src="logo.png"
-      alt="AgriTech Connect Logo"
-      class="w-32 mb-6 rounded-full logo-border"
-      onclick="toggleSidebar()"
-    />
-    <nav class="space-y-3">
-      <a href="dashboard.html" class="block hover:bg-green-700 p-2 rounded"
-        >🏠 Dashboard</a
-      >
-      <a
-        href="marketplace.html"
-        class="block hover:bg-green-700 p-2 rounded"
-        >🛒 Marketplace</a
-      >
-      <a
-        href="learning.html"
-        class="block bg-green-700 p-2 rounded font-semibold"
-        >🎓 Learning Hub</a
-      >
-      <a href="weather.html" class="block hover:bg-green-700 p-2 rounded"
-        >⛅ Weather</a
-      >
-      <a href="sickness.html" class="block hover:bg-green-700 p-2 rounded"
-        >🩺 Crop Doctor</a
-      >
-      <a href="mentorship.html" class="block hover:bg-green-700 p-2 rounded"
-        >👥 Mentorship</a
-      >
-      <a href="chat.html" class="block hover:bg-green-700 p-2 rounded"
-        >💬 Community Chat</a
-      >
-      <a href="cart.html" class="block hover:bg-green-700 p-2 rounded"
-        >🧺 Cart</a
-      >
-    </nav>
-  </aside>
+<body class="bg-gray-50 text-gray-900">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-800 text-white p-4 space-y-4">
+      <h1 class="text-xl font-bold">Learning Hub</h1>
+      <nav class="space-y-2">
+        <a href="#financial" class="block hover:bg-green-700 p-2 rounded">Financial Literacy</a>
+        <a href="#funding" class="block hover:bg-green-700 p-2 rounded">Funding for Agriculture</a>
+        <a href="#regional" class="block hover:bg-green-700 p-2 rounded">Farming by Region</a>
+        <a href="#specialized" class="block hover:bg-green-700 p-2 rounded">Specialized Farming</a>
+      </nav>
+    </aside>
 
-  <div class="flex-1 flex flex-col min-h-screen">
-    <header
-      class="bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-50"
-    >
-      <div class="flex items-center gap-2">
-        <img
-          src="logo.png"
-          alt="Logo"
-          class="w-10 h-10 rounded-full logo-border md:hidden"
-          onclick="toggleSidebar()"
-        />
-        <h1 class="text-xl font-bold">Learning Hub</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleDarkMode()" class="text-lg">
-          <i class="fas fa-moon"></i>
-        </button>
-        <div class="relative">
-          <img
-            id="userPhoto"
-            src="https://via.placeholder.com/32"
-            class="w-8 h-8 rounded-full cursor-pointer"
-            onclick="toggleMenu()"
-          />
-          <div
-            id="dropdownMenu"
-            class="absolute right-0 mt-2 bg-white shadow-md rounded hidden p-2 w-40 text-black"
-          >
-            <p class="text-sm" id="userName">User</p>
-            <hr class="my-1" />
-            <a
-              href="profile.html"
-              class="block text-sm py-1 hover:bg-gray-100"
-              >⚙️ Profile</a
-            >
-            <button
-              onclick="logout()"
-              class="w-full text-left text-sm py-1 hover:bg-gray-100"
-            >
-              🚪 Logout
-            </button>
-          </div>
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+
+      <!-- Financial Literacy -->
+      <section id="financial" class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">Financial Literacy for Beginners</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <iframe src="https://www.youtube.com/embed/k0aRLu3L_hk" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/JhdNsVP4JFM" allowfullscreen></iframe>
         </div>
-      </div>
-    </header>
+      </section>
 
-    <main class="p-6 space-y-6">
-      <section>
-        <h2 class="text-lg font-semibold mb-4">🎓 Learning Videos</h2>
-        <!-- Example video embed -->
-        <iframe
-          width="100%"
-          height="315"
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          class="rounded"
-        ></iframe>
-        <p class="text-sm mt-3">
-          Want to discuss this topic?
-          <a
-            href="chat.html"
-            class="text-green-700 font-semibold hover:underline"
-            >Join the community chat</a
-          >
-        </p>
+      <!-- Funding for Agriculture -->
+      <section id="funding" class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">How to Get Funded in Agriculture</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <iframe src="https://www.youtube.com/embed/EYEbnkWPl58" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/NoAXFPVsKJk" allowfullscreen></iframe>
+        </div>
+      </section>
+
+      <!-- Farming by Region -->
+      <section id="regional" class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">Farming by Region</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <iframe src="https://www.youtube.com/embed/wbGImjMc_8o" allowfullscreen title="West Africa"></iframe>
+          <iframe src="https://www.youtube.com/embed/O2hrU5Bgz4I" allowfullscreen title="East Africa"></iframe>
+          <iframe src="https://www.youtube.com/embed/Xxd4QHENmvQ" allowfullscreen title="Southern Africa"></iframe>
+        </div>
+      </section>
+
+      <!-- Specialized Farming -->
+      <section id="specialized" class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">Specialized Farming: Vegetables, Fruits, Livestock & Product Sales</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Onions -->
+          <iframe src="https://www.youtube.com/embed/2OnXqxWyR2o" allowfullscreen title="Onion Farming"></iframe>
+          <!-- Spinach -->
+          <iframe src="https://www.youtube.com/embed/ONLb0QDfvvA" allowfullscreen title="Spinach Farming"></iframe>
+          <!-- Cabbage -->
+          <iframe src="https://www.youtube.com/embed/4RSYykmb3_o" allowfullscreen title="Cabbage Farming"></iframe>
+          <!-- General Vegetables -->
+          <iframe src="https://www.youtube.com/embed/ySvhU3HJJz4" allowfullscreen title="Vegetable Farming"></iframe>
+          <!-- Fruits -->
+          <iframe src="https://www.youtube.com/embed/cqwZQbgcbvY" allowfullscreen title="Fruit Farming"></iframe>
+          <!-- Livestock -->
+          <iframe src="https://www.youtube.com/embed/DLO1OBGkqgU" allowfullscreen title="Livestock Farming"></iframe>
+          <!-- Product Selling -->
+          <iframe src="https://www.youtube.com/embed/Nx7kR5iEYi8" allowfullscreen title="Agriculture Product Sales"></iframe>
+        </div>
       </section>
     </main>
   </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLHgzcY_VdE_F5BzEahc6EY5dfSRgLeDw",
-      authDomain: "agritechconnect-1d52b.firebaseapp.com",
-      projectId: "agritechconnect-1d52b",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById("userName").textContent =
-          user.displayName || user.email;
-        document.getElementById("userPhoto").src =
-          user.photoURL || "https://via.placeholder.com/32";
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-
-    function logout() {
-      auth.signOut();
-    }
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("hidden");
-    }
-    function toggleSidebar() {
-      document.querySelector("aside").classList.toggle("hidden");
-    }
-    function toggleDarkMode() {
-      document.getElementById("main-body").classList.toggle("dark-mode");
-    }
-  </script>
 </body>
 </html>
